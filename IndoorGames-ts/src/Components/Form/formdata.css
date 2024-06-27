@@ -1,0 +1,79 @@
+
+.container
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.input-div
+{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.danger
+{
+  color: red;
+  font-size: small;
+}
+
+.space
+{
+  margin-left: 2px;
+}
+
+button
+{
+  background-color: darkblue;
+    color: white;
+    padding: 6px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.password
+{
+  position: relative;
+  width: 100%;
+}
+
+.ab
+{
+  position: absolute;
+    top: 0px;
+    right: 0px; 
+    padding-top: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+}
+
+input
+{
+  height: 25px;
+  width : 300px;
+}
+
+select
+{
+  height: 30px;
+  
+  min-width: fit-content;
+}
+
+@media only screen and (max-width : 650px)
+{
+  input
+  {
+        width: 198px;
+  }
+
+  .danger
+  {
+      font-size: xx-small;
+  }
+}
