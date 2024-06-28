@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
-import { Formik, Field, Form,useFormikContext } from "formik";
-import { RegistrationDetails,Count } from "../../Type";
-import { useRef,useEffect,useContext } from "react";
+import { Formik, Field, Form, useFormikContext } from "formik";
+import { RegistrationDetails, Count } from "../../Type";
+import { useRef, useEffect, useContext } from "react";
 import * as Yup from "yup";
 import { Fragment } from "react/jsx-runtime";
 import Button from "@mui/material/Button";
@@ -15,72 +15,52 @@ import Container from "@mui/material/Container";
 import FormLabel from "@mui/material/FormLabel";
 import { useNavigate } from "react-router-dom";
 import CountContext from "../../store/count-context";
-import { toast,ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch,useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import  Switch  from "@mui/material/Switch";
+import Switch from "@mui/material/Switch";
 import { itemActions } from "../../store";
 
-
-
-
-
-
-
-
-
-const Registration = (props : any) => {
-
-
+const Registration = (props: any) => {
   const dispatch = useDispatch();
 
-  const items = useSelector((state : RootState) => state.items)
+  const items = useSelector((state: RootState) => state.items);
 
   const Formikfunction = () => {
+    const { values } = useFormikContext<RegistrationDetails>();
 
-    const {values} = useFormikContext<RegistrationDetails>();
-    
     useEffect(() => {
-
-      if(values.checked.length !== values.number)
-        {
-  
-          toast(`it should contains exactly ${values.number} games`);
-
-        }
-     
-    },[(values.checked.length !== values.number)])
+      if (values.checked.length !== values.number) {
+        toast(`it should contains exactly ${values.number} games`);
+      }
+    }, [values.checked.length !== values.number]);
 
     return null;
-  
-  }
-  
-  
+  };
 
-  const {onGetData,list,cid,setId} = props;
-  
+  const { onGetData, list, cid, setId } = props;
+
   const intialvalues: RegistrationDetails = {
-    id : cid,
+    id: cid,
     name: "",
     email: "",
     interested: "",
     number: 0,
     checked: [],
-    type : ''
-  
+    type: "Singles",
   };
 
-
   const ctx = useContext<Count>(CountContext);
-  
-
 
   const validationschema = Yup.object().shape({
     name: Yup.string().required("Please enter Name"),
     email: Yup.string()
       .email("Enter valid email")
-      .required("Please enter email").test('email-exists','email already exists',(email) =>  {return !(items.some((item) => item.email === email ))}),
+      .required("Please enter email")
+      .test("email-exists", "email already exists", (email) => {
+        return !items.some((item) => item.email === email);
+      }),
     interested: Yup.string().required("interested field is required"),
     number: Yup.number()
       .min(0, "number should be positive")
@@ -91,63 +71,49 @@ const Registration = (props : any) => {
     }),
   });
 
-
- 
-
-
   const detailsNavigate = useNavigate();
-  
- const inputRef = useRef<HTMLInputElement>(null);
 
- useEffect(() => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  if(inputRef.current)
-    {
+  useEffect(() => {
+    if (inputRef.current) {
       inputRef.current.focus();
     }
+  }, []);
 
- },[])
+  const SubmitHandler = (values: RegistrationDetails) => {
+    setId((c: number) => c + 1);
+    onGetData(values);
 
-  const SubmitHandler = (values : RegistrationDetails) => 
-    {
-        
-            setId((c : number) => c+1)
-            onGetData(values);
-         
-          ctx.count = ctx.count +1;
+    ctx.count = ctx.count + 1;
 
-          values.type = values.checked.includes('Table Tennis')? 'Singles' : 'not Participated'
+    values.type = values.checked.includes("Table Tennis")
+      ? values.type
+      : "not Participated";
 
-           dispatch(itemActions.addItem(values));
-       
-            detailsNavigate('/Details');
+    dispatch(itemActions.addItem(values));
 
-  }
-
-
-  
-
-  
+    detailsNavigate("/Details");
+  };
 
   return (
     <Fragment>
+
+      
       <Container>
         <h2>Registration Details</h2>
         <Formik
           initialValues={intialvalues}
           validationSchema={validationschema}
           validateOnBlur={false}
-          validateOnChange = {false}
+          validateOnChange={false}
           onSubmit={SubmitHandler}
         >
-         
-        
-
           {({ values, errors, touched }) => (
             <Form>
-                <h3 style={{marginTop : '50px'}}>Personal Details :</h3>
+              <h3 style={{ marginTop: "50px" }}>Personal Details :</h3>
               <Grid container spacing={2}>
-                <Grid item xs={12} md ={6}>
+                <Grid item xs={12} md={6}>
                   <Field
                     as={TextField}
                     style={{ width: "100%" }}
@@ -157,10 +123,10 @@ const Registration = (props : any) => {
                     helperText={
                       errors.name && touched.name ? errors.name : null
                     }
-                    inputRef={inputRef} 
+                    inputRef={inputRef}
                   />
                 </Grid>
-                <Grid item xs={12} md ={6}>
+                <Grid item xs={12} md={6}>
                   <Field
                     as={TextField}
                     style={{ width: "100%" }}
@@ -173,33 +139,39 @@ const Registration = (props : any) => {
                   />
                 </Grid>
               </Grid>
-              <h3 style={{marginTop : '50px'}}>Sports Details :</h3>
+              <h3 style={{ marginTop: "50px" }}>Sports Details :</h3>
               <Grid container spacing={2}>
-                <Grid item xs={12} md ={6}>
-                  <FormLabel required style={{color : errors.interested && touched.interested ? 'red' : ''}} >interested </FormLabel>
+                <Grid item xs={12} md={6}>
+                  <FormLabel
+                    required
+                    style={{
+                      color:
+                        errors.interested && touched.interested ? "red" : "",
+                    }}
+                  >
+                    interested{" "}
+                  </FormLabel>
                   <Field as={RadioGroup} name="interested">
-                    <div style={{display : 'flex'}}>
-                    <FormControlLabel
-                      value="yes"
-                      control={<Radio />}
-                      label="yes"
-                    />
-                    <FormControlLabel
-                      value="no"
-                      control={<Radio />}
-                      label="no"
-                    />
-
-</div>
-                 
+                    <div style={{ display: "flex" }}>
+                      <FormControlLabel
+                        value="yes"
+                        control={<Radio />}
+                        label="yes"
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={<Radio />}
+                        label="no"
+                      />
+                    </div>
                   </Field>
                 </Grid>
-                <Grid item xs={12} md = {2}>
+                <Grid item xs={12} md={2}>
                   <Field
                     as={TextField}
                     type="number"
                     name="number"
-                    label = "number"
+                    label="number"
                     disabled={!(values.interested === "yes")}
                     error={errors.number && touched.number}
                     helperText={
@@ -207,7 +179,7 @@ const Registration = (props : any) => {
                     }
                   />
                 </Grid>
-                <Grid item  xs={6} md = {2}>
+                <Grid item xs={6} md={2}>
                   <Field as={FormGroup}>
                     <FormControlLabel
                       control={<Checkbox />}
@@ -223,10 +195,10 @@ const Registration = (props : any) => {
                       value="carrom"
                       label="carrom"
                     />
-                    </Field>
-                    </Grid>
-                    <Grid item  xs={6} md = {2}>
-                    <Field as={FormGroup}>
+                  </Field>
+                </Grid>
+                <Grid item xs={6} md={2}>
+                  <Field as={FormGroup}>
                     <FormControlLabel
                       control={<Checkbox />}
                       name="checked"
@@ -242,12 +214,21 @@ const Registration = (props : any) => {
                       label="Table Tennis"
                     />
                   </Field>
-                  </Grid>
-              
-               <Grid item xs = {3} >
-                            <Field as = {Switch} disabled = {!values.checked.includes("Table Tennis")} />
-                            <FormLabel component="legend">{!values.checked.includes("Table Tennis") ? "Singles" : "Doubles"}</FormLabel>
-               </Grid>
+                </Grid>
+
+                <Grid item xs={3}>
+                  <div style={{display : 'flex'}}>
+                    <FormLabel component="legend" style={{marginTop : 7}}>Singles</FormLabel>
+                    <Field
+                      as={Switch}
+                      name = 'type'
+                      value = 'Doubles'
+                      disabled={!values.checked.includes("Table Tennis")}
+                    
+                    />
+                    <FormLabel component="legend" style={{marginTop : 7}}>Doubles</FormLabel>
+                  </div>
+                </Grid>
               </Grid>
 
               <div style={{ display: "flex", justifyContent: "end" }}>

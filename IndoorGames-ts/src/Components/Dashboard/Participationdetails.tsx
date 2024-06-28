@@ -46,7 +46,7 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
     {
       field: "checked",
       headerName: "Games",
-      width: 110,
+      width: 230,
     },
     {
       field: "type",
@@ -58,9 +58,11 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
       field: "action",
       headerName: "Action",
       width: 200,
+      
       renderCell: (params) => (
         <div>
           <Button
+           style={{marginRight : 10}}
             variant="contained"
             onClick={() => handleDelete(params.row.id)}
           >
@@ -94,7 +96,11 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
 
   return (
     <>
+
+    <Analysis />
+
     <Box sx={{ height: 400, width: "100%" }}>
+
       <DataGrid
         rows={rows}
         columns={columns}

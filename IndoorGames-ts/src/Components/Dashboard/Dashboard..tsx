@@ -24,6 +24,7 @@ import Participationdetails from './Participationdetails';
 import { useNavigate } from 'react-router-dom';
 import CountContext from '../../store/count-context';
 import { Count } from '../../Type';
+import Analysis from './Analysis';
 
 
 const drawerWidth = 240;
@@ -79,7 +80,7 @@ if(array.length > 0)
     }
 
     const detailsNavigate = useNavigate();
-    const registrationNavigate = useNavigate();
+    const navigate = useNavigate();
 
   const drawer = (
     <div>
@@ -88,7 +89,7 @@ if(array.length > 0)
       <List>
         
         <ListItem disablePadding >
-            <ListItemButton selected={isSelected} onClick={() => {  SetisSelected(true); registrationNavigate('/')}} >
+            <ListItemButton selected={isSelected} onClick={() => {  SetisSelected(true); navigate('/')}} >
               <ListItemIcon>
                 <CreateIcon /> 
               </ListItemIcon>
@@ -96,13 +97,14 @@ if(array.length > 0)
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding >
-            <ListItemButton selected = {!isSelected} onClick={() => {  SetisSelected(false); detailsNavigate('/Details')}} >
+            <ListItemButton selected = {!isSelected} onClick={() => {  SetisSelected(false); navigate('/Details')}} >
               <ListItemIcon>
               <ViewListIcon />
               </ListItemIcon>
               <ListItemText>Show Details</ListItemText>
             </ListItemButton>
           </ListItem>
+          
        
       </List>
      
@@ -187,6 +189,7 @@ if(array.length > 0)
           <Routes>
             <Route path = '/' element = {<Registration onGetData = {getDataHandler} list = {list} cid = {cid} setId = {setId}/>}  />
             <Route path = '/Details' element = {<Participationdetails list = {list} />} />
+           
           </Routes>
      
        

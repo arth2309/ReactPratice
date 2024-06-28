@@ -3,6 +3,7 @@
 
 export type RegistrationDetails = {
     
+    
     id : number,
     name : string,
     email : string,
@@ -18,6 +19,7 @@ export type Count = {
 }
 
 export type RegistrationDetailsArray =  {
+  
 
     items : RegistrationDetails[]
 }

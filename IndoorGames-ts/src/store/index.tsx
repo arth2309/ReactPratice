@@ -43,6 +43,7 @@ const itemSlice = createSlice({
                     existingItem.interested = 'yes';
                     existingItem.number = 2;
                     existingItem.checked = ['chess','ludo'];
+                    existingItem.type = 'Not Participated';
 
                     localStorage.setItem('participantsarray',JSON.stringify(state.items));
 
