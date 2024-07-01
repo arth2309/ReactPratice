@@ -38,7 +38,7 @@ const Registration = (props: any) => {
 
     return null;
   };
-
+ 
   const { onGetData, list, cid, setId } = props;
 
   const intialvalues: RegistrationDetails = {
@@ -71,7 +71,7 @@ const Registration = (props: any) => {
     }),
   });
 
-  const detailsNavigate = useNavigate();
+  const detailsNavigate = useNavigate();               
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -84,6 +84,7 @@ const Registration = (props: any) => {
   const SubmitHandler = (values: RegistrationDetails) => {
     setId((c: number) => c + 1);
     onGetData(values);
+    
 
     ctx.count = ctx.count + 1;
 
@@ -109,6 +110,7 @@ const Registration = (props: any) => {
           validateOnChange={false}
           onSubmit={SubmitHandler}
         >
+
           {({ values, errors, touched }) => (
             <Form>
               <h3 style={{ marginTop: "50px" }}>Personal Details :</h3>
@@ -139,6 +141,7 @@ const Registration = (props: any) => {
                   />
                 </Grid>
               </Grid>
+              
               <h3 style={{ marginTop: "50px" }}>Sports Details :</h3>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
@@ -213,11 +216,7 @@ const Registration = (props: any) => {
                       value="Table Tennis"
                       label="Table Tennis"
                     />
-                  </Field>
-                </Grid>
-
-                <Grid item xs={3}>
-                  <div style={{display : 'flex'}}>
+                    <div style={{display : 'flex'}}>
                     <FormLabel component="legend" style={{marginTop : 7}}>Singles</FormLabel>
                     <Field
                       as={Switch}
@@ -228,6 +227,11 @@ const Registration = (props: any) => {
                     />
                     <FormLabel component="legend" style={{marginTop : 7}}>Doubles</FormLabel>
                   </div>
+                  </Field>
+                </Grid>
+
+                <Grid item xs={3}>
+                  
                 </Grid>
               </Grid>
 

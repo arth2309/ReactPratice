@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { itemActions } from "../../store";
 import Analysis from "./Analysis";
+import Updatedetail from "./Updatedetail";
 
 const Participationdetails = (props: { list: RegistrationDetails[] }) => {
   const ctx = useContext<Count>(CountContext);
@@ -69,12 +70,12 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
             Delete
           </Button>
 
-          <Button
+          {/* <Button
             variant="contained"
             onClick={() => handleUpdate(params.row.id)}
           >
             Update
-          </Button>
+          </Button> */}
         </div>
       ),
     },
@@ -118,7 +119,7 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
       />
     </Box>
 
-    
+    <Updatedetail />
 
   
     </>
