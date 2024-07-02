@@ -24,7 +24,7 @@ import Participationdetails from './Participationdetails';
 import { useNavigate } from 'react-router-dom';
 import CountContext from '../../store/count-context';
 import { Count } from '../../Type';
-import Analysis from './Analysis';
+
 
 
 const drawerWidth = 240;
@@ -79,7 +79,7 @@ if(array.length > 0)
                setList((prevState) => {return[...prevState,item]})
     }
 
-    const detailsNavigate = useNavigate();
+  
     const navigate = useNavigate();
 
   const drawer = (

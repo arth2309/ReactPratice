@@ -7,20 +7,34 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import { selectActions } from '../../store';
 
 
 
 const Header : React.FC = () => {
 
-    const [currencyType, setCurrencyType] = useState('');
+  const dispatch = useDispatch();
+
+    const [currencyType, setCurrencyType] = useState('INR');
 
     const handleChange = (event: SelectChangeEvent) => {
       setCurrencyType(event.target.value);
+
+      if(event.target.value === 'INR')
+        {
+          dispatch(selectActions.changeType('ddf333d1-ea20-441d-ab4c-bf56bc7641a6 '))
+        }
+        else
+        {
+          dispatch(selectActions.changeType('0458d638-790d-43c8-856b-ff407a26090b'))
+        }
+      
     };
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color={'success'}>
+          <AppBar position="static" color={'success'} >
             <Toolbar>
               <Typography
                 variant="h6"
@@ -48,7 +62,7 @@ const Header : React.FC = () => {
 
           
           <MenuItem value={'INR'}>INR</MenuItem>
-          <MenuItem value={'Dollar'}>Dollar</MenuItem>
+          <MenuItem value={'USD'}>Dollar</MenuItem>
         </Select>
       </FormControl>
             </Toolbar>

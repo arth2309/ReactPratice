@@ -34,12 +34,13 @@ const Registration = (props: any) => {
       if (values.checked.length !== values.number) {
         toast(`it should contains exactly ${values.number} games`);
       }
+      // eslint-disable-next-line
     }, [values.checked.length !== values.number]);
 
     return null;
   };
  
-  const { onGetData, list, cid, setId } = props;
+  const { onGetData, cid, setId } = props;
 
   const intialvalues: RegistrationDetails = {
     id: cid,

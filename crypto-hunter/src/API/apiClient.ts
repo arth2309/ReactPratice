@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { coindetails } from '../Type';
 
 // Define the base URL for your API
-const BASE_URL: string = process.env.REACT_APP_BASE_URL || 'https://api.coingecko.com/api/v3';
+const BASE_URL: string = process.env.REACT_APP_BASE_URL || 'https://mocki.io/v1';
 
 // Create an Axios instance with default configurations
 const apiClient: AxiosInstance = axios.create({

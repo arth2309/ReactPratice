@@ -2,12 +2,16 @@ import * as React from "react";
 import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.css";
 import Slider from "./Slider";
+import Cryptotable from "./Cryptotable";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
+
 
 
 const Dashboard: React.FC = () => {
   return (
     <>
-      <Header />
+      <Header  />
 
       <div className="d-flex flex-column align-items-center mt-5">
         <h1 className=" text-success">
@@ -16,8 +20,11 @@ const Dashboard: React.FC = () => {
         <span className="text-success">
           Get All The Info Regarding Your Favourite Crypto Currency{" "}
         </span>
-        <Slider />
+      
       </div>
+      <Slider />
+      <Cryptotable />
+      
     </>
   );
 };

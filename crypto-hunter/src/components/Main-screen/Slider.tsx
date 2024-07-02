@@ -1,19 +1,17 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import { useTheme } from "@mui/material/styles";
-import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import { get } from "../../API/apiClient";
 import { useEffect, useState } from "react";
 import { coindetails } from "../../Type";
-import { CarouselProvider, Slider as Sl, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
+import { Carousel } from "react-responsive-carousel";
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import  Container  from "react-bootstrap/Container";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
+
 
 const Slider = () => {
+
+  const api = useSelector((state : RootState) => state.api)
   const [list, setList] = useState<coindetails[]>([
     {
       id: "1",
@@ -22,100 +20,60 @@ const Slider = () => {
         "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
       current_price: 1,
       ath_change_percentage: 1,
+      market_cap : 1,
+      price_change_percentage_24h : 1,
+      name : 'bitcoin'
     },
   ]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [api]);
 
   const fetchData = async () => {
     try {
-      const result = await get<any>("/coins/markets?vs_currency=INR"); // Replace with your actual endpoint
+      const result = await get<any>(`/${api}`); // Replace with your actual endpoint
       result && setList(result);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const theme = useTheme();
-  const [activeStep, setActiveStep] = useState<number>(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  const[slidesPerPage,setSLidesPerPage] = useState<number>(4);
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  useEffect(() => {
+
+    setSLidesPerPage(window.innerWidth < 768 ? 2 : 4)
+    console.log('here');
+
+  },[window.innerWidth ])
+  
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-          pl: 2,
-          bgcolor: "background.default",
-        }}
-      ></Paper>
-    
-      <Box sx={{ height: 325, maxWidth: 400, width: "100%", p: 2 }}>
 
-        {/* {list[activeStep] !== null ?  <div className=" d-flex flex-column align-items-center">
-          { <img src={list[activeStep].image} />}
-          <div>{list[activeStep].symbol.toUpperCase()}   <span style={{color : list[activeStep].ath_change_percentage < 0 ? 'red' : 'green'}}>{list[activeStep].ath_change_percentage} </span> </div>
-          <div> $ {list[activeStep].current_price}</div>
-          </div>: null } */}
-         
+
+<Container className="mt-5">
+
+         <Carousel autoPlay = {true} infiniteLoop showArrows={true} showIndicators = {false} showStatus={false} showThumbs = {false}  interval={3000}>
+            {Array.from({ length: Math.ceil(list.length / slidesPerPage) }, (_, slideIndex) => (
+                <div key={slideIndex} className="d-flex align-items-center">
+                    {list.slice(slideIndex * slidesPerPage, slideIndex * slidesPerPage + slidesPerPage).map(item => (
+                        <div key={item.id} className="d-flex flex-column align-items-center mx-5 justify-content-between">
+                            <img src={item.image} alt={item.symbol} style={{maxWidth : '100%'}} />
+                            <div>
+                            <div>{item.symbol.toUpperCase()} <span className= {item.ath_change_percentage < 0 ? 'text-danger' : 'text-success'} >{item.ath_change_percentage} </span> </div>
+                            <div>$ {item.current_price}</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </Carousel>
        
-      </Box>
-      <MobileStepper
-        variant="text"
-        steps={list.length}
-        position="static"
-        activeStep={activeStep}
-        nextButton={
-          <Button
-            size="small"
-            onClick={handleNext}
-            disabled={activeStep === list.length - 1}
-          >
-            Next
-            {theme.direction === "rtl" ? (
-              <KeyboardArrowLeft />
-            ) : (
-              <KeyboardArrowRight />
-            )}
-          </Button>
-        }
-        backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === "rtl" ? (
-              <KeyboardArrowRight />
-            ) : (
-              <KeyboardArrowLeft />
-            )}
-            Back
-          </Button>
-        }
-      />
-
-<CarouselProvider
-        naturalSlideWidth={100}
-        naturalSlideHeight={125}
-        totalSlides={3}
-      >
-        <Sl>
-          <Slide index={1}>I am the first Slide.</Slide>
-          <Slide index={0}>I am the second Slide.</Slide>
-          <Slide index={2}>I am the third Slide.</Slide>
-        </Sl>
-      </CarouselProvider>
-    </Box>
+     
+    
+    </Container>
 
 
   );

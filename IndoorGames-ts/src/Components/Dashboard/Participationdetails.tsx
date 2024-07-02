@@ -2,10 +2,10 @@ import React  from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import CountContext from "../../store/count-context";
 import { Count, RegistrationDetails } from "../../Type";
-import { useNavigate } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { itemActions } from "../../store";
@@ -14,7 +14,7 @@ import Updatedetail from "./Updatedetail";
 
 const Participationdetails = (props: { list: RegistrationDetails[] }) => {
   const ctx = useContext<Count>(CountContext);
-  const detailsNavigate = useNavigate();
+
   const dispatch = useDispatch();
   
 
@@ -88,10 +88,10 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
     
   };
 
-  const handleUpdate = (id : number) => {
+  // const handleUpdate = (id : number) => {
 
-    dispatch(itemActions.updateItem(id));
-  }
+  //   dispatch(itemActions.updateItem(id));
+  // }
 
   const rows = items;
 
