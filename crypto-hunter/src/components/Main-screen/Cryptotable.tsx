@@ -8,10 +8,13 @@ import { useSelector } from "react-redux";
 import TextField from '@mui/material/TextField';
 import { Pagination } from '@mui/material';
 import { orderBy } from 'lodash'; 
+import { useNavigate } from 'react-router-dom';
 
 const ITEMS_PER_PAGE = 5;
 
 const Cryptotable = () => {
+
+  const navigate = useNavigate();
   const api = useSelector((state: RootState) => state.api);
   const [list, setList] = useState<coindetails[]>([]);
   const [filteredItems, setFilteredItems] = useState<coindetails[]>([]);
@@ -59,6 +62,12 @@ const Cryptotable = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const paginatedItems = filteredItems.slice(startIndex, endIndex);
 
+  const handleCoinDetail = (id : string) => {
+    
+    navigate(`/Coindetails/${id}`)
+
+  }
+
   return (
     <div className='px-5 py-3 mt-2 bg-body-tertiary'>
       <div className='d-flex flex-column align-items-center mb-2'>
@@ -70,17 +79,17 @@ const Cryptotable = () => {
       <Table striped responsive className='mt-4'>
         <thead className='table-success'>
           <tr>
-            <th onClick={() => handleSort('name')}>Coin {sortField === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
-            <th onClick={() => handleSort('current_price')}>Price {sortField === 'current_price' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
-            <th onClick={() => handleSort('price_change_percentage_24h')}>24h Change {sortField === 'price_change_percentage_24h' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
-            <th onClick={() => handleSort('market_cap')}>Market Cap {sortField === 'market_cap' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+            <th style={{cursor : 'pointer'}} onClick={() => handleSort('name')}>Coin {sortField === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+            <th style={{cursor : 'pointer'}} onClick={() => handleSort('current_price')}>Price {sortField === 'current_price' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+            <th style={{cursor : 'pointer'}} onClick={() => handleSort('price_change_percentage_24h')}>24h Change {sortField === 'price_change_percentage_24h' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
+            <th style={{cursor : 'pointer'}} onClick={() => handleSort('market_cap')}>Market Cap {sortField === 'market_cap' && (sortOrder === 'asc' ? '▲' : '▼')}</th>
           </tr>
         </thead>
         <tbody>
           {paginatedItems.map((item) => (
             <tr key={item.id}>
               <td>
-                <div className='d-flex align-items-center'>
+                <div className='d-flex align-items-center' style={{cursor : 'pointer'}} onClick={() =>  handleCoinDetail(item.id)}>
                   <img src={item.image} alt={item.name} style={{ width: '65px', height: '70px' }} />
                   <div className='mx-3'>
                     <div><strong>{item.symbol.toUpperCase()}</strong></div>

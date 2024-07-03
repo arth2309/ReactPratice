@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
-import Dashboard from "./components/Main-screen/Dashboard";
+import Routes from "./Routes";
 
 
 const App = () => {
 
   return (
     <div>
-      <Dashboard />
+     <Routes />
     </div>
   );
 };

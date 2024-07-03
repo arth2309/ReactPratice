@@ -22,17 +22,21 @@ const Slider = () => {
       ath_change_percentage: 1,
       market_cap : 1,
       price_change_percentage_24h : 1,
-      name : 'bitcoin'
+      name : 'bitcoin',
+      market_cap_rank : 1
     },
   ]);
 
   useEffect(() => {
     fetchData();
+   
   }, [api]);
+
+  // eslint-disable-next-line
 
   const fetchData = async () => {
     try {
-      const result = await get<any>(`/${api}`); // Replace with your actual endpoint
+      const result = await get<coindetails[]>(`/${api}`); // Replace with your actual endpoint
       result && setList(result);
     } catch (error) {
       console.log(error);
