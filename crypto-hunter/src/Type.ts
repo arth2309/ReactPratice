@@ -27,3 +27,9 @@ export interface coinChartDetails {
     prices : number[][]
 
 }
+
+export interface timeSlot {
+
+    time : number,
+    position : number
+}

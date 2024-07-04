@@ -24,6 +24,7 @@ const Cryptotable = () => {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line
   }, [api]);
 
   useEffect(() => {

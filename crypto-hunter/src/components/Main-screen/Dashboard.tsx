@@ -3,8 +3,6 @@ import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.css";
 import Slider from "./Slider";
 import Cryptotable from "./Cryptotable";
-import { RootState } from "../../store";
-import { useSelector } from "react-redux";
 
 
 

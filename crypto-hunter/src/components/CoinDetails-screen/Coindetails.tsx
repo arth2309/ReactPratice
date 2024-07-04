@@ -5,10 +5,10 @@ import { useState,useEffect } from "react";
 import { get } from "../../API/apiClient";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
-import { coindetails,coinChartDetails } from "../../Type";
+import { coindetails } from "../../Type";
 import  Grid  from "@mui/material/Grid";
 import Coinchart from "./Coinchart";
-import { getChartData } from "../../API/apiClient";
+
 
 
 const Coindetails = () => {
@@ -34,9 +34,9 @@ const Coindetails = () => {
      
   useEffect(() => {
     fetchData();
+// eslint-disable-next-line
   }, [api]);
 
-  // eslint-disable-next-line
 
 
   const fetchData = async () => {
@@ -63,14 +63,14 @@ const Coindetails = () => {
         <Detail item = {item} />
         </Grid> 
   
-        <div className="d-grid">
+        {/* <div className="d-grid">
        
         <div className="vr" style={{height : '600px'}}></div>
              
-        </div>
+        </div> */}
 
-        <Grid item xs = {12} md = {7} lg = {8}>
-        <Coinchart />
+        <Grid item xs = {12} md = {7} lg = {8} paddingLeft={3}>
+        <Coinchart id = {id} />
         </Grid>
         </Grid >
        

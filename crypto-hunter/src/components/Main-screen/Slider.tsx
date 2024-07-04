@@ -27,16 +27,18 @@ const Slider = () => {
     },
   ]);
 
+
   useEffect(() => {
     fetchData();
-   
+
+    // eslint-disable-next-line
   }, [api]);
 
-  // eslint-disable-next-line
+// eslint-disable-next-line 
 
   const fetchData = async () => {
     try {
-      const result = await get<coindetails[]>(`/${api}`); // Replace with your actual endpoint
+      const result = await get<coindetails[]>(`/${api}`); 
       result && setList(result);
     } catch (error) {
       console.log(error);
@@ -51,7 +53,7 @@ const Slider = () => {
     setSLidesPerPage(window.innerWidth < 768 ? 2 : 4)
     console.log('here');
 
-  },[window.innerWidth ])
+  },[])
   
 
   return (
