@@ -24,6 +24,8 @@ import Participationdetails from './Participationdetails';
 import { useNavigate } from 'react-router-dom';
 import CountContext from '../../store/count-context';
 import { Count } from '../../Type';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 
 
@@ -32,12 +34,15 @@ const drawerWidth = 240;
 
 
 const Dashboard = (props : any) => {
+
+  const totalparticipants = useSelector((state : RootState) => state.count.count)
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] =  useState(false);
 
-  const[isSelected,SetisSelected] = useState<boolean>(true);
+  
 
+ // eslint-disable-next-line
   const {count} = useContext<Count>(CountContext);
 
   const array : {id : number}[] =  JSON.parse(localStorage.getItem('participantsarray') || '[]')
@@ -89,7 +94,7 @@ if(array.length > 0)
       <List>
         
         <ListItem disablePadding >
-            <ListItemButton selected={isSelected} onClick={() => {  SetisSelected(true); navigate('/')}} >
+            <ListItemButton  onClick={() => {   navigate('/')}} >
               <ListItemIcon>
                 <CreateIcon /> 
               </ListItemIcon>
@@ -97,7 +102,7 @@ if(array.length > 0)
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding >
-            <ListItemButton selected = {!isSelected} onClick={() => {  SetisSelected(false); navigate('/Details')}} >
+            <ListItemButton onClick={() => { navigate('/Details')}} >
               <ListItemIcon>
               <ViewListIcon />
               </ListItemIcon>
@@ -140,7 +145,7 @@ if(array.length > 0)
                  Indoor Games
                  </div>
                  <div>
-                  Total Participants :  {count}
+                  Total Participants :  {totalparticipants}
                  </div>
           
              

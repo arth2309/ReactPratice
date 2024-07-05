@@ -1,13 +1,36 @@
-import { createSlice,configureStore,PayloadAction } from "@reduxjs/toolkit";
-import { RegistrationDetails,RegistrationDetailsArray } from "../Type";
+import { createSlice,configureStore,PayloadAction, combineReducers } from "@reduxjs/toolkit";
+import { RegistrationDetails,RegistrationDetailsArray, Counter } from "../Type";
 
 
 
 const intialState : RegistrationDetailsArray = {
     items : JSON.parse(localStorage.getItem('participantsarray') || '[]')
+
 }
 
 
+const intialcount : Counter = {
+    count :  JSON.parse(localStorage.getItem('participantsarray') || '[]').length
+}
+const countslice = createSlice({
+
+    name : 'counter',
+    initialState : intialcount,
+    reducers : {
+        increment(state) {
+
+            state.count++;
+
+        },
+
+        decrement(state) {
+
+            state.count--;
+
+        }
+    }
+
+})
 
 const itemSlice = createSlice({
     name : 'details',
@@ -57,12 +80,19 @@ const itemSlice = createSlice({
 
 });
 
+const rootreducer = combineReducers({
+
+    item : itemSlice.reducer,
+    count : countslice.reducer
+
+})
 
 const store = configureStore({
-    reducer : itemSlice.reducer
+    reducer : rootreducer,
 })
 
 export const itemActions = itemSlice.actions;
+export const countActions = countslice.actions;
 export type RootState = ReturnType<typeof store.getState>;
 export default store
 

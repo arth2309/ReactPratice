@@ -1,0 +1,37 @@
+.collapsible {
+    padding: 1rem ; 
+  }
+  
+  .card {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 25px;
+    
+  }
+  
+  
+  .border-bottom {
+    border-bottom:  1px solid #ced4da;
+  }
+  
+  .btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+
+  .content
+  {
+    padding-left: 1rem;
+    border-bottom:5px solid #F96332;
+    display: flex;
+    justify-content: space-between;
+    transition: 0.5s;
+
+  }
+  

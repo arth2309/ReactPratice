@@ -11,8 +11,9 @@
     position: absolute;
     z-index: 2;
     margin-top: -350px;
-    padding-left: 12px;
+    padding-left: 20px;
     display: flex;
+    flex-direction: column;
     justify-content: start;
 }
 
@@ -30,5 +31,60 @@
 {
     font-size: 80px;
     font-family: obviously;
+    padding-bottom: 15px;
+    border-bottom-style: solid;
+    border-bottom-color: #F96332;
+    border-bottom-width: 8.1px;
+    width: fit-content;
+    margin-bottom: 10px;
 }
+
+
+@media only screen and (max-width : 992px) {
+
+    .text-banner
+    {
+        font-size: 60px;
+    }
+    .banner-content
+    {
+        margin-top: -325px;
+    }
+
+
+    
+}
+
+@media only screen and (max-width : 660px) {
+
+    .text-banner
+    {
+        font-size: 45px;
+    }
+    .banner-content
+    {
+        margin-top: -310px;
+    }
+
+
+    
+}
+
+
+
+@media only screen and (max-width : 490px) {
+
+    .text-banner
+    {
+        font-size: 32px;
+    }
+    .banner-content
+    {
+        margin-top: -292px;
+    }
+
+
+    
+}
+
 

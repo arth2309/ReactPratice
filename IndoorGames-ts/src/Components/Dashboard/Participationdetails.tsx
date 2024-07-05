@@ -1,24 +1,22 @@
-import React  from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { useContext } from "react";
 import CountContext from "../../store/count-context";
 import { Count, RegistrationDetails } from "../../Type";
-
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import { itemActions } from "../../store";
+import { itemActions, countActions } from "../../store";
+
 import Analysis from "./Analysis";
-import Updatedetail from "./Updatedetail";
 
 const Participationdetails = (props: { list: RegistrationDetails[] }) => {
   const ctx = useContext<Count>(CountContext);
 
   const dispatch = useDispatch();
-  
 
-  const items = useSelector((state: RootState) => state.items);
+  const items = useSelector((state: RootState) => state.item.items);
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: "id", headerName: "ID", width: 90 },
@@ -59,11 +57,11 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
       field: "action",
       headerName: "Action",
       width: 200,
-      
+
       renderCell: (params) => (
         <div>
           <Button
-           style={{marginRight : 10}}
+            style={{ marginRight: 10 }}
             variant="contained"
             onClick={() => handleDelete(params.row.id)}
           >
@@ -83,9 +81,9 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
 
   const handleDelete = (id: number) => {
     dispatch(itemActions.removeItem(id));
+    dispatch(countActions.decrement());
 
     ctx.count = ctx.count - 1;
-    
   };
 
   // const handleUpdate = (id : number) => {
@@ -97,31 +95,24 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
 
   return (
     <>
+      <Analysis />
 
-    <Analysis />
-
-    <Box sx={{ height: 400, width: "100%" }}>
-
-      <DataGrid
-        rows={rows}
-        columns={columns}
-       
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 3,
+      <Box sx={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 3,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[3]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
-
-    <Updatedetail />
-
-  
+          }}
+          pageSizeOptions={[3]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box>
     </>
   );
 };

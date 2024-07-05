@@ -24,6 +24,10 @@ export type RegistrationDetailsArray =  {
     items : RegistrationDetails[]
 }
 
+export type Counter = {
+    count : number
+}
+
 
 
 

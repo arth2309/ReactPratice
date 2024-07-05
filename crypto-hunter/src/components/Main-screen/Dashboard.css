@@ -1,0 +1,19 @@
+.subtitle {
+  font-size: medium;
+}
+
+.tabletitle {
+  font-size: xx-large;
+}
+
+@media only screen and (max-width: 480px) {
+  .subtitle {
+    font-size: small;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .tabletitle {
+    font-size: 15px;
+  }
+}

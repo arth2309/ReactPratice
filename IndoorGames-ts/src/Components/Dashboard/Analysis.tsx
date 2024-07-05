@@ -9,7 +9,7 @@ const Analysis = () => {
   
 
 
-  const items = useSelector((state : RootState) => state.items)
+  const items = useSelector((state : RootState) => state.item.items)
 
 
   interface GameCount {

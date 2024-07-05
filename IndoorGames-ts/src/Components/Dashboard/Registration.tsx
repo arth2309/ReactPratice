@@ -21,11 +21,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Switch from "@mui/material/Switch";
 import { itemActions } from "../../store";
+import { countActions } from "../../store";
 
 const Registration = (props: any) => {
   const dispatch = useDispatch();
 
-  const items = useSelector((state: RootState) => state.items);
+  const items = useSelector((state: RootState) => state.item.items);
 
   const Formikfunction = () => {
     const { values } = useFormikContext<RegistrationDetails>();
@@ -94,6 +95,7 @@ const Registration = (props: any) => {
       : "not Participated";
 
     dispatch(itemActions.addItem(values));
+    dispatch(countActions.increment());
 
     detailsNavigate("/Details");
   };
