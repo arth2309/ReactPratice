@@ -8,7 +8,7 @@ const  Banner = () => {
     
     return (
         <Fragment>
-        <div>
+        <div style={{backgroundColor : 'black'}}>
         <img src = {Carrerbanner} alt='banner' className='banner' />
         <div className='banner-content'>
             <h1 className='text-banner line'><strong><span className='text-orange'>Explore</span> <span className='text-white'>Courses .</span> </strong> </h1>

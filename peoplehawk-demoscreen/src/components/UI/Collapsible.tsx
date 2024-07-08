@@ -23,13 +23,15 @@ const Collapsible: React.FC<IProps> = ({ open = false, children, title }) => {
         <div className="content">
           <h3><strong style={{color : '#42455C'}}>{title}</strong></h3>
           <button type="button" className="btn" onClick={handleFilterOpening}>
-            <Dropdown/>
-            {/* <img src={require('../../assests/img/arrow-dropdown.svg')} alt ='dropdown' /> */}
+            
+            <Dropdown  height='30px'/>
+            {/* <img src={require('../../assests/img/arrow-dropdown.svg')}  /> */}
+            
           </button>
         </div>
       </div>
 
-      <div className="border-bottom">
+      <div>
         {isOpen && <div className="collapsible">{children}</div>}
       </div>
     </div>

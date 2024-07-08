@@ -1,0 +1,64 @@
+.heading
+{
+    font-family: obviously;
+    font-size: 28px;
+    display: flex;
+    justify-content: start;
+    color: #F96332;
+}
+
+.main-content
+{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.w-50
+{
+    width: 50%;
+}
+
+.button {
+    background-color: #F96332;;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    width: 80%;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-top: 36px;
+    
+  }
+
+
+@media only screen and (max-width : 992px)
+{
+    .w-50
+    {
+        width: 100%;
+    }
+
+    .main-content
+{
+    display: block;
+    justify-content: none;
+    margin-top: 15px;
+}
+}
+
+.ab
+{
+    position: relative;
+    height: 400px;
+}
+
+.chart-slice
+{
+    position: absolute;
+    width: 400px;
+}

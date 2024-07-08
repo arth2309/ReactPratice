@@ -18,7 +18,7 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Fine Arts, Graphic Design, Music, Media, Interior Design, Architecture, Communications",
     "color1": "#2e6747",
     "color2": "#58856c",
-    "img_src":require('assets/img/artistic.png')
+    "img_src":require('../src/assests/img/artistic.png')
   },
   {
     "name": "CONVENTIONAL",
@@ -28,7 +28,7 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Accounting, Finance, Business, Actuarial, Human Resources, Marketing, Law",
     "color1": "#d54d35",
     "color2": "#dd715d",
-    "img_src":require('assets/img/conventional.png')
+    "img_src":require('../src/assests/img/conventional.png')
   },
   {
     "name": "ENTERPRISING",
@@ -38,7 +38,7 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Hospitality, Tourism, Communications, Sport, Public Relations, Marketing, Real Estate",
     "color1": "#d76a6a",
     "color2": "#df8888",
-     "img_src":require('assets/img/enterprising.png')
+     "img_src":require('../src/assests/img/enterprising.png')
   },
   {
     "name": "INVESTIGATIVE",
@@ -48,7 +48,7 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Biology, Chemistry, Physics, Mathematics, Computer Science, Psychology, Economics",
     "color1": "#4b84ae",
     "color2": "#6f9dbe",
-     "img_src":require('assets/img/investigate.png')
+     "img_src":require('../src/assests/img/investigate.png')
   },
   {
     "name": "REALISTIC",
@@ -58,7 +58,7 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Engineering, Construction, Environmental, Agriculture, Geology, Marine Biology, Physical Education",
     "color1": "#76accd",
     "color2": "#91bdd7",
-     "img_src":require('assets/img/realistic.png')
+     "img_src":require('../src/assests/img/realistic.png')
   },
   {
     "name": "SOCIAL",
@@ -68,6 +68,6 @@ export const CourseInterestData: CourseInterest[] = [
     "courses": "Social Work, Nursing, Education, Sociology, Occupational Therapy, Religion, Public Administration",
     "color1": "#f29b10",
     "color2": "#f6b040",
-     "img_src":require('assets/img/social.png')
+     "img_src":require('../src/assests/img/social.png')
   }
 ]
