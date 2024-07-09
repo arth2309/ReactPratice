@@ -5,6 +5,7 @@ import "../stylesheets/obviously-font.css";
 import { CourseInterestData } from "../../IdealCourseInterests";
 
 
+
 const Memberinterestanalysis = () => {
 
   const object =  {
@@ -26,7 +27,7 @@ const Memberinterestanalysis = () => {
         <div className="heading">Member Interests Analysis</div>
         <div className="main-content">
         <div className="w-50">
-          <div>
+          <div onClick={() => {console.log('hii')}}>
           Our Member Test uses a series of questions to understand your likes
           and dislikes. From these results we can scientifically meaure your
           score across six categroies and determine which courses would be best

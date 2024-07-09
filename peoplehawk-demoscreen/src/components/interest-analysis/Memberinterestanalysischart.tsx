@@ -22,6 +22,24 @@ const Memberinterestanalysischart = () => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+
+    onClick: (event : any, elements : any) => {
+      if (elements.length > 0) {
+        const clickedIndex = elements[0].index;
+        // Call different functions based on clicked bar index
+        switch (clickedIndex) {
+          case 0:
+            console.log(elements);
+            break;
+          case 1:
+            console.log('hii 1');
+            break;
+          // Add more cases as needed
+          default:
+            break;
+        }
+      }
+    },
     
   indexAxis : 'y' as const,
 

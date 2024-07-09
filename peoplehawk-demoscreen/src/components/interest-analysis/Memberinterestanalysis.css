@@ -36,7 +36,7 @@
   }
 
 
-@media only screen and (max-width : 992px)
+@media only screen and (max-width : 1409px)
 {
     .w-50
     {
@@ -54,11 +54,113 @@
 .ab
 {
     position: relative;
-    height: 400px;
+    height: 485px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon 
+{
+    position: absolute;
+    width: 100px;
+    padding-top: 185px;
+}
+
+.p
+{
+    padding: 16px;
+}
+
+.d-flex
+{
+    display: flex;
+}
+
+.justify-content-between
+{
+    justify-content: space-between;
+}
+
+.justify-content-start
+{
+    justify-content: start;
 }
 
 .chart-slice
 {
     position: absolute;
-    width: 400px;
+    width: 485px;
+    cursor: pointer;
+  
+}
+
+.result-heading
+{
+    color: #394456;
+    font-family: obviously;
+    font-size: 28px;
+}
+
+.main-card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+    background-color: #f1f1f1;
+    color: white;
+    border-radius: 5px;
+  }
+
+  .item-card
+  {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: fit-content;
+    padding: 6px;
+  }
+
+  .cls-1 {
+    fill : transparent;
+    stroke-miterlimit: 10;
+    stroke-width: 10px;
+    pointer-events: auto;
+  }
+
+@media only screen and (max-width : 680px)
+{
+      
+    .chart-slice
+    {
+       
+        width: 270px;
+    }
+
+    .ab
+{
+    
+    height: 270px;
+}
+
+.icon {
+    
+    width: 70px;
+    padding-top: 103px;
+}
+
+
+    
+}
+
+@media only screen and (max-width : 611px)
+{
+    .heading
+    {
+        font-size: 15px;
+    }
+
+    .result-heading
+    {
+        font-size: 20px;
+    }
 }

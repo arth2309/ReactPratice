@@ -24,7 +24,7 @@ const Collapsible: React.FC<IProps> = ({ open = false, children, title }) => {
           <h3><strong style={{color : '#42455C'}}>{title}</strong></h3>
           <button type="button" className="btn" onClick={handleFilterOpening}>
             
-            <Dropdown  height='30px'/>
+            <Dropdown  height='20px' style={{rotate : isOpen ? '180deg' : '0deg' }} />
             {/* <img src={require('../../assests/img/arrow-dropdown.svg')}  /> */}
             
           </button>
