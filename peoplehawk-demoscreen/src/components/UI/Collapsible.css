@@ -10,6 +10,8 @@
     width: 80%;
     margin-left: 10%;
     margin-top: 25px;
+    padding: 10px;
+
    
     
   }
@@ -32,9 +34,12 @@
     border-bottom:5px solid #F96332;
     display: flex;
     justify-content: space-between;
-    transition: 0.5s;
+    align-items: center;
+
 
   }
+
+
 
  
   

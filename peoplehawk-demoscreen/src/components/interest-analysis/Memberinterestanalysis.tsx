@@ -36,7 +36,7 @@ const Memberinterestanalysis = () => {
           <button className="button"><strong>Re-take Member test</strong></button>
         </div>
        <div className="w-50">
-        <div  style={{height : '263px'}}>
+        <div className="react-chartjs-2 " style={{height : '263px'}}>
           <Memberinterestanalysischart />
          
 

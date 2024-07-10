@@ -3,7 +3,7 @@ import { CategoryScale } from "chart.js/auto";
 import { Bar} from "react-chartjs-2";
 import { CourseInterestData } from "../../IdealCourseInterests";
 import { CourseInterest } from "../../IdealCourseInterests"
-
+import "./Memberinterestanalysis.css";
 Chart.register(CategoryScale);
 
 const Memberinterestanalysischart = () => {
@@ -46,8 +46,11 @@ const Memberinterestanalysischart = () => {
   scales : {
     y: {
       ticks: {
+        align: 'center',
         color: CourseInterestData.map((item : CourseInterest) => item.color1), 
       } as const, 
+
+     
 
   }},
       plugins: {
@@ -74,8 +77,6 @@ const Memberinterestanalysischart = () => {
       {
        
         backgroundColor: CourseInterestData.map((item : CourseInterest) => item.color1),
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
         hoverBackgroundColor: CourseInterestData.map((item : CourseInterest) => item.color2),
         hoverBorderColor: 'rgba(255,99,132,1)',
         data: [84, 81.9, 81.9,82.5,82.35, 82.69] 
@@ -87,12 +88,44 @@ const Memberinterestanalysischart = () => {
 
   };
 
+  const plugins: any = {
+    afterDraw: (chart: any) => {
+      var ctx = chart.chart.ctx
+      var xAxis = chart.scales['x-axis-0']
+      var yAxis = chart.scales['y-axis-0']
+      var dataset = chart.data.datasets[0]
+      yAxis.ticks.forEach((value: any, index: number) => {
+        var y = yAxis.getPixelForTick(index)
+        var label = CourseInterestData.map((item : CourseInterest) => item.name)
+        ctx.fillStyle = 'black'
+        // ctx.fillStyle = CourseInterestData[index]
+        ctx.font = '10px Arial'
+        ctx.fillText(label, yAxis.left - 100, y + 6)
+      })
+      yAxis.ticks.forEach((value: any, index: number) => {
+        var y = yAxis.getPixelForTick(index)
+        var valueText = `${dataset.data[index]}%`
+        const xwidth =
+          (Number(dataset.data[index] ? dataset.data[index] : 0) *
+            xAxis.width) /
+          100
+        ctx.fillStyle = 'black'
+        ctx.font = '14px Arial'
+        ctx.fillText(
+          valueText,
+          xwidth > 55 ? yAxis.left + xwidth - 25 : yAxis.left + xwidth + 15,
+          y + 6
+        )
+      })
+    },
+  }
+
   
 
 
 
   return (
-    <Bar data={data} options={options}  />
+    <Bar data={data} options={options} plugins={plugins} />
   );
 };
 

@@ -1,6 +1,7 @@
 import Collapsible from "../UI/Collapsible";
 import "./Memberinterestanalysis.css";
 import "../stylesheets/obviously-font.css";
+import "../stylesheets/app.css"
 import social from "../../assests/img/social.png";
 import artistic from "../../assests/img/artistic.png";
 import enterprise from "../../assests/img/enterprising.png";
@@ -8,7 +9,6 @@ import conventional from "../../assests/img/conventional.png";
 import realistic from "../../assests/img/realistic.png";
 import investigate from "../../assests/img/investigate.png";
 import { CourseInterest, CourseInterestData } from "../../IdealCourseInterests";
-import Testinterestanalysischart from "./Testinterestanalysischart";
 import { useState } from "react";
 import Hotspot from "./Hotspot";
 import Diamond from '../../assests/img/vector-diamond.svg'
@@ -21,9 +21,9 @@ const Testinterestanalysis = () => {
   );
 
   const cardHandler = (item: string) => {
-    console.log(item);
+   
     const data = CourseInterestData.find((data) => data.name === item);
-    console.log(data);
+    
 
     if (data) {
       setAnalysisData(data);
@@ -56,8 +56,8 @@ const Testinterestanalysis = () => {
           If you are geniunely interested in what you study you fill find the
           course more enjoyable be more motivated to learn and develop relevant
           skills. andoverco
-          <div style={{marginTop : '150px'}}>
-            Explore Interests and courses
+          <div  className="m-5">
+           <strong> Explore Interests and courses : </strong>
           <div className="ab">
             
               <img
@@ -125,49 +125,60 @@ const Testinterestanalysis = () => {
               <Hotspot onCardHandler={cardHandler} />
            
           </div>
-          <div className="d-flex" style={{justifyContent:'center'}}>
+          <div className="d-flex" style={{justifyContent:'center', marginTop : '10px'}}>
           Click Slice to get more information about the interest and related courses
           </div>
           </div>
         </div>
         <div className="w-50">
           <div className="result-heading">Your top 3 results</div>
-          <div style={{ height: "135px" }}>
+          {/* <div style={{ height: "135px" }}>
             <Testinterestanalysischart onCardHandler={cardHandler} />
-          </div>
+          </div> */}
+          {array.map((item) => <div className="progress-wrapper">
+    <div className="progress-label" style={{color : item.color1 }}>{item.name}</div>
+    <div className="progress-bar" onClick={() => cardHandler(item.name)}>
+        <div className="progress" style={{width: '80%', backgroundColor : item.color1}}>80%</div>
+    </div>
+</div> )}
+          
           <div className="main-card">
             <div style={{ backgroundColor: analysisData.color1 }}>
               <div className="p">
                 <div className="d-flex justify-content-between" >
                   <div>
-                  {analysisData.name}
+                  <strong>{analysisData.name}</strong>
                   </div>
                   <div>
                   {array[0].name === analysisData.name ?<img src={Diamond} alt = 'diamond' />: null }  
                   </div>
                   </div>
-                <div style={{ marginTop: "10px" }}>
+                <div  style={{ marginTop: "10px" }}>
                   {analysisData.description}
                 </div>
                 <div>
                 <div style={{marginTop : '25px'}}>
                   <strong >You are:</strong>
                   </div>
+                  <div className="flex-wrap">
                   {analysisData.features.split(",").map((item, index) => (
                     <div className="item-card" key={index}>
-                      {item}
+                     <strong>{item}</strong> 
                     </div>
                   ))}
+                  </div>
                 </div>
                 <div>
                   <div style={{marginTop : '25px'}}>
                   <strong >You Like to:</strong>
                   </div>
+                  <div className="flex-wrap">
                   {analysisData.likes.split(",").map((item, index) => (
                     <div className="item-card" key={index}>
-                      {item}
+                     <strong>{item}</strong> 
                     </div>
                   ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -177,7 +188,7 @@ const Testinterestanalysis = () => {
                 <ul>
                 {analysisData.courses.split(",").map((item, index) => (
                   <li key={index}>
-                    {item}
+                    <strong>{item}</strong> 
                   </li>
                 ))}
                 </ul>

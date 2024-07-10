@@ -20,11 +20,12 @@ const Collapsible: React.FC<IProps> = ({ open = false, children, title }) => {
 
     <div className="card">
       <div>
-        <div className="content">
-          <h3><strong style={{color : '#42455C'}}>{title}</strong></h3>
-          <button type="button" className="btn" onClick={handleFilterOpening}>
+        <div className="content"  onClick={handleFilterOpening}>
+          {window.innerWidth > 576 ?<h3 style={{marginBottom : '2px'}}><strong style={{color : '#42455C'}}>{title}</strong></h3>:<h4 style={{marginBottom : '2px'}}><strong style={{color : '#42455C'}}>{title}</strong></h4> }
+          
+          <button type="button" className="btn">
             
-            <Dropdown  height='20px' style={{rotate : isOpen ? '180deg' : '0deg' }} />
+            <Dropdown  height='12px' style={{rotate : isOpen ? '180deg' : '0deg' }} />
             {/* <img src={require('../../assests/img/arrow-dropdown.svg')}  /> */}
             
           </button>
