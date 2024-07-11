@@ -13,16 +13,21 @@ import { useState } from "react";
 import Hotspot from "./Hotspot";
 import Diamond from '../../assests/img/vector-diamond.svg'
 import idealCourse from '../../assests/img/ideal.png'
+import { CourseInterest as Course } from "../../type";
 
 
-const Testinterestanalysis = () => {
+const Testinterestanalysis = (props : any) => {
+  
+
+  const {courseInterest} = props 
+
   const [analysisData, setAnalysisData] = useState<CourseInterest>(
     CourseInterestData[0]
   );
 
   const cardHandler = (item: string) => {
    
-    const data = CourseInterestData.find((data) => data.name === item);
+    const data = courseInterest.find((data : Course) => data.name === item);
     
 
     if (data) {

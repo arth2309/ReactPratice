@@ -3,24 +3,19 @@ import Memberinterestanalysischart from "./Memberinterestanalysischart";
 import "./Memberinterestanalysis.css";
 import "../stylesheets/obviously-font.css";
 import { CourseInterestData } from "../../IdealCourseInterests";
+import { CourseInterest } from "../../type";
 
 
 
-const Memberinterestanalysis = () => {
 
-  const object =  {
-    A: 84,
-    C: 81.92,
-    E: 80.67,
-    I: 82.5,
-    R: 82.35,
-    S: 82.69,
-    career_code: "ASI",
-    created_at: "2024-02-22 11:28:23",
-    id: 10,
- }
+const Memberinterestanalysis = (props : any ) => {
 
-  const array = CourseInterestData.sort((a, b) => object.career_code.indexOf(a.name.charAt(0).toUpperCase()) - object.career_code.indexOf(b.name.charAt(0).toUpperCase())).slice(3,6);
+
+  const {courseInterest ,chartData} = props
+ 
+ 
+
+  const array = CourseInterestData.sort((a : any, b : any) => chartData.career_code.indexOf(a.name.charAt(0).toUpperCase()) - chartData.career_code.indexOf(b.name.charAt(0).toUpperCase())).slice(3,6);
   return (
     <>
       <Collapsible open={false} title="Member Interests Test Results:">
@@ -37,7 +32,7 @@ const Memberinterestanalysis = () => {
         </div>
        <div className="w-50">
         <div className="react-chartjs-2 " style={{height : '263px'}}>
-          <Memberinterestanalysischart />
+          <Memberinterestanalysischart courseInterest = {courseInterest} chartData = {chartData}  />
          
 
         </div>

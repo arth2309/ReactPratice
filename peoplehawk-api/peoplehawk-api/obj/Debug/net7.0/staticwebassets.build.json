@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "0YMqEn0eUndiGvqvdZ0NQrVl1Xtg/5YfzDftl0nbcIU=",
+  "Source": "peoplehawk-api",
+  "BasePath": "_content/peoplehawk-api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
