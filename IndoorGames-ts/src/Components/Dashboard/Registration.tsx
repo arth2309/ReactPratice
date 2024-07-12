@@ -32,11 +32,11 @@ const Registration = (props: any) => {
     const { values } = useFormikContext<RegistrationDetails>();
 
     useEffect(() => {
-      if (values.checked.length !== values.number) {
+      if (values.check.length !== values.number) {
         toast(`it should contains exactly ${values.number} games`);
       }
       // eslint-disable-next-line
-    }, [values.checked.length !== values.number]);
+    }, [values.check.length !== values.number]);
 
     return null;
   };
@@ -44,13 +44,13 @@ const Registration = (props: any) => {
   const { onGetData, cid, setId } = props;
 
   const intialvalues: RegistrationDetails = {
-    id: cid,
+    id: 0,
     name: "",
     email: "",
     interested: "",
     number: 0,
-    checked: [],
-    type: "Singles",
+    check: [],
+    tableTennisType: "Singles",
   };
 
   const ctx = useContext<Count>(CountContext);
@@ -68,7 +68,7 @@ const Registration = (props: any) => {
       .min(0, "number should be positive")
       .max(4, "number should not be greater than 4")
       .required("please enter number"),
-    checked: Yup.array().when("number", (value: any, schema) => {
+     check: Yup.array().when("number", (value: any, schema) => {
       return schema.length(value[0], `it should contains exactly ${value[0]}`);
     }),
   });
@@ -90,8 +90,8 @@ const Registration = (props: any) => {
 
     ctx.count = ctx.count + 1;
 
-    values.type = values.checked.includes("Table Tennis")
-      ? values.type
+    values.tableTennisType = values.check.includes("Table Tennis")
+      ? values.tableTennisType
       : "not Participated";
 
     dispatch(itemActions.addItem(values));
@@ -189,14 +189,14 @@ const Registration = (props: any) => {
                   <Field as={FormGroup}>
                     <FormControlLabel
                       control={<Checkbox />}
-                      name="checked"
+                      name="check"
                       disabled={!(values.interested === "yes")}
                       value="chess"
                       label="chess"
                     />
                     <FormControlLabel
                       control={<Checkbox />}
-                      name="checked"
+                      name="check"
                       disabled={!(values.interested === "yes")}
                       value="carrom"
                       label="carrom"
@@ -207,14 +207,14 @@ const Registration = (props: any) => {
                   <Field as={FormGroup}>
                     <FormControlLabel
                       control={<Checkbox />}
-                      name="checked"
+                      name="check"
                       disabled={!(values.interested === "yes")}
                       value="ludo"
                       label="ludo"
                     />
                     <FormControlLabel
                       control={<Checkbox />}
-                      name="checked"
+                      name="check"
                       disabled={!(values.interested === "yes")}
                       value="Table Tennis"
                       label="Table Tennis"
@@ -223,9 +223,9 @@ const Registration = (props: any) => {
                     <FormLabel component="legend" style={{marginTop : 7}}>Singles</FormLabel>
                     <Field
                       as={Switch}
-                      name = 'type'
+                      name = 'tableTennisType'
                       value = 'Doubles'
-                      disabled={!values.checked.includes("Table Tennis")}
+                      disabled={!values.check.includes("Table Tennis")}
                     
                     />
                     <FormLabel component="legend" style={{marginTop : 7}}>Doubles</FormLabel>
@@ -242,7 +242,7 @@ const Registration = (props: any) => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={values.checked.length !== values.number}
+                  disabled={values.check.length !== values.number}
                 >
                   Submit
                 </Button>

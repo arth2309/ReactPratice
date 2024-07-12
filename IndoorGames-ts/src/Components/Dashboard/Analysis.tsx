@@ -42,8 +42,8 @@ const Analysis = () => {
 
     // Count each game type from checked items
     items.forEach(obj => {
-        if (Array.isArray(obj.checked)) {
-            obj.checked.forEach(game => {
+        if (Array.isArray(obj.check)) {
+            obj.check.forEach(game => {
                 // Increment the count for the corresponding game type
                 if (gameCounts.hasOwnProperty(game)) {
                     gameCounts[game]++;

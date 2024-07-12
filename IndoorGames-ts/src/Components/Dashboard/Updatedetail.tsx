@@ -49,8 +49,8 @@ const  Updatedetail = () => {
     email: "",
     interested: "",
     number: 0,
-    checked: [],
-    type: "Singles",
+    check: [],
+    tableTennisType: "Singles",
   };
 
   return (
@@ -184,7 +184,7 @@ const  Updatedetail = () => {
                       as={Switch}
                       name = 'type'
                       value = 'Doubles'
-                      disabled={!values.checked.includes("Table Tennis")}
+                      disabled={!values.check.includes("Table Tennis")}
                     
                     />
                     <FormLabel component="legend" style={{marginTop : 7}}>Doubles</FormLabel>
@@ -201,7 +201,7 @@ const  Updatedetail = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={values.checked.length !== values.number}
+                  disabled={values.check.length !== values.number}
                 >
                   Submit
                 </Button>

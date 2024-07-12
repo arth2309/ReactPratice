@@ -8,13 +8,25 @@ import { Count, RegistrationDetails } from "../../Type";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { itemActions, countActions } from "../../store";
-
+import { useEffect } from "react";
 import Analysis from "./Analysis";
+import { getParticipantsDetails } from "../../API/apiClient";
 
 const Participationdetails = (props: { list: RegistrationDetails[] }) => {
   const ctx = useContext<Count>(CountContext);
 
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+         fetchdata();
+  },[])
+
+  const fetchdata = async() => {
+        const result = await getParticipantsDetails<RegistrationDetails[]>('');
+        console.log(result);
+        dispatch(itemActions.getitems(result)); 
+  }
 
   const items = useSelector((state: RootState) => state.item.items);
 
@@ -43,12 +55,12 @@ const Participationdetails = (props: { list: RegistrationDetails[] }) => {
       width: 110,
     },
     {
-      field: "checked",
+      field: "check",
       headerName: "Games",
       width: 230,
     },
     {
-      field: "type",
+      field: "tableTennisType",
       headerName: "Table Tennis Type",
       width: 200,
     },

@@ -9,8 +9,8 @@ export type RegistrationDetails = {
     email : string,
     interested : string,
     number : number,
-    checked : string[]
-    type : string
+    check : string[]
+    tableTennisType : string
 
 }
 
