@@ -10,7 +10,7 @@ export type RegistrationDetails = {
     interested : string,
     number : number,
     check : string[]
-    tableTennisType : string
+    tableTennisType : String
 
 }
 

@@ -3,7 +3,7 @@ import Memberinterestanalysischart from "./Memberinterestanalysischart";
 import "./Memberinterestanalysis.css";
 import "../stylesheets/obviously-font.css";
 import { CourseInterestData } from "../../IdealCourseInterests";
-import { CourseInterest } from "../../type";
+
 
 
 

@@ -26,7 +26,7 @@ const Collapsible: React.FC<IProps> = ({ open = false, children, title }) => {
           <button type="button" className="btn">
             
             <Dropdown  height='12px' style={{rotate : isOpen ? '180deg' : '0deg' }} />
-            {/* <img src={require('../../assests/img/arrow-dropdown.svg')}  /> */}
+           
             
           </button>
         </div>

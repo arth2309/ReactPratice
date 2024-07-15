@@ -19,7 +19,7 @@ import { CourseInterest as Course } from "../../type";
 const Testinterestanalysis = (props : any) => {
   
 
-  const {courseInterest} = props 
+  const {courseInterest, chartData} = props 
 
   const [analysisData, setAnalysisData] = useState<CourseInterest>(
     CourseInterestData[0]
@@ -35,22 +35,18 @@ const Testinterestanalysis = (props : any) => {
     }
   };
 
-  const object = {
-    A: 84,
-    C: 81.92,
-    E: 80.67,
-    I: 82.5,
-    R: 82.35,
-    S: 82.69,
-    career_code: "ASI",
-    created_at: "2024-02-22 11:28:23",
-    id: 10,
-  };
+  const selecteditems = ['a','c','e','i','r','s']
 
+     const data1 = selecteditems.map((item) => chartData[item]).sort((a,b) => b - a ).slice(0,3);
+
+     console.log(data1);
+  
+
+  
   const array = CourseInterestData.sort(
     (a, b) =>
-      object.career_code.indexOf(a.name.charAt(0).toUpperCase()) -
-      object.career_code.indexOf(b.name.charAt(0).toUpperCase())
+      chartData.career_code.indexOf(a.name.charAt(0).toUpperCase()) -
+      chartData.career_code.indexOf(b.name.charAt(0).toUpperCase())
   ).slice(3, 6);
 
   return (
@@ -121,7 +117,7 @@ const Testinterestanalysis = (props : any) => {
                 alt="enterprise"
                 className="chart-slice"
                 style={{
-                  opacity: array.some((item) => item.name === "ENTERPRISE")
+                  opacity: array.some((item) => item.name === "ENTERPRISING")
                     ? 1
                     : 0.5,
                 }}
@@ -140,15 +136,15 @@ const Testinterestanalysis = (props : any) => {
           {/* <div style={{ height: "135px" }}>
             <Testinterestanalysischart onCardHandler={cardHandler} />
           </div> */}
-          {array.map((item) => <div className="progress-wrapper">
+          {array.map((item,index) => <div className="progress-wrapper">
     <div className="progress-label" style={{color : item.color1 }}>{item.name}</div>
     <div className="progress-bar" onClick={() => cardHandler(item.name)}>
-        <div className="progress" style={{width: '80%', backgroundColor : item.color1}}>80%</div>
+        <div className="progress" style={{width: `${data1[index]}%`, backgroundColor : item.color1}}>{data1[index]}%</div>
     </div>
 </div> )}
           
           <div className="main-card">
-            <div style={{ backgroundColor: analysisData.color1 }}>
+            <div style={{ backgroundColor: analysisData.color1 }} className=" main-card-top">
               <div className="p">
                 <div className="d-flex justify-content-between" >
                   <div>
@@ -187,7 +183,7 @@ const Testinterestanalysis = (props : any) => {
                 </div>
               </div>
             </div>
-            <div style={{ backgroundColor: analysisData.color2 }}>
+            <div style={{ backgroundColor: analysisData.color2 }} className="main-card-bottom">
               <div className="p">
                 <strong>Courses to Consider(click to search)</strong>
                 <ul>

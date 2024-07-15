@@ -10,6 +10,7 @@ namespace peoplehawk_api
         {
             CreateMap<Chart,ChartDTO>().ReverseMap();
             CreateMap<CourseInterest,CourseInterestDTO>().ReverseMap();
+            CreateMap<ResumeFile,ResumeFileDTO>().ReverseMap();
         }
     }
 }

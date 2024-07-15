@@ -1,10 +1,9 @@
 import { Chart} from "chart.js/auto";
 import { CategoryScale } from "chart.js/auto";
 import { Bar} from "react-chartjs-2";
-import { CourseInterestData } from "../../IdealCourseInterests";
-import { CourseInterest } from "../../IdealCourseInterests"
+
 import "./Memberinterestanalysis.css";
-import { CourseInterest as Course,ChartData } from '../../type';
+import { CourseInterest as Course } from '../../type';
 Chart.register(CategoryScale);
 
 const Memberinterestanalysischart = (props : any) => {
@@ -29,23 +28,6 @@ const Memberinterestanalysischart = (props : any) => {
     responsive: true,
     maintainAspectRatio: false,
 
-    onClick: (event : any, elements : any) => {
-      if (elements.length > 0) {
-        const clickedIndex = elements[0].index;
-        // Call different functions based on clicked bar index
-        switch (clickedIndex) {
-          case 0:
-            console.log(elements);
-            break;
-          case 1:
-            console.log('hii 1');
-            break;
-          // Add more cases as needed
-          default:
-            break;
-        }
-      }
-    },
     
   indexAxis : 'y' as const,
 

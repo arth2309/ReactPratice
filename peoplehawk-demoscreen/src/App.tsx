@@ -7,6 +7,7 @@ import Testinterestanalysis from './components/interest-analysis/Testinterestana
 import { useEffect,useState } from 'react';
 import { getCourseInterest , getChartData } from './API/apiClient';
 import { CourseInterest,ChartData } from './type';
+import Resumeupload from './components/resumeupload/Resumeupload';
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
   const fetchData = async () => {
     try {
       const result = await getCourseInterest<CourseInterest[]>(``);
-      const result1 = await getChartData<ChartData>(`/${1}`);
+      const result1 = await getChartData<ChartData>(`/${3}`);
 
       result && setCourseInterest(result);
       result1 && setChartData(result1);
@@ -43,11 +44,14 @@ function App() {
   };
 
   return (
-    <div className='App' >
-     <Header />
-     <Banner />
-     <Memberinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
-     <Testinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
+    // <div className='App' >
+    //  <Header />
+    //  <Banner />
+    //  <Memberinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
+    //  <Testinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
+    // </div>
+    <div className='App'>
+      <Resumeupload />
     </div>
   );
 }

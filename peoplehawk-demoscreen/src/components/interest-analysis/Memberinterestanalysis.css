@@ -94,9 +94,19 @@
 
 .main-card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
-    background-color: #f1f1f1;
-    color: white;
+    background-color: currentColor;
+    color: #ffffff;
     border-radius: 5px;
+  }
+
+  .main-card-top
+  {
+    border-radius: 15px 15px 0 0;
+  }
+
+  .main-card-bottom
+  {
+    border-radius: 0 0 15px 15px;
   }
 
   .item-card
@@ -104,7 +114,6 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     background-color: white;
     color: black;
-    border-radius: 5px;
     margin-top: 10px;
     width: fit-content;
     padding: 10px;
@@ -168,17 +177,7 @@
     flex-wrap: wrap;
 }
 
-.react-chartjs-2 {
-    display: flex;
-    justify-content: center; /* Adjust as needed */
-    align-items: center; /* Adjust as needed */
-  }
-   
-  /* Adjust tick alignment as per your requirement */
-  .react-chartjs-2 .chartjs-chart y-axis {
-    justify-content: center !important;
-    align-items: center !important;
-  }
+
 
 
 
