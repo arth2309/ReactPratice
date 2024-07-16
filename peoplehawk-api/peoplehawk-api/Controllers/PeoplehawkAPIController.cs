@@ -12,13 +12,13 @@ namespace peoplehawk_api.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+       
 
-        public PeoplehawkAPIController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment)    
+        public PeoplehawkAPIController(ApplicationDbContext context, IMapper mapper)    
         {
             _context = context;
             _mapper = mapper;
-            _webHostEnvironment = webHostEnvironment;
+            
         }
 
         [HttpGet("{Id:int}",Name = "GetChartData")]
@@ -53,30 +53,48 @@ namespace peoplehawk_api.Controllers
             try
             {
                 string uploadsFolder = Path.Combine( "Files");
-        
                 string filePath = Path.Combine(uploadsFolder, file.FileName);
-
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                ResumeFile fileEntity = new ResumeFile
+                ResumeFile resumeFile = new ResumeFile
                 {
                     FileName = file.FileName,
-                    FilePath = Path.Combine("/Files", file.FileName), // Store relative path
+                    FilePath = Path.Combine("/Files", file.FileName),
                     UploadDate = DateTime.Now
                 };
 
-                _context.ResumeFiles.Add(fileEntity);
+                _context.ResumeFiles.Add(resumeFile);
                 await _context.SaveChangesAsync();
 
-                return fileEntity;
+                return resumeFile;
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
+        }
+
+        [HttpGet("Files/{Id:int}")]
+        public async  Task<IActionResult> GetFile(int Id)
+        {
+            if(Id == 0)
+            {
+                return BadRequest();
+            }
+
+            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.Id == Id);
+           
+            if (resumeFile == null)
+            {
+                return NotFound();
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/pdf", resumeFile.FileName); 
         }
     }
 }

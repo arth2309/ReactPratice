@@ -22,3 +22,7 @@ export interface CourseInterest{
   career_code: string
 
   }
+
+  export interface FileUploadData {
+    file: File;
+  }

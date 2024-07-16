@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { CourseInterest,ChartData } from "../type";
+import { CourseInterest,ChartData,FileUploadData } from "../type";
 
 const BASE_URL: string =
   process.env.REACT_APP_BASE_URL || "https://localhost:7055/api/PeoplehawkAPI";
@@ -21,7 +21,7 @@ const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInt
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    
     return [];
   }
 };
@@ -33,12 +33,45 @@ const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => 
   
       return response.data;
     } catch (error) {
-      console.error("Error fetching data:", error);
+     
       return { id : 1, a : 1, s : 1, c : 1, i : 1, r : 1,e : 1, career_code : 'asi'};
     }
   };
+
+  const uploadFile = async (data: FileUploadData): Promise<any> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', data.file);
+  
+      const response = await apiClient.post('/Files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      return response;  // Return the entire Axios response object
+    } catch (error) {
+      throw new Error(`Error uploading file`);
+    }
+  };
+
+  const fetchFile = async (fileId: number): Promise<string | null> => {
+    try {
+      const response = await apiClient.get(`/Files/${fileId}`, {
+        responseType: 'blob', 
+      });
+
+      const url = URL.createObjectURL(response.data);
+  
+      return url
+    } catch (error) {
+      
+      return null;
+    }
+  };
+  
   
 
 
 
-export { apiClient, getCourseInterest,getChartData};
+export { apiClient, getCourseInterest,getChartData,uploadFile,fetchFile};
