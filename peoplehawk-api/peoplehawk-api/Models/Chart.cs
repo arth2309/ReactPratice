@@ -2,7 +2,7 @@
 {
     public class Chart
     {
-        public  int Id { get; set; }
+        public int Id { get; set; }
 
         public int A { get; set; }
 

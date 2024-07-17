@@ -63,6 +63,7 @@ namespace peoplehawk_api.Controllers
                 {
                     FileName = file.FileName,
                     FilePath = Path.Combine("/Files", file.FileName),
+                    UserId = 1,
                     UploadDate = DateTime.Now
                 };
 
@@ -77,15 +78,15 @@ namespace peoplehawk_api.Controllers
             }
         }
 
-        [HttpGet("Files/{Id:int}")]
-        public async  Task<IActionResult> GetFile(int Id)
+        [HttpGet("Files/{UserId:int}")]
+        public async  Task<IActionResult> GetFile(int UserId)
         {
-            if(Id == 0)
+            if(UserId == 0)
             {
                 return BadRequest();
             }
 
-            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.Id == Id);
+            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
            
             if (resumeFile == null)
             {
@@ -96,5 +97,72 @@ namespace peoplehawk_api.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             return File(fileBytes, "application/pdf", resumeFile.FileName); 
         }
+
+        [HttpDelete("Files/{UserId:int}")]
+        public async Task<IActionResult> DeleteFile(int UserId)
+        {
+            if(UserId == 0)
+            {
+                return BadRequest();
+            }
+
+            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
+
+            if(resumeFile == null) 
+            {
+                return NotFound();
+            }
+
+            _context.ResumeFiles.Remove(resumeFile);
+            await _context.SaveChangesAsync();
+            return Ok(resumeFile);
+
+        }
+
+        [HttpPut("Files/{UserId:int}")]
+
+        public async Task<ActionResult<ResumeFile>> UpdateFile(IFormFile file,int UserId)
+        {
+            if (file == null || file.Length == 0 || UserId == 0)
+            {
+                return BadRequest("File is null or empty");
+            }
+
+            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a =>a.UserId == UserId);    
+
+            if(resumeFile == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                string uploadsFolder = Path.Combine("Files");
+                string filePath = Path.Combine(uploadsFolder, file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                resumeFile.UploadDate = DateTime.Now;
+                resumeFile.FileName = file.FileName;
+                resumeFile.FilePath= Path.Combine("/Files", file.FileName);
+               
+                
+
+                _context.ResumeFiles.Update(resumeFile);
+                await _context.SaveChangesAsync();
+
+                return resumeFile;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
+
+ 
+
+
 }

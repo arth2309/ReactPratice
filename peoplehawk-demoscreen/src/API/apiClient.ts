@@ -15,7 +15,7 @@ const apiClient: AxiosInstance = axios.create({
 
 
 // eslint-disable-next-line
-const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInterest[]> => {
+export const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInterest[]> => {
   try {
     const response = await apiClient.get<CourseInterest[]>(url, config);
 
@@ -27,7 +27,7 @@ const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInt
 };
 
 // eslint-disable-next-line
-const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => {
+export const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => {
     try {
       const response = await apiClient.get<ChartData>(url, config);
   
@@ -38,7 +38,7 @@ const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => 
     }
   };
 
-  const uploadFile = async (data: FileUploadData): Promise<any> => {
+ export const uploadFile = async (data: FileUploadData): Promise<any> => {
     try {
       const formData = new FormData();
       formData.append('file', data.file);
@@ -55,7 +55,7 @@ const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => 
     }
   };
 
-  const fetchFile = async (fileId: number): Promise<string | null> => {
+ export const fetchFile = async (fileId: number): Promise<string | null> => {
     try {
       const response = await apiClient.get(`/Files/${fileId}`, {
         responseType: 'blob', 
@@ -69,9 +69,41 @@ const getChartData = async <T>(url: string, config = {}): Promise<ChartData> => 
       return null;
     }
   };
+
+ export const deleteFile = async(fileId : number): Promise<any> => {
+    try{
+      const response = await apiClient.delete(`/Files/${fileId}`);
+      return response.data;
+    }
+
+    catch(error) {
+      
+      throw new Error(`Error fetching file`);
+    }
+  }
+
+  export const updateFile = async(fileId : number,data: FileUploadData): Promise<string | null> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', data.file);
+  
+       await apiClient.put(`/Files/${fileId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+        const url = URL.createObjectURL(data.file);
+      return url; 
+    } catch (error) {
+      throw new Error(`Error updating file`);
+    }
+  };
+  
+
+
   
   
 
 
 
-export { apiClient, getCourseInterest,getChartData,uploadFile,fetchFile};
+

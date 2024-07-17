@@ -1,0 +1,22 @@
+Query-1:
+select p.PlaceName, COUNT(c.ColourID) , AVG(s.Score) 
+from scoretable as s
+join Placetable as p ON s.PlaceID = p.PlaceID
+group by p.PlaceName;
+
+Query-2:
+select avg(ColourID),PlaceId from scoretable 
+where PlaceId = 8  
+group by PlaceId 
+Having avg(ColourID) > 500
+
+Query-3:
+select Avg(Score) from scoretable 
+where ColourID = 4 and Place_ID = 3; 
+
+Query-4:
+
+select c.ColourName, Avg(s.Place)  
+from colourtable as c
+join scoretable as s ON c.colourId = s.colourId
+group by c.ColourName;

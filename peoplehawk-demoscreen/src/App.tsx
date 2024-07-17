@@ -1,13 +1,8 @@
 import React from 'react';
-import './App.css';
-// import Header from './components/analysis/header/Header';
-// import Banner from './components/analysis/Banner/Banner';
-// import Memberinterestanalysis from './components/interest-analysis/Memberinterestanalysis';
-// import Testinterestanalysis from './components/interest-analysis/Testinterestanalysis';
 import { useEffect,useState } from 'react';
 import { getCourseInterest , getChartData } from './API/apiClient';
 import { CourseInterest,ChartData } from './type';
-import Resumeupload from './components/resumeupload/Resumeupload';
+import Routes from './components/Routes';
 
 function App() {
 
@@ -44,15 +39,11 @@ function App() {
   };
 
   return (
-    // <div className='App' >
-    //  <Header />
-    //  <Banner />
-    //  <Memberinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
-    //  <Testinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
-    // </div>
-    <div className='App'>
-      <Resumeupload />
-    </div>
+   
+     
+     <Routes courseInterest = {courseInterest} chartData = {chartData} />
+
+    
   );
 }
 
