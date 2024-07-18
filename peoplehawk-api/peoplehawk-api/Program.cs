@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using peoplehawk_api;
+using PeoplehawkRepositories;
+using PeoplehawkRepositories.Implementation;
+using PeoplehawkRepositories.Interface;
+using PeoplehawkServices;
+using PeoplehawkServices.Implementation;
+using PeoplehawkServices.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +18,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ICourseInterestRepository , CourseInterestRepository>();
+builder.Services.AddScoped<IChartRepository , ChartRepository>();
+builder.Services.AddTransient(typeof(IGenericService<,>), typeof(GenericService<,>));
+builder.Services.AddTransient<ICourseInterestService, CourseInterestService>();
+builder.Services.AddTransient<IChartService, ChartService>();
+
 
 var app = builder.Build();
 

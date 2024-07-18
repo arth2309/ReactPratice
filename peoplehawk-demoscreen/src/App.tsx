@@ -28,7 +28,7 @@ function App() {
   const fetchData = async () => {
     try {
       const result = await getCourseInterest<CourseInterest[]>(``);
-      const result1 = await getChartData<ChartData>(`/${3}`);
+      const result1 = await getChartData<ChartData>(`/${2}`);
 
       result && setCourseInterest(result);
       result1 && setChartData(result1);

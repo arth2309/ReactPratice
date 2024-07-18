@@ -1,0 +1,14 @@
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\bin\Debug\net7.0\PeoplehawkRepositories.deps.json
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\bin\Debug\net7.0\PeoplehawkRepositories.dll
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\bin\Debug\net7.0\PeoplehawkRepositories.pdb
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.csproj.AssemblyReference.cache
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.GeneratedMSBuildEditorConfig.editorconfig
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.AssemblyInfoInputs.cache
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.AssemblyInfo.cs
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.csproj.CoreCompileInputs.cache
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.dll
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\refint\PeoplehawkRepositories.dll
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.pdb
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\ref\PeoplehawkRepositories.dll
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\bin\Debug\net7.0\PeoplehawkRepositories.runtimeconfig.json
+D:\ReactProject\peoplehawk-api\PeoplehawkRepositories\obj\Debug\net7.0\PeoplehawkRepositories.genruntimeconfig.cache

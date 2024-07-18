@@ -43,3 +43,7 @@ D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\Npgsql.EntityFram
 D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\System.CodeDom.dll
 D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\AutoMapper.dll
 D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\PeoplehawkRepositories.dll
+D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\PeoplehawkServices.dll
+D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\PeoplehawkServices.pdb
+D:\ReactProject\peoplehawk-api\peoplehawk-api\bin\Debug\net7.0\PeoplehawkRepositories.pdb

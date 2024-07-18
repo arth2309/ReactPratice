@@ -543,6 +543,34 @@
         "build": {
           "buildTransitive/net6.0/System.Text.Json.targets": {}
         }
+      },
+      "PeoplehawkRepositories/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18"
+        },
+        "compile": {
+          "bin/placeholder/PeoplehawkRepositories.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PeoplehawkRepositories.dll": {}
+        }
+      },
+      "PeoplehawkServices/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "AutoMapper": "12.0.1",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
+          "PeoplehawkRepositories": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/PeoplehawkServices.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PeoplehawkServices.dll": {}
+        }
       }
     }
   },
@@ -1600,6 +1628,16 @@
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "PeoplehawkRepositories/1.0.0": {
+      "type": "project",
+      "path": "../PeoplehawkRepositories/PeoplehawkRepositories.csproj",
+      "msbuildProject": "../PeoplehawkRepositories/PeoplehawkRepositories.csproj"
+    },
+    "PeoplehawkServices/1.0.0": {
+      "type": "project",
+      "path": "../PeoplehawkServices/PeoplehawkServices.csproj",
+      "msbuildProject": "../PeoplehawkServices/PeoplehawkServices.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1609,6 +1647,7 @@
       "Microsoft.AspNetCore.OpenApi >= 7.0.5",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.20",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18",
+      "PeoplehawkServices >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.4.0"
     ]
   },
@@ -1639,7 +1678,11 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\ReactProject\\peoplehawk-api\\PeoplehawkServices\\PeoplehawkServices.csproj": {
+              "projectPath": "D:\\ReactProject\\peoplehawk-api\\PeoplehawkServices\\PeoplehawkServices.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

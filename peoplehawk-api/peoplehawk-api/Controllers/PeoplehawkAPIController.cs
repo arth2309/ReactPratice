@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using peoplehawk_api.Dto;
-using peoplehawk_api.Models;
+using PeoplehawkServices.Dto;
+using PeoplehawkServices.Interface;
+using System.Runtime.CompilerServices;
 
 namespace peoplehawk_api.Controllers
 {
@@ -10,156 +10,136 @@ namespace peoplehawk_api.Controllers
     [ApiController]
     public class PeoplehawkAPIController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-       
+        private readonly ICourseInterestService _courseInterestService;
+        private readonly IChartService _chartService;
 
-        public PeoplehawkAPIController(ApplicationDbContext context, IMapper mapper)    
+        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService)    
         {
-            _context = context;
-            _mapper = mapper;
-            
+           _courseInterestService = courseInterestService;
+            _chartService = chartService;
         }
 
-        [HttpGet("{Id:int}",Name = "GetChartData")]
-        public async  Task<ActionResult<ChartDTO>> GetChartData(int Id)
+        [HttpGet("{Id:int}")]
+        public async Task<ActionResult<ChartDTO>> Chart(int Id)
         {
-            if(Id == 0) 
-            {
-                return BadRequest();
-            }
-
-            Chart chart = await _context.Charts.FirstOrDefaultAsync(u => u.Id == Id);
-            return chart != null ? Ok(_mapper.Map<ChartDTO>(chart)): NotFound();
-
-
+            return await _chartService.GetByIdAsync(Id);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CourseInterestDTO>> GetCourseInterestsData()
+        public async  Task<List<CourseInterestDTO>> CourseInterests()
         {
-           List<CourseInterest> courseInterest = await _context.CourseInterests.OrderByDescending(u => u.Id).ToListAsync();
-           return _mapper.Map<List<CourseInterestDTO>>(courseInterest);
+            return await _courseInterestService.GetAllAsync();
         }
 
-        [HttpPost("Files")]
-        public async Task<ActionResult<ResumeFile>> UploadFile(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("File is null or empty");
-            }
+        //[HttpPost("Files")]
+        //public async Task<ActionResult<ResumeFile>> UploadFile(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("File is null or empty");
+        //    }
 
-            try
-            {
-                string uploadsFolder = Path.Combine( "Files");
-                string filePath = Path.Combine(uploadsFolder, file.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
 
-                ResumeFile resumeFile = new ResumeFile
-                {
-                    FileName = file.FileName,
-                    FilePath = Path.Combine("/Files", file.FileName),
-                    UserId = 1,
-                    UploadDate = DateTime.Now
-                };
+        //        string uploadsFolder = Path.Combine( "Files");
+        //        string filePath = Path.Combine(uploadsFolder, file.FileName);
+        //        using (var stream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
 
-                _context.ResumeFiles.Add(resumeFile);
-                await _context.SaveChangesAsync();
+        //        ResumeFile resumeFile = new ResumeFile
+        //        {
+        //            FileName = file.FileName,
+        //            FilePath = Path.Combine("/Files", file.FileName),
+        //            UserId = 1,
+        //            UploadDate = DateTime.Now
+        //        };
 
-                return resumeFile;
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }
-        }
+        //        _context.ResumeFiles.Add(resumeFile);
+        //        await _context.SaveChangesAsync();
 
-        [HttpGet("Files/{UserId:int}")]
-        public async  Task<IActionResult> GetFile(int UserId)
-        {
-            if(UserId == 0)
-            {
-                return BadRequest();
-            }
+        //        return resumeFile;
 
-            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
-           
-            if (resumeFile == null)
-            {
-                return NotFound();
-            }
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, "application/pdf", resumeFile.FileName); 
-        }
+        //}
 
-        [HttpDelete("Files/{UserId:int}")]
-        public async Task<IActionResult> DeleteFile(int UserId)
-        {
-            if(UserId == 0)
-            {
-                return BadRequest();
-            }
+        //[HttpGet("Files/{UserId:int}")]
+        //public async  Task<IActionResult> GetFile(int UserId)
+        //{
+        //    if(UserId == 0)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
+        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
 
-            if(resumeFile == null) 
-            {
-                return NotFound();
-            }
+        //    if (resumeFile == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.ResumeFiles.Remove(resumeFile);
-            await _context.SaveChangesAsync();
-            return Ok(resumeFile);
+        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
+        //    var fileBytes = System.IO.File.ReadAllBytes(filePath);
+        //    return File(fileBytes, "application/pdf", resumeFile.FileName); 
+        //}
 
-        }
+        //[HttpDelete("Files/{UserId:int}")]
+        //public async Task<IActionResult> DeleteFile(int UserId)
+        //{
+        //    if(UserId == 0)
+        //    {
+        //        return BadRequest();
+        //    }
 
-        [HttpPut("Files/{UserId:int}")]
+        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
 
-        public async Task<ActionResult<ResumeFile>> UpdateFile(IFormFile file,int UserId)
-        {
-            if (file == null || file.Length == 0 || UserId == 0)
-            {
-                return BadRequest("File is null or empty");
-            }
+        //    if(resumeFile == null) 
+        //    {
+        //        return NotFound();
+        //    }
 
-            ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a =>a.UserId == UserId);    
+        //    _context.ResumeFiles.Remove(resumeFile);
+        //    await _context.SaveChangesAsync();
+        //    return Ok(resumeFile);
 
-            if(resumeFile == null)
-            {
-                return NotFound();
-            }
+        //}
 
-            try
-            {
-                string uploadsFolder = Path.Combine("Files");
-                string filePath = Path.Combine(uploadsFolder, file.FileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
+        //[HttpPut("Files/{UserId:int}")]
 
-                resumeFile.UploadDate = DateTime.Now;
-                resumeFile.FileName = file.FileName;
-                resumeFile.FilePath= Path.Combine("/Files", file.FileName);
-               
-                
+        //public async Task<ActionResult<ResumeFile>> UpdateFile(IFormFile file,int UserId)
+        //{
+        //    if (file == null || file.Length == 0 || UserId == 0)
+        //    {
+        //        return BadRequest("File is null or empty");
+        //    }
 
-                _context.ResumeFiles.Update(resumeFile);
-                await _context.SaveChangesAsync();
+        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a =>a.UserId == UserId);    
 
-                return resumeFile;
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }
-        }
+        //    if(resumeFile == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //string uploadsFolder = Path.Combine("Files");
+        //        string filePath = Path.Combine(uploadsFolder, file.FileName);
+        //        using (var stream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
+
+        //        resumeFile.UploadDate = DateTime.Now;
+        //        resumeFile.FileName = file.FileName;
+        //        resumeFile.FilePath= Path.Combine("/Files", file.FileName);
+
+
+
+        //        _context.ResumeFiles.Update(resumeFile);
+        //        await _context.SaveChangesAsync();
+
+        //        return resumeFile;
+
+
+        //}
     }
 
  

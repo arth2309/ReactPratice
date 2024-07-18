@@ -23,4 +23,8 @@
     <Folder Include="Files\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PeoplehawkServices\PeoplehawkServices.csproj" />
+  </ItemGroup>
+
 </Project>
