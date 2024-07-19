@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
-using System.Runtime.CompilerServices;
 
 namespace peoplehawk_api.Controllers
 {
@@ -12,16 +11,19 @@ namespace peoplehawk_api.Controllers
     {
         private readonly ICourseInterestService _courseInterestService;
         private readonly IChartService _chartService;
+        private readonly IResumeFileService _resumeFileService;
 
-        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService)    
+        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService)    
         {
            _courseInterestService = courseInterestService;
-            _chartService = chartService;
+           _chartService = chartService;
+           _resumeFileService = resumeFileService;
         }
 
         [HttpGet("{Id:int}")]
         public async Task<ActionResult<ChartDTO>> Chart(int Id)
         {
+            
             return await _chartService.GetByIdAsync(Id);
         }
 
@@ -31,118 +33,38 @@ namespace peoplehawk_api.Controllers
             return await _courseInterestService.GetAllAsync();
         }
 
-        //[HttpPost("Files")]
-        //public async Task<ActionResult<ResumeFile>> UploadFile(IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //    {
-        //        return BadRequest("File is null or empty");
-        //    }
+        [HttpPost("Files")]
+        public async Task<ResumeFileDTO> UploadFile(IFormFile file)
+        {
+            return await _resumeFileService.UploadFile(file);
+        }
 
+        [HttpGet("Files/{UserId:int}")]
+        public async Task<IActionResult> GetFile(int UserId)
+        {
+            try
+            {
+                var result = await _resumeFileService.GetFile(UserId);
+                return File(result.Item1, "application/pdf", result.Item2);
+            }
 
-        //        string uploadsFolder = Path.Combine( "Files");
-        //        string filePath = Path.Combine(uploadsFolder, file.FileName);
-        //        using (var stream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await file.CopyToAsync(stream);
-        //        }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("User Does not Exist");
+            }
+          
+        }
 
-        //        ResumeFile resumeFile = new ResumeFile
-        //        {
-        //            FileName = file.FileName,
-        //            FilePath = Path.Combine("/Files", file.FileName),
-        //            UserId = 1,
-        //            UploadDate = DateTime.Now
-        //        };
+        [HttpDelete("Files/{UserId:int}")]
+        public async Task<ResumeFileDTO> DeleteFile(int UserId)
+        { 
+           return await _resumeFileService.DeleteAsync(a=>a.UserId == UserId); 
+        }
 
-        //        _context.ResumeFiles.Add(resumeFile);
-        //        await _context.SaveChangesAsync();
-
-        //        return resumeFile;
-
-
-        //}
-
-        //[HttpGet("Files/{UserId:int}")]
-        //public async  Task<IActionResult> GetFile(int UserId)
-        //{
-        //    if(UserId == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
-
-        //    if (resumeFile == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
-        //    var fileBytes = System.IO.File.ReadAllBytes(filePath);
-        //    return File(fileBytes, "application/pdf", resumeFile.FileName); 
-        //}
-
-        //[HttpDelete("Files/{UserId:int}")]
-        //public async Task<IActionResult> DeleteFile(int UserId)
-        //{
-        //    if(UserId == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a => a.UserId == UserId);
-
-        //    if(resumeFile == null) 
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.ResumeFiles.Remove(resumeFile);
-        //    await _context.SaveChangesAsync();
-        //    return Ok(resumeFile);
-
-        //}
-
-        //[HttpPut("Files/{UserId:int}")]
-
-        //public async Task<ActionResult<ResumeFile>> UpdateFile(IFormFile file,int UserId)
-        //{
-        //    if (file == null || file.Length == 0 || UserId == 0)
-        //    {
-        //        return BadRequest("File is null or empty");
-        //    }
-
-        //    ResumeFile resumeFile = await _context.ResumeFiles.FirstOrDefaultAsync(a =>a.UserId == UserId);    
-
-        //    if(resumeFile == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //string uploadsFolder = Path.Combine("Files");
-        //        string filePath = Path.Combine(uploadsFolder, file.FileName);
-        //        using (var stream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await file.CopyToAsync(stream);
-        //        }
-
-        //        resumeFile.UploadDate = DateTime.Now;
-        //        resumeFile.FileName = file.FileName;
-        //        resumeFile.FilePath= Path.Combine("/Files", file.FileName);
-
-
-
-        //        _context.ResumeFiles.Update(resumeFile);
-        //        await _context.SaveChangesAsync();
-
-        //        return resumeFile;
-
-
-        //}
+        [HttpPut("Files/{UserId:int}")]
+        public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
+        { 
+            return  await _resumeFileService.UpdateFile(file, UserId); 
+        }
     }
-
- 
-
-
 }

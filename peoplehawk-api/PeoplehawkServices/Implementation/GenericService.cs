@@ -4,6 +4,7 @@ using PeoplehawkServices.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,8 +30,26 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<TDto> GetByIdAsync(int Id)
         {
+            if (Id <=  0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
             var model = await _genericRepository.GetByIdAsync(Id);
+
+            if(model == null)
+
+            {
+                throw new KeyNotFoundException();
+            }
+
             return _mapper.Map<TDto>(model);
+        }
+
+        public async Task<TDto> DeleteAsync(Expression<Func<TModel, bool>> predicate)
+        {
+            var model = await _genericRepository.DeleteAsync(predicate);
+            return _mapper.Map<TDto>(model);    
         }
     }
 }

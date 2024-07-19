@@ -14,9 +14,9 @@ namespace PeoplehawkRepositories.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [ForeignKey("Chart")]
+        [ForeignKey("User")]
         public int UserId { get; set; }
-        public Chart Chart { get; set; }
+        public User User { get; set; }
         public string? FileName { get; set; }
         public string? FilePath { get; set; }
 

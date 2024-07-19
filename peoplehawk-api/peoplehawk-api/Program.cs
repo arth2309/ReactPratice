@@ -21,9 +21,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICourseInterestRepository , CourseInterestRepository>();
 builder.Services.AddScoped<IChartRepository , ChartRepository>();
+builder.Services.AddScoped<IResumeFileRepository, ResumeFileRepository>();
 builder.Services.AddTransient(typeof(IGenericService<,>), typeof(GenericService<,>));
 builder.Services.AddTransient<ICourseInterestService, CourseInterestService>();
 builder.Services.AddTransient<IChartService, ChartService>();
+builder.Services.AddTransient<IResumeFileService, ResumeFileService>();
 
 
 var app = builder.Build();

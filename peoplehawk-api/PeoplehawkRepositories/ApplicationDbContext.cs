@@ -15,5 +15,7 @@ namespace PeoplehawkRepositories
         public DbSet<CourseInterest> CourseInterests { get; set; }
 
         public DbSet<ResumeFile> ResumeFiles { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }

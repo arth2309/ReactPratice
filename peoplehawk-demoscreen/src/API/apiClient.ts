@@ -1,5 +1,6 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { CourseInterest,ChartData,FileUploadData } from "../type";
+import { error } from "console";
 
 const BASE_URL: string =
   process.env.REACT_APP_BASE_URL || "https://localhost:7055/api/PeoplehawkAPI";
@@ -11,6 +12,7 @@ const apiClient: AxiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 
 
 
@@ -50,22 +52,27 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
       });
   
       return response;  // Return the entire Axios response object
-    } catch (error) {
+    } catch (error ) {
       throw new Error(`Error uploading file`);
     }
   };
 
- export const fetchFile = async (fileId: number): Promise<string | null> => {
+ export const fetchFile = async (fileId: number): Promise<string | null > => {
     try {
       const response = await apiClient.get(`/Files/${fileId}`, {
-        responseType: 'blob', 
+      responseType :  'text' || 'blob'
+      
       });
 
       const url = URL.createObjectURL(response.data);
   
       return url
-    } catch (error) {
+    } 
+    catch (error : any) {
       
+      if (error.response && error.response.status === 404) {
+        throw new Error(error.response.data); // Throw an error with the message received from the backend
+      }
       return null;
     }
   };
