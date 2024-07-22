@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { CourseInterest,ChartData,FileUploadData } from "../type";
-import { error } from "console";
+
 
 const BASE_URL: string =
   process.env.REACT_APP_BASE_URL || "https://localhost:7055/api/PeoplehawkAPI";
@@ -13,15 +13,38 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
+apiClient.interceptors.request.use(
+  (config) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+  },
+  (error:AxiosError) => {
+      return Promise.reject(error);
+  }
+)
 
-
+export const Login = async(email : string,password : string): Promise<string | null> => {
+  try {
+    const response = await apiClient.post(`/Auth/${email}&&${password}`);
+    return response.data;
+  }
+  catch(error)
+  {
+    return null;
+  }
+}
 
 // eslint-disable-next-line
 export const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInterest[]> => {
   try {
     const response = await apiClient.get<CourseInterest[]>(url, config);
-
     return response.data;
+   
+
+    
   } catch (error) {
     
     return [];
@@ -51,7 +74,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
         },
       });
   
-      return response;  // Return the entire Axios response object
+      return response;  
     } catch (error ) {
       throw new Error(`Error uploading file`);
     }

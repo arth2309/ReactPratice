@@ -51,6 +51,12 @@ namespace PeoplehawkServices.Implementation
             var model = await _genericRepository.DeleteAsync(predicate);
             return _mapper.Map<TDto>(model);    
         }
+
+        public async Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate)
+        {
+            var model = await _genericRepository.FirstOrDefaultAsync(predicate);
+            return _mapper.Map<TDto>(model);
+        }
     }
 }
  

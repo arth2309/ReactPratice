@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
@@ -12,22 +14,44 @@ namespace peoplehawk_api.Controllers
         private readonly ICourseInterestService _courseInterestService;
         private readonly IChartService _chartService;
         private readonly IResumeFileService _resumeFileService;
+        private readonly IUserService _userService;
+       
 
-        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService)    
+        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService,IUserService userService)    
         {
            _courseInterestService = courseInterestService;
            _chartService = chartService;
            _resumeFileService = resumeFileService;
+            _userService = userService;
+           
         }
 
-        [HttpGet("{Id:int}")]
-        public async Task<ActionResult<ChartDTO>> Chart(int Id)
+        [HttpPost("Auth/{email}&&{password}")]
+        public async Task<ActionResult<string>> Login(string email,string password)
+        {
+            try
+            {
+                
+                return await _userService.Login(email, password);
+               
+            }
+
+            catch (KeyNotFoundException) 
+            {
+                return NotFound("Email or Password is Invalid");
+            }
+        }
+
+        [HttpGet("{UserId:int}")]
+       
+        public async Task<ActionResult<ChartDTO>> Chart(int UserId)
         {
             
-            return await _chartService.GetByIdAsync(Id);
+            return await _chartService.FirstorDefaultAsync(a=>a.UserId == UserId);
         }
 
         [HttpGet]
+        [Authorize]
         public async  Task<List<CourseInterestDTO>> CourseInterests()
         {
             return await _courseInterestService.GetAllAsync();
@@ -40,6 +64,7 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("Files/{UserId:int}")]
+     
         public async Task<IActionResult> GetFile(int UserId)
         {
             try
@@ -52,7 +77,7 @@ namespace peoplehawk_api.Controllers
             {
                 return NotFound("User Does not Exist");
             }
-          
+
         }
 
         [HttpDelete("Files/{UserId:int}")]
@@ -66,5 +91,6 @@ namespace peoplehawk_api.Controllers
         { 
             return  await _resumeFileService.UpdateFile(file, UserId); 
         }
+
     }
 }

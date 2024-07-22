@@ -15,5 +15,7 @@ namespace PeoplehawkServices.Interface
 
         Task<TDto> DeleteAsync(Expression<Func<TModel, bool>> predicate);
 
+        Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate);
+
     }
 }

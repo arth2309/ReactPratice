@@ -1,8 +1,10 @@
 import React from 'react';
-import { useEffect,useState } from 'react';
-import { getCourseInterest , getChartData } from './API/apiClient';
+import { useEffect,useState,useContext} from 'react';
+import { getCourseInterest , getChartData ,Login } from './API/apiClient';
 import { CourseInterest,ChartData } from './type';
 import Routes from './components/Routes';
+
+
 
 function App() {
 
@@ -20,6 +22,8 @@ function App() {
   }]);
   const [chartData,setChartData] = useState<ChartData>({ id : 1, a : 1, s : 1, c : 1, i : 1, r : 1,e : 1, career_code : 'asi'});
 
+  
+
   useEffect(() => {
     fetchData();
 
@@ -27,8 +31,12 @@ function App() {
 
   const fetchData = async () => {
     try {
+      
       const result = await getCourseInterest<CourseInterest[]>(``);
-      const result1 = await getChartData<ChartData>(`/${2}`);
+      const result1 = await getChartData<ChartData>(`/${1}`);
+
+
+
 
       result && setCourseInterest(result);
       result1 && setChartData(result1);

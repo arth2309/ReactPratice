@@ -16,6 +16,7 @@ namespace PeoplehawkServices
             CreateMap<Chart, ChartDTO>().ReverseMap();
             CreateMap<CourseInterest, CourseInterestDTO>().ReverseMap();
             CreateMap<ResumeFile, ResumeFileDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();    
         }
     }
 }
