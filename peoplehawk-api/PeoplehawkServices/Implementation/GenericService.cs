@@ -49,12 +49,22 @@ namespace PeoplehawkServices.Implementation
         public async Task<TDto> DeleteAsync(Expression<Func<TModel, bool>> predicate)
         {
             var model = await _genericRepository.DeleteAsync(predicate);
+            if (model == null)
+
+            {
+                throw new KeyNotFoundException();
+            }
             return _mapper.Map<TDto>(model);    
         }
 
         public async Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate)
         {
             var model = await _genericRepository.FirstOrDefaultAsync(predicate);
+            if (model == null)
+
+            {
+                throw new KeyNotFoundException();
+            }
             return _mapper.Map<TDto>(model);
         }
     }

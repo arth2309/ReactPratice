@@ -1,5 +1,6 @@
 import React, {useState,createContext, ReactNode} from 'react';
 
+
 type AuthProvider = {
     children : ReactNode
 }
@@ -19,6 +20,8 @@ const AuthContext  = createContext<Auth>({
 });
 
 export const AuthContextProvider = (props : AuthProvider) => {
+
+
      const intialToken = localStorage.getItem("token");
       const[token,setToken] = useState<string | null>(intialToken)
       const userIsLoggedIn = !!token
@@ -32,6 +35,8 @@ export const AuthContextProvider = (props : AuthProvider) => {
       const logoutHandler = () => {
         setToken(null);
         localStorage.clear();
+        
+        
       }
 
       const contextValue : Auth = {

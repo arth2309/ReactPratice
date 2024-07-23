@@ -38,7 +38,7 @@ namespace peoplehawk_api.Controllers
 
             catch (KeyNotFoundException) 
             {
-                return NotFound("Email or Password is Invalid");
+                return NotFound("Invalid Login credintials");
             }
         }
 

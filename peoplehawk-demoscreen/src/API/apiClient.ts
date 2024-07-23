@@ -1,5 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { CourseInterest,ChartData,FileUploadData } from "../type";
+import {toast} from 'react-toastify'
+
+
 
 
 const BASE_URL: string =
@@ -26,14 +29,28 @@ apiClient.interceptors.request.use(
   }
 )
 
-export const Login = async(email : string,password : string): Promise<string | null> => {
+export const Login = async(email : string,password : string): Promise<any> => {
   try {
     const response = await apiClient.post(`/Auth/${email}&&${password}`);
+    toast.success("successfully");
     return response.data;
+    
   }
-  catch(error)
+  catch(error : any)
   {
-    return null;
+    console.log(error.response.data);
+    toast.error(error.response.data,{
+      position: "bottom-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      
+  })
+
   }
 }
 
