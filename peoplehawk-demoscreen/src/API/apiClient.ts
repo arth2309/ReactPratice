@@ -54,7 +54,7 @@ export const Login = async(email : string,password : string): Promise<any> => {
   }
 }
 
-// eslint-disable-next-line
+
 export const getCourseInterest = async <T>(url: string, config = {}): Promise<CourseInterest[]> => {
   try {
     const response = await apiClient.get<CourseInterest[]>(url, config);
@@ -100,7 +100,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
  export const fetchFile = async (fileId: number): Promise<string | null > => {
     try {
       const response = await apiClient.get(`/Files/${fileId}`, {
-      responseType :  'text' || 'blob'
+      responseType :   'blob'
       
       });
 
@@ -110,9 +110,6 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
     } 
     catch (error : any) {
       
-      if (error.response && error.response.status === 404) {
-        throw new Error(error.response.data); // Throw an error with the message received from the backend
-      }
       return null;
     }
   };

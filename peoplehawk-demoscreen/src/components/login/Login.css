@@ -140,6 +140,62 @@
   .form-control:focus
   {
     border: 1px solid #008892;
+    border-color: red;
+  }
+
+  .verification-list
+  {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+  }
+  
+  .verification-item
+  {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+  }
+  
+  .verification-step
+  {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      justify-content: center;
+      border-radius: 9px;
+      color: white;
+      background-color:  #D6D7D7;
+      align-items: center;
+      font-size: 16px;
+  }
+
+  
+  .verification-button 
+  {
+      color : #D6D7D7;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      width: fit-content;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+
+  .member-type{
+    border: 1px solid #979797;
+    border-radius: 20px;
+    width: 100%;
+    padding: 10px 20px 10px 20px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .member-type:focus
+  {
+    border: 1px solid #F96332;
   }
 
   @media only screen and (max-width : 1298px) {
@@ -152,6 +208,8 @@
     {
         width: 60%;
     }
+
+
     
   }
 

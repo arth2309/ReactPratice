@@ -26,6 +26,7 @@ const Resumeupload = () => {
     const result = await fetchFile(1);
     if (result) {
       setSelectedFileUrl(result);
+      console.log(result);
     }
   };
 

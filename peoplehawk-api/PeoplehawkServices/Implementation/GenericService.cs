@@ -61,7 +61,6 @@ namespace PeoplehawkServices.Implementation
         {
             var model = await _genericRepository.FirstOrDefaultAsync(predicate);
             if (model == null)
-
             {
                 throw new KeyNotFoundException();
             }

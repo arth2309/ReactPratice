@@ -2,7 +2,7 @@ import { Formik, Field,Form,ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { Login as api } from "../../API/apiClient";
 import AuthContext from "../../store/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import '../stylesheets/obviously-font.css';
 import './Login.css';
@@ -20,10 +20,6 @@ export const Login = () => {
     const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
 
-
-    // useEffect(() => {
-    //     toast.success("Successfully Logged out");
-    //   },[])
 
     interface LoginFormValues {
         email: string;
@@ -61,7 +57,7 @@ return (
     <div className="sub">
     <div className="obviously text-darkblue">Welcome  to</div>
     <div className="obviously text-orange">PeopleHawk</div>
-    <div style={{marginTop : '40px', marginBottom : '30px'}}>Don't have account?<span className="text-orange">Register Here</span></div>
+    <div style={{marginTop : '40px', marginBottom : '30px'}}>Don't have account?<span className="text-orange" onClick={() => {navigate("/Register")}}>Register Here</span></div>
     </div>
     
     <Formik
