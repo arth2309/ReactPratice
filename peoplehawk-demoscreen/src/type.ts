@@ -26,3 +26,9 @@ export interface CourseInterest{
   export interface FileUploadData {
     file: File;
   }
+
+  export interface CountryList
+  {
+    id : number,
+    countryName : string
+  }

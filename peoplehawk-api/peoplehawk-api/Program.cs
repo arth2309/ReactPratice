@@ -48,11 +48,13 @@ builder.Services.AddScoped<ICourseInterestRepository , CourseInterestRepository>
 builder.Services.AddScoped<IChartRepository , ChartRepository>();
 builder.Services.AddScoped<IResumeFileRepository, ResumeFileRepository>();
 builder.Services.AddScoped<IUserRepository , UserRepository>();
+builder.Services.AddScoped<ICountryRepository , CountryRepository>();
 builder.Services.AddTransient(typeof(IGenericService<,>), typeof(GenericService<,>));
 builder.Services.AddTransient<ICourseInterestService, CourseInterestService>();
 builder.Services.AddTransient<IChartService, ChartService>();
 builder.Services.AddTransient<IResumeFileService, ResumeFileService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICountryService, CountryService>();
 
 builder.Services.AddSwaggerGen(
     options =>

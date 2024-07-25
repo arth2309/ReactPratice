@@ -17,5 +17,15 @@ namespace PeoplehawkRepositories.Models
         public string? Password { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set;}
+        public string? MemberType { get; set; }
+        [ForeignKey("Country")]
+        public int CountryId { get; set; }
+        public string? OrganisationCode { get; set; }
+        [ForeignKey("Role")]
+        public int? RoleId { get; set; }
+
+        public Country Country { get; set; }
+        public Role Role { get; set; }
+
     }
 }

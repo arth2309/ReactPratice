@@ -17,5 +17,7 @@ namespace PeoplehawkServices.Interface
 
         Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate);
 
+        Task<TDto> AddAsync(TDto tDto);
+
     }
 }

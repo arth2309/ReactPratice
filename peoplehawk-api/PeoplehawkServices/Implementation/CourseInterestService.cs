@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace PeoplehawkServices.Implementation
 {
     public class CourseInterestService : GenericService<CourseInterest,CourseInterestDTO>, ICourseInterestService

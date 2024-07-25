@@ -17,5 +17,9 @@ namespace PeoplehawkRepositories
         public DbSet<ResumeFile> ResumeFiles { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Country> Countrys { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
     }
 }

@@ -46,6 +46,8 @@ namespace PeoplehawkRepositories.Implementation
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
+       
+
         public async Task<T> DeleteAsync(Expression<Func<T, bool>> predicate)
         {
             T t = await _dbSet.FirstOrDefaultAsync(predicate);

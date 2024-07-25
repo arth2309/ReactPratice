@@ -15,15 +15,32 @@ namespace peoplehawk_api.Controllers
         private readonly IChartService _chartService;
         private readonly IResumeFileService _resumeFileService;
         private readonly IUserService _userService;
-       
+        private readonly ICountryService _countryService;
+      
 
-        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService,IUserService userService)    
+        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService,IUserService userService,ICountryService countryService)    
         {
            _courseInterestService = courseInterestService;
            _chartService = chartService;
            _resumeFileService = resumeFileService;
             _userService = userService;
+            _countryService = countryService;
+            
            
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDTO>> Register([FromBody]UserDTO userDTO)
+        {
+            try
+            {
+                return await _userService.AddAsync(userDTO);
+            }
+
+            catch (Exception ex) 
+            {
+                return NotFound(ex);            
+            }
         }
 
         [HttpPost("Auth/{email}&&{password}")]
@@ -31,6 +48,7 @@ namespace peoplehawk_api.Controllers
         {
             try
             {
+                
                 
                 return await _userService.Login(email, password);
                
@@ -47,7 +65,15 @@ namespace peoplehawk_api.Controllers
         public async Task<ActionResult<ChartDTO>> Chart(int UserId)
         {
             
+            
             return await _chartService.FirstorDefaultAsync(a=>a.UserId == UserId);
+        }
+
+        [HttpGet("Users")]
+
+        public async Task<List<UserDTO>> Users()
+        {
+            return await _userService.GetAllAsync();
         }
 
         [HttpGet]
@@ -90,6 +116,12 @@ namespace peoplehawk_api.Controllers
         public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
         { 
             return  await _resumeFileService.UpdateFile(file, UserId); 
+        }
+
+        [HttpGet("Country")]
+        public async Task<List<CountryDTO>> Country()
+        {
+            return await _countryService.GetAllAsync();
         }
 
     }

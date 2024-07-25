@@ -1,7 +1,18 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { CourseInterest,ChartData,FileUploadData } from "../type";
+import { CourseInterest,ChartData,FileUploadData,CountryList as list } from "../type";
 import {toast} from 'react-toastify'
 
+interface RegisterFormvalues {
+  id : number,
+ email : string,
+ password : string,
+ firstName : string,
+ lastName : string,
+ memberType : string,
+ countryId : number,
+ organisationCode : string | null,
+ roleId : number
+}
 
 
 
@@ -29,10 +40,44 @@ apiClient.interceptors.request.use(
   }
 )
 
+export const Register = async(data : RegisterFormvalues) : Promise<RegisterFormvalues | null> => {
+
+  try {
+    const response = await apiClient.post<RegisterFormvalues>('/Register',data);
+    return response.data
+  }
+  catch(error)
+  {
+    return null;
+  }
+}
+
+export const userList = async() : Promise<RegisterFormvalues[] | null> => {
+
+  try {
+    const response = await apiClient.get<RegisterFormvalues[]>('/Users');
+    return response.data
+  }
+  catch(error)
+  {
+    return null;
+  }
+}
+
+export const CountryList = async() : Promise<list[] | null> => {
+  try {
+    const response = await apiClient.get('/Country');
+    return response.data;
+  }
+  catch(error)
+  {
+    return null;
+  }
+}
+
 export const Login = async(email : string,password : string): Promise<any> => {
   try {
     const response = await apiClient.post(`/Auth/${email}&&${password}`);
-    toast.success("successfully");
     return response.data;
     
   }

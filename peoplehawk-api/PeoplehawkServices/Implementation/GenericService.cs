@@ -66,6 +66,13 @@ namespace PeoplehawkServices.Implementation
             }
             return _mapper.Map<TDto>(model);
         }
+
+        public async Task<TDto> AddAsync(TDto tDto)
+        {
+            TModel model = _mapper.Map<TModel>(tDto);
+            await _genericRepository.AddAsync(model);
+            return tDto;
+        }
     }
 }
  
