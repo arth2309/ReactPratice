@@ -1,20 +1,31 @@
 import React, {useState,createContext, ReactNode} from 'react';
-
+import { getToken,storeToken,removeToken } from '../utils/manageAccessToken';
+import {decodeJwt} from 'jose';
 
 type AuthProvider = {
     children : ReactNode
 }
 
+interface Candidate {
+  Id : number,
+  FirstName : string,
+  LastName : string
+}
+
 interface Auth {
     token : string | null,
     isLoggedIn: boolean,
+    userData: Candidate | null,
     login : (token:string) => void,
     logout : () => void
 }
 
+
+
 const AuthContext  = createContext<Auth>({
     token : '',
     isLoggedIn: false,
+    userData : null,
     login: (token) => {},
     logout: () => {}
 });
@@ -22,25 +33,29 @@ const AuthContext  = createContext<Auth>({
 export const AuthContextProvider = (props : AuthProvider) => {
 
 
-     const intialToken = localStorage.getItem("token");
+     const intialToken = getToken();
       const[token,setToken] = useState<string | null>(intialToken)
+      const[userData,setUserData] = useState<Candidate | null>(intialToken ? JSON.parse(decodeJwt<any>(intialToken).UserData) : null)
       const userIsLoggedIn = !!token
 
       const loginHandler = (token : string) => {
         setToken(token);
-        token  && console.log(token,userIsLoggedIn);
-        token && localStorage.setItem("token",token);
+        const claims = decodeJwt<any>(token);
+        setUserData(JSON.parse(claims.UserData));
+        token && storeToken(token);
       };
 
       const logoutHandler = () => {
         setToken(null);
-        localStorage.clear();
-        
+        setUserData(null);
+        removeToken();
+
         
       }
 
       const contextValue : Auth = {
         token : token,
+        userData : userData,
         isLoggedIn : userIsLoggedIn,
         login : loginHandler,
         logout : logoutHandler

@@ -11,7 +11,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using PeoplehawkServices.Common;
 using System.Threading.Tasks;
+
 
 namespace PeoplehawkServices.Implementation
 {
@@ -31,7 +34,7 @@ namespace PeoplehawkServices.Implementation
         public async Task<string> Login(string email,string password)
         {
 
-            User user = await _userRepository.FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
+            User user = await _userRepository.FirstOrDefaultAsync(a => a.Email == email && a.Password == HashHelper.HashedInput(password));
 
             if (user == null) 
             {
@@ -43,9 +46,10 @@ namespace PeoplehawkServices.Implementation
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity( new Claim[]
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,user.Id.ToString())
+                    new Claim(ClaimTypes.Name, Convert.ToString(user.Id)),
+                    new Claim("UserData",JsonSerializer.Serialize(user))
                 }),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = new(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
@@ -53,6 +57,13 @@ namespace PeoplehawkServices.Implementation
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<UserDTO> Register(UserDTO userDTO)
+        {
+            userDTO.Password = HashHelper.HashedInput(userDTO.Password);
+            await _userRepository.AddAsync(_mapper.Map<User>(userDTO));
+            return userDTO;
         }
 
     }

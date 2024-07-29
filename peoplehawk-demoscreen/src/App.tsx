@@ -1,8 +1,8 @@
 import React from "react";
 import { useEffect, useState, useContext } from "react";
 import { getCourseInterest, getChartData, Login } from "./API/apiClient";
-import { CourseInterest, ChartData } from "./type";
-import Routes from "./components/Routes";
+import { CourseInterest, ChartData } from "./interface/Interface";
+import Routes from "./routes/Routes";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {

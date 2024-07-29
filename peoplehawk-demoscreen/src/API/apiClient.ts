@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { CourseInterest,ChartData,FileUploadData,CountryList as list } from "../type";
-import {toast} from 'react-toastify'
+import { CourseInterest,ChartData,FileUploadData,CountryList as list,LoginFormValues } from "../interface/Interface";
+import {toast} from 'react-toastify';
+import { getToken } from "../utils/manageAccessToken"; 
+
 
 interface RegisterFormvalues {
   id : number,
@@ -29,7 +31,7 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       if (token) {
           config.headers.Authorization = `Bearer ${token}`;
       }
@@ -43,7 +45,7 @@ apiClient.interceptors.request.use(
 export const Register = async(data : RegisterFormvalues) : Promise<RegisterFormvalues | null> => {
 
   try {
-    const response = await apiClient.post<RegisterFormvalues>('/Register',data);
+    const response = await apiClient.post<RegisterFormvalues>('/register',data);
     return response.data
   }
   catch(error)
@@ -55,7 +57,7 @@ export const Register = async(data : RegisterFormvalues) : Promise<RegisterFormv
 export const userList = async() : Promise<RegisterFormvalues[] | null> => {
 
   try {
-    const response = await apiClient.get<RegisterFormvalues[]>('/Users');
+    const response = await apiClient.get<RegisterFormvalues[]>('/users');
     return response.data
   }
   catch(error)
@@ -66,7 +68,7 @@ export const userList = async() : Promise<RegisterFormvalues[] | null> => {
 
 export const CountryList = async() : Promise<list[] | null> => {
   try {
-    const response = await apiClient.get('/Country');
+    const response = await apiClient.get('/country');
     return response.data;
   }
   catch(error)
@@ -75,9 +77,9 @@ export const CountryList = async() : Promise<list[] | null> => {
   }
 }
 
-export const Login = async(email : string,password : string): Promise<any> => {
+export const Login = async(data : LoginFormValues): Promise<any> => {
   try {
-    const response = await apiClient.post(`/Auth/${email}&&${password}`);
+    const response = await apiClient.post(`/auth`,data);
     return response.data;
     
   }
@@ -130,7 +132,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
       const formData = new FormData();
       formData.append('file', data.file);
   
-      const response = await apiClient.post('/Files', formData, {
+      const response = await apiClient.post('/files', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -144,7 +146,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
 
  export const fetchFile = async (fileId: number): Promise<string | null > => {
     try {
-      const response = await apiClient.get(`/Files/${fileId}`, {
+      const response = await apiClient.get(`/files/${fileId}`, {
       responseType :   'blob'
       
       });
@@ -161,7 +163,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
 
  export const deleteFile = async(fileId : number): Promise<any> => {
     try{
-      const response = await apiClient.delete(`/Files/${fileId}`);
+      const response = await apiClient.delete(`/files/${fileId}`);
       return response.data;
     }
 
@@ -176,7 +178,7 @@ export const getChartData = async <T>(url: string, config = {}): Promise<ChartDa
       const formData = new FormData();
       formData.append('file', data.file);
   
-       await apiClient.put(`/Files/${fileId}`, formData, {
+       await apiClient.put(`/files/${fileId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

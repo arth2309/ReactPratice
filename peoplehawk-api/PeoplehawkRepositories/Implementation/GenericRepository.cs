@@ -29,16 +29,16 @@ namespace PeoplehawkRepositories.Implementation
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int Id)
+        public async Task<T> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(Id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public async Task<T> AddAsync(T t)
+        public async Task<T> AddAsync(T entity)
         {
-            await  _dbSet.AddAsync(t);
+            await  _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
-            return t;
+            return entity;
         }
 
         public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
@@ -50,20 +50,24 @@ namespace PeoplehawkRepositories.Implementation
 
         public async Task<T> DeleteAsync(Expression<Func<T, bool>> predicate)
         {
-            T t = await _dbSet.FirstOrDefaultAsync(predicate);
-             _dbSet.Remove(t);
+            T entity = await _dbSet.FirstOrDefaultAsync(predicate);
+             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
-            return t;
+            return entity;
         }
 
-        public async Task<T> UpdateAsync(T t)
+        public async Task<T> UpdateAsync(T entity)
         {
-            _dbSet.Attach(t);
-            _context.Entry(t).State = EntityState.Modified;
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return t;
+            return entity;
         }
 
+        public async Task<List<T>> GetByCriteria (Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
        
 
 

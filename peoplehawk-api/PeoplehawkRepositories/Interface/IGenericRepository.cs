@@ -11,15 +11,17 @@ namespace PeoplehawkRepositories.Interface
     {
         Task<List<T>> GetAllAsync();
 
-        Task<T> GetByIdAsync(int Id);
+        Task<T> GetByIdAsync(int id);
 
-        Task<T> AddAsync(T t);
+        Task<T> AddAsync(T entity);
 
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
         Task<T> DeleteAsync(Expression<Func<T, bool>> predicate);
 
-        Task<T> UpdateAsync(T t);
+        Task<T> UpdateAsync(T entity);
+
+        Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
 
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using peoplehawk_api;
 using PeoplehawkRepositories;
 using PeoplehawkRepositories.Implementation;
 using PeoplehawkRepositories.Interface;
@@ -97,6 +98,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandler>();
 
 app.UseAuthentication();
 

@@ -11,5 +11,6 @@ namespace PeoplehawkServices.Interface
     public interface IUserService : IGenericService<User,UserDTO>
     {
         Task<string> Login(string email, string password);
+        Task<UserDTO> Register(UserDTO userDTO);
     }
 }

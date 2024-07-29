@@ -19,5 +19,7 @@ namespace PeoplehawkServices.Interface
 
         Task<TDto> AddAsync(TDto tDto);
 
+        Task<List<TDto>> GetByCriteria(Expression<Func<TModel, bool>> predicate);
+
     }
 }

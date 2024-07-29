@@ -4,6 +4,7 @@ using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
+using PeoplehawkServices.Mapping;
 using System.IO;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace PeoplehawkServices.Implementation
             _mapper = mapper;
         }
 
+        
+
         public async Task<ResumeFileDTO> UploadFile(IFormFile file)
         {
             string uploadsFolder = Path.Combine("Files");
@@ -42,7 +45,7 @@ namespace PeoplehawkServices.Implementation
             };
 
             var Resume = await _resumeFileRepository.AddAsync(resumeFile);
-            return  _mapper.Map<ResumeFileDTO>(resumeFile);
+            return  resumeFile.ToDto();
             
         }
 
@@ -73,7 +76,7 @@ namespace PeoplehawkServices.Implementation
             resumeFile.FilePath = Path.Combine("/Files", file.FileName);
 
             var resume = await _resumeFileRepository.UpdateAsync(resumeFile);
-            return _mapper.Map<ResumeFileDTO>(resumeFile);
+            return resumeFile.ToDto();
           
         }
     }

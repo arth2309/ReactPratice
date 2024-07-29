@@ -73,6 +73,12 @@ namespace PeoplehawkServices.Implementation
             await _genericRepository.AddAsync(model);
             return tDto;
         }
+
+        public async Task<List<TDto>> GetByCriteria(Expression<Func<TModel, bool>> predicate)
+        {
+            List<TModel> models = await _genericRepository.GetByCriteria(predicate);
+            return _mapper.Map<List<TDto>>(models);
+        }
     }
 }
  

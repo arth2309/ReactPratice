@@ -7,6 +7,7 @@ using PeoplehawkServices.Interface;
 
 namespace peoplehawk_api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PeoplehawkAPIController : ControllerBase
@@ -29,12 +30,13 @@ namespace peoplehawk_api.Controllers
            
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register([FromBody]UserDTO userDTO)
         {
             try
             {
-                return await _userService.AddAsync(userDTO);
+                return await _userService.Register(userDTO);
             }
 
             catch (Exception ex) 
@@ -43,33 +45,25 @@ namespace peoplehawk_api.Controllers
             }
         }
 
-        [HttpPost("Auth/{email}&&{password}")]
-        public async Task<ActionResult<string>> Login(string email,string password)
+        [AllowAnonymous]
+        [HttpPost("auth")]
+        public async Task<ActionResult<string>> Login([FromBody]  LoginDetails loginDetails)
         {
-            try
-            {
-                
-                
-                return await _userService.Login(email, password);
-               
-            }
 
-            catch (KeyNotFoundException) 
-            {
-                return NotFound("Invalid Login credintials");
-            }
+                return await _userService.Login(loginDetails.email, loginDetails.password);
         }
 
         [HttpGet("{UserId:int}")]
        
         public async Task<ActionResult<ChartDTO>> Chart(int UserId)
         {
-            
-            
+
             return await _chartService.FirstorDefaultAsync(a=>a.UserId == UserId);
         }
 
-        [HttpGet("Users")]
+
+        [AllowAnonymous]
+        [HttpGet("users")]
 
         public async Task<List<UserDTO>> Users()
         {
@@ -77,48 +71,40 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+    
         public async  Task<List<CourseInterestDTO>> CourseInterests()
         {
             return await _courseInterestService.GetAllAsync();
         }
 
-        [HttpPost("Files")]
+        [HttpPost("files")]
         public async Task<ResumeFileDTO> UploadFile(IFormFile file)
         {
             return await _resumeFileService.UploadFile(file);
         }
 
-        [HttpGet("Files/{UserId:int}")]
+        [HttpGet("files/{UserId:int}")]
      
         public async Task<IActionResult> GetFile(int UserId)
         {
-            try
-            {
                 var result = await _resumeFileService.GetFile(UserId);
                 return File(result.Item1, "application/pdf", result.Item2);
-            }
-
-            catch (KeyNotFoundException)
-            {
-                return NotFound("User Does not Exist");
-            }
-
         }
 
-        [HttpDelete("Files/{UserId:int}")]
+        [HttpDelete("files/{UserId:int}")]
         public async Task<ResumeFileDTO> DeleteFile(int UserId)
         { 
            return await _resumeFileService.DeleteAsync(a=>a.UserId == UserId); 
         }
 
-        [HttpPut("Files/{UserId:int}")]
+        [HttpPut("files/{UserId:int}")]
         public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
         { 
             return  await _resumeFileService.UpdateFile(file, UserId); 
         }
 
-        [HttpGet("Country")]
+        [AllowAnonymous]
+        [HttpGet("country")]
         public async Task<List<CountryDTO>> Country()
         {
             return await _countryService.GetAllAsync();
