@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
+
 namespace peoplehawk_api
 {
     public class ExceptionHandler
@@ -32,7 +33,7 @@ namespace peoplehawk_api
           
             context.Response.StatusCode = (int)GetStatusCodeForException(exception);
             context.Response.ContentType = "application/json";
-
+            
           
             var response = new
             {

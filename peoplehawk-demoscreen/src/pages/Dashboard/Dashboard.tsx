@@ -62,7 +62,7 @@ const Heading = styled.div({
 
 const Card1 = styled.div({
       width : 'fit-content',
-      padding : '5px 10px 5px 10px',
+      padding : '10px 25px',
       borderRadius : '8px',
       display : 'flex',
       gap : '10px',
@@ -75,14 +75,16 @@ const Card1Item = styled.div<Card1ItemProps>( (props) => ({
       border : `1px solid ${props.bordercolor}`,
       borderRadius : '10px',
       display : 'flex',
-      padding : '4px 8px 4px 8px',
+      padding : '9px 24px',
       justifyContent : 'center',
-      cursor :'pointer'
+      cursor :'pointer',
+      fontSize : '12px',
+      color : '#394456'
 }))
 
 const Card2 = styled.div({
       display : 'flex',
-      gap : '10px',
+      gap : '30px',
      marginTop : '10px',
     
 })
@@ -91,12 +93,11 @@ const Card2Item = styled.div({
      display : 'flex',
      flexDirection : 'column',
      alignItems : 'center',
-     width : 'fit-content',
      backgroundColor : '#DBEFFA',
      padding : '5px 25px 5px 25px',
      gap : '5px',
      borderRadius : '8px',
-     boxShadow : '0px 2px 2px 0px'
+   
 })
 
 const Card2Sub = styled.div({
@@ -124,9 +125,8 @@ const Trophy = styled.div<TrophyProps>( (props) => ({
 
 const Card3 = styled.div({
   backgroundColor : '#DBEFFA',
-   boxShadow : '0px 2px 2px 0px',
    display : 'flex',
-   gap : '10px',
+   gap : '50px',
    marginTop : '20px',
    padding : '10px',
    borderRadius : '8px'
@@ -137,6 +137,10 @@ const Card3Item = styled.div({
    gap : '5px',
   flexDirection : 'column'
 }) 
+
+const Card3List = styled.div({
+   marginTop : '15px'
+})
 
 const Broker = styled.div({
   color : '#F96332',
@@ -270,26 +274,26 @@ const Dashboard = () => {
                 <LeftChildMainContainer>
                 <Card1>
                   <Card1Item bordercolor="#F96332">
-                    View My Profile
+                   <strong>View My Profile</strong> 
                   </Card1Item>
                   <Card1Item bordercolor="#F96332">
-                    What's included
+                    <strong>What's included</strong>
                   </Card1Item>
                 </Card1>
                 <Card2>
                   <Card2Item>
-                    <div > {authctx.userData?.FirstName} {authctx.userData?.LastName}</div>
+                    <h2 style={{color : '#394456', margin : '0px'}}> {authctx.userData?.FirstName} {authctx.userData?.LastName}</h2>
                     <img src={profile} alt = "profile" height={'75px'}/>
                   </Card2Item>
                   <Card2Sub>
                     <Card2Item>
-                         Progress
+                        <div style={{color : '#394456'}}><strong> Progress</strong></div>
                          <Progress>
                           51%
                           </Progress>
                     </Card2Item>
                     <Card2Item>
-                          Trophies
+                          <div style={{color : '#394456',fontSize : '12px'}}><strong>Trophies</strong></div>
                           <Trophy  cHeight="44px" cWidth="80%" >
                           <img src={trophy} alt = "trophy" />
                           </Trophy>
@@ -302,12 +306,14 @@ const Dashboard = () => {
                   <div>Your personality Type</div>
                   <Broker>Broker</Broker>
                   <div>
-                    <div>Your key strengths</div>
+                    <div style={{fontSize : '12px', letterSpacing : '1px'}}><i>Your key strengths:</i></div>
                     <div>Unflappable</div>
                     <div>Concrete</div>
                     <div>Team-builder</div>
+                    
+                    
                   </div>
-                  <div>Share your personality type</div>
+                  <div style={{marginTop : '20px'}}>Share your personality type</div>
                    <Card3Img>
                       <img src={facebook} alt="facebook" height='30px' />
                       <img src={twitter} alt = "twitter" height='30px' />

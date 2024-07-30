@@ -12,7 +12,7 @@ import { Container, LeftContainer, MainContainer,FormControl, FormSelect } from 
 import { Bottom,Subject,RightContainer } from "../../components/layout/authentication/authentication";
 import { Register as api , CountryList,userList as user} from "../../API/apiClient";
 import { CountryList as list } from "../../interface/Interface";
-import { decodeJwt} from "jose";
+
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -22,12 +22,7 @@ export const Register = () => {
             fetchCountryList()
   },[])
 
-  const token = localStorage.getItem('token') ;
-        if(token)
-        {
-           const claims = decodeJwt<any>(token);
-           console.log(claims.unique_name);
-        }
+  
 
   const fetchCountryList =  async() => {
 
@@ -162,6 +157,7 @@ export const Register = () => {
                         style={{ color: "black" }}
                         onClick={() => setStep(1)}
                       >
+                       
                         Basics <img src={arrow} alt="arrow" />
                       </div>
                     </div>
@@ -454,11 +450,14 @@ export const Register = () => {
                 </div>
                 <div className="form-group">
                   <label>Set a Password*</label>
+                 
                   <Field
                     type="password"
                     name="password"
                     as= {FormControl}
                   />
+              
+               
                   <ErrorMessage
                     name="password"
                     component="div"
@@ -467,11 +466,14 @@ export const Register = () => {
                 </div>
                 <div className="form-group">
                   <label>Confirm Password*</label>
+                  <div>
                   <Field
                     type="password"
                     name="cpassword"
                     as= {FormControl}
                   />
+                 
+                  </div>
                   <ErrorMessage
                     name="cpassword"
                     component="div"

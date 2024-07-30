@@ -6,6 +6,7 @@ import AuthContext from "../store/AuthContext";
 import { useContext } from "react";
 import { Register } from "../pages/Authentication/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import { ForgotPassword } from "../pages/Authentication/Forgotpassword";
 const Routes = (props : any) => {
 
     const {courseInterest, chartData} = props;
@@ -23,6 +24,7 @@ const Routes = (props : any) => {
            <Route path = "/Analysis" element = {authCtx.isLoggedIn ?<Useranalysis courseInterest = {courseInterest} chartData = {chartData} /> : <Navigate to="/login"/>}></Route>  
             <Route path="/Resume" element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to="/login"/>}></Route>
             <Route path = "/login" element = {<Login />}></Route>
+            <Route path = "/forgotpassword" element = {<ForgotPassword />}></Route>
             <Route path = "/register" element = {<Register />}></Route>
             <Route path = "*" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
 

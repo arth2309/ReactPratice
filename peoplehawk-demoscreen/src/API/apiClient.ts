@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { CourseInterest,ChartData,FileUploadData,CountryList as list,LoginFormValues } from "../interface/Interface";
+import { CourseInterest,ChartData,FileUploadData,CountryList as list,LoginFormValues, ForgotPasswordValues } from "../interface/Interface";
 import {toast} from 'react-toastify';
 import { getToken } from "../utils/manageAccessToken"; 
+import { date } from "yup";
 
 
 interface RegisterFormvalues {
@@ -99,6 +100,11 @@ export const Login = async(data : LoginFormValues): Promise<any> => {
   })
 
   }
+}
+
+export const ForgotPassword = async(data : ForgotPasswordValues) : Promise<any> => {
+    const response = apiClient.post<string>('/forgotpassword',data);
+    toast.success((await response).data)
 }
 
 

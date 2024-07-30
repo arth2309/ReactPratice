@@ -9,5 +9,6 @@ namespace PeoplehawkRepositories.Interface
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+       
     }
 }

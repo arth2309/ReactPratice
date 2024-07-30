@@ -37,3 +37,7 @@ export interface CourseInterest{
     email: string;
     password: string;
   }
+
+ export  interface ForgotPasswordValues {
+    email : string
+}

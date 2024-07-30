@@ -23,5 +23,16 @@ namespace PeoplehawkRepositories.Interface
 
         Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
 
+        Task<List<T>> GetPagedAsync(int pageNumber, int pageSize);
+
+        Task<List<T>> GetSortedAsync(Expression<Func<T, object>> orderBy, bool isDescending = false);
+
+        Task<IEnumerable<T>> GetFilteredAsync(
+         Expression<Func<T, bool>> filter = null,
+         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+         int? pageNumber = null,
+         int? pageSize = null);
+
+
     }
 }

@@ -70,6 +70,14 @@ namespace peoplehawk_api.Controllers
             return await _userService.GetAllAsync();
         }
 
+        [AllowAnonymous]
+        [HttpPost("forgotpassword")]
+
+        public  ActionResult<string> SendMail([FromBody] ForgotPasswordDetails forgotPasswordDetails)
+        {
+           return _userService.SendEmail(forgotPasswordDetails.email);
+        }
+
         [HttpGet]
     
         public async  Task<List<CourseInterestDTO>> CourseInterests()
@@ -110,5 +118,12 @@ namespace peoplehawk_api.Controllers
             return await _countryService.GetAllAsync();
         }
 
+        [AllowAnonymous]
+        [HttpGet("criteria")]
+
+        public async Task<List<UserDTO>> UsersList()
+        {
+            return await _userService.UsersList(a => a.CountryId == 1);
+        }
     }
 }

@@ -3,6 +3,8 @@ using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
+using System.Net.Mail;
+using System.Net;
 
 namespace PeoplehawkServices.Implementation
 {
@@ -16,5 +18,7 @@ namespace PeoplehawkServices.Implementation
             _chartRepository = chartRepository;
             _mapper = mapper;
         }
+        
+
     }
 }

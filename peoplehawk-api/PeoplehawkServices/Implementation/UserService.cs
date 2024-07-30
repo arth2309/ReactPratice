@@ -14,7 +14,9 @@ using System.Text;
 using System.Text.Json;
 using PeoplehawkServices.Common;
 using System.Threading.Tasks;
-
+using System.Net;
+using System.Net.Mail;
+using System.Linq.Expressions;
 
 namespace PeoplehawkServices.Implementation
 {
@@ -64,6 +66,39 @@ namespace PeoplehawkServices.Implementation
             userDTO.Password = HashHelper.HashedInput(userDTO.Password);
             await _userRepository.AddAsync(_mapper.Map<User>(userDTO));
             return userDTO;
+        }
+
+        public string SendEmail(string email)
+        {
+            try
+            {
+                MailMessage mm = new MailMessage("tatva.dotnet.arthgandhi@outlook.com", email);
+                mm.Subject = "Reset Password";
+                string url = "https://localhost:3000/home";
+                mm.Body = string.Format("Hi <p><a href=\"" + url + "\">Click here to resetpassword</a></p>");
+                mm.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.office365.com";
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(userName: "tatva.dotnet.arthgandhi@outlook.com", password: "Liony@2002");
+                smtp.Port = 587;
+                smtp.Send(mm);
+                return email;
+            }
+
+            catch (Exception ex) 
+            {
+                return ex.ToString();
+            }
+            
+        }
+
+        public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
+        {
+            List<User> users =  await _userRepository.GetByCriteria(predicate);
+     
+           return  _mapper.Map<List<UserDTO>>(users);
         }
 
     }
