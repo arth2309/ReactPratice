@@ -1,4 +1,4 @@
-import { Formik, Form } from "formik";
+import { Formik, Form ,ErrorMessage} from "formik";
 import * as Yup from "yup";
 import { Login as api } from "../../API/apiClient";
 import AuthContext from "../../store/AuthContext";
@@ -66,17 +66,27 @@ console.log(inputValue);
             }}
             validateOnBlur={false}
           >
-             {(props) => (
+             {({setFieldValue}) => (
                 <Form>
              
                 <div className="form-group">
-                <Input label="Email" type="email" name="email" required  />
+                <Input label="Email" type="email" name="email" required onChange={(e)=> setFieldValue('email', e.target.value)}  />
+                <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="error"
+                    />
                 </div>
-  
+                
                 <div className="form-group">
-                  <Input label="Password" name = "password" type="password" required />
+                  <Input label="Password" name = "password" type="password" required onChange={(e)=> setFieldValue('password', e.target.value)}  />
+                  <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error"
+                    />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit"><strong>Log In</strong></button>
               </Form>
               )}
             

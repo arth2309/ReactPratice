@@ -8,44 +8,67 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import arrow from "../../assests/img/next-step-arrow.png";
 import { toast } from "react-toastify";
-import { Container, LeftContainer, MainContainer,FormControl, FormSelect } from "./styled";
-import { Bottom,Subject,RightContainer } from "../../components/layout/authentication/authentication";
-import { Register as api , CountryList,userList as user} from "../../API/apiClient";
-import { CountryList as list } from "../../interface/Interface";
-
+import {
+  Container,
+  LeftContainer,
+  MainContainer,
+  FormControl,
+  FormSelect,
+} from "./styled";
+import {
+  Bottom,
+  Subject,
+  RightContainer,
+} from "../../components/layout/authentication/authentication";
+import {
+  Register as api,
+  CountryList,
+  userList as user,
+} from "../../API/apiClient";
+import { CountryList as list, OptionTypes } from "../../interface/Interface";
+import { MyComponent } from "../../components/layout/form/Select";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const[countryList,setCountryList] = useState<list[] | null>(null);
-  
+  const [countryList, setCountryList] = useState<list[] | null>(null);
+  const [options, setOptions] = useState<OptionTypes[] | null>(null);
   useEffect(() => {
-            fetchCountryList()
-  },[])
+    fetchCountryList();
+  }, []);
 
-  
+  const convertApiToOptions = (apiData: list[]): OptionTypes[] => {
+    return apiData.map((item) => ({
+      value: item.id,
+      label: item.countryName,
+    }));
+  };
 
-  const fetchCountryList =  async() => {
+  const fetchCountryList = async () => {
+    const response = await CountryList();
+    const users = await user();
+    response && setCountryList(response);
+    if (response) {
+      const transformedoptions = convertApiToOptions(response);
+      setOptions(transformedoptions);
+      console.log(transformedoptions);
+    }
 
-        const response = await CountryList();
-        const users =  await user();
-        response && setCountryList(response);
-        users && setUserList(users);
-
-  }
+    users && setUserList(users);
+  };
 
   interface RegisterFormvalues {
-      id : number,
-     email : string,
-     password : string,
-     firstName : string,
-     lastName : string,
-     memberType : string,
-     countryId : number,
-     organisationCode : string | null,
-     roleId : number
+    id: number;
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    memberType: string;
+    countryId: number;
+    organisationCode: string | null;
+    roleId: number;
   }
 
-  const[userList,setUserList] = useState<RegisterFormvalues[] | null>(null);
+  const [userList, setUserList] = useState<RegisterFormvalues[] | null>(null);
 
   interface Form1Values {
     firstname: string;
@@ -58,19 +81,23 @@ export const Register = () => {
     lastname: Yup.string().required("Last Name is required"),
     email: Yup.string()
       .email("Enter a valid email")
-      .test("email exists","Email already exist",(email) => {return userList? !userList.some((item) => item.email === email) : true})
+      .test("email exists", "Email already exist", (email) => {
+        return userList ? !userList.some((item) => item.email === email) : true;
+      })
       .required("Email is required"),
   });
 
   interface Form2Values {
     membertype: string;
-    countryId : number;
+    countryId: number;
     code: string | null;
   }
 
   const validationSchema2 = Yup.object({
     membertype: Yup.string().required("Please select a Member Type"),
-    countryId: Yup.number().moreThan(0,'Please select a Country').required("Please select a Country"),
+    countryId: Yup.number()
+      .moreThan(0, "Please select a Country")
+      .required("Please select a Country"),
   });
 
   interface Form3Values {
@@ -105,7 +132,17 @@ export const Register = () => {
     step2: { countryId: 0, code: null, membertype: "" },
     step3: { password: "", cpassword: "", termsAccepted: false },
   });
-  const[Registervalues,setRegisterValues] = useState<RegisterFormvalues>({id : 0,email : "", password : "", firstName : "",lastName : "", memberType : "",countryId : 1,organisationCode : null, roleId : 1})
+  const [Registervalues, setRegisterValues] = useState<RegisterFormvalues>({
+    id: 0,
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    memberType: "",
+    countryId: 1,
+    organisationCode: null,
+    roleId: 1,
+  });
   const [step, setStep] = useState<number>(1);
   const [isForm1Submitted, setIsForm1Submitted] = useState<boolean>(false);
   const [isForm2Submitted, setIsForm2Submitted] = useState<boolean>(false);
@@ -137,7 +174,12 @@ export const Register = () => {
               validateOnChange={false}
               onSubmit={(values) => {
                 setFormData((prevstate) => ({ ...prevstate, step1: values }));
-                setRegisterValues((prevState) => ({...prevState,email : values.email,firstName : values.firstname,lastName : values.lastname}))
+                setRegisterValues((prevState) => ({
+                  ...prevState,
+                  email: values.email,
+                  firstName: values.firstname,
+                  lastName: values.lastname,
+                }));
                 setIsForm1Submitted(true);
                 setStep((s) => s + 1);
               }}
@@ -157,7 +199,6 @@ export const Register = () => {
                         style={{ color: "black" }}
                         onClick={() => setStep(1)}
                       >
-                       
                         Basics <img src={arrow} alt="arrow" />
                       </div>
                     </div>
@@ -189,11 +230,7 @@ export const Register = () => {
                   </div>
                   <div className="form-group">
                     <label>First Name*</label>
-                    <Field
-                      type="text"
-                      name="firstname"
-                      as= {FormControl}
-                    />
+                    <Field type="text" name="firstname" as={FormControl} />
                     <ErrorMessage
                       name="firstname"
                       component="div"
@@ -203,11 +240,7 @@ export const Register = () => {
 
                   <div className="form-group">
                     <label>Last Name*</label>
-                    <Field
-                      type="text"
-                      name="lastname"
-                      as= {FormControl}
-                    />
+                    <Field type="text" name="lastname" as={FormControl} />
                     <ErrorMessage
                       name="lastname"
                       component="div"
@@ -217,7 +250,7 @@ export const Register = () => {
 
                   <div className="form-group">
                     <label>Email (UserName / Login)*</label>
-                    <Field type="text" name="email" as= {FormControl}/>
+                    <Field type="text" name="email" as={FormControl} />
                     <ErrorMessage
                       name="email"
                       component="div"
@@ -239,7 +272,12 @@ export const Register = () => {
               validateOnChange={false}
               onSubmit={(values) => {
                 setFormData((prevState) => ({ ...prevState, step2: values }));
-                setRegisterValues((prevState) => ({...prevState,memberType : values.membertype,countryId : values.countryId,organisationCode : values.code}))
+                setRegisterValues((prevState) => ({
+                  ...prevState,
+                  memberType: values.membertype,
+                  countryId: values.countryId,
+                  organisationCode: values.code,
+                }));
                 setIsForm2Submitted(true);
                 console.log(values);
                 setStep((c) => c + 1);
@@ -364,7 +402,7 @@ export const Register = () => {
                   </div>
                   <div className="form-group">
                     <label>Base Country*</label>
-                    <Field
+                    {/* <Field
                       name="countryId"
                       as= {FormSelect}
                     >
@@ -372,7 +410,23 @@ export const Register = () => {
                      {
                        countryList && countryList.map((item) => <option key={item.id} value= {item.id}>{item.countryName}</option>)
                      }
-                    </Field>
+                    </Field> */}
+
+                    {options && (
+                      <MyComponent
+                        options={options}
+                        name="countryId"
+                         
+                        onChange={(e, value) => {
+                          if (value === null) {
+                            setFieldValue("countryId", 0);
+                          } else {
+                            setFieldValue("countryId", value.value);
+                  
+                          }
+                        }}
+                      />
+                    )}
                     <ErrorMessage
                       name="countryId"
                       component="div"
@@ -381,7 +435,7 @@ export const Register = () => {
                   </div>
                   <div className="form-group">
                     <label>Organisation Code</label>
-                    <Field type="text" name="code" as= {FormControl} />
+                    <Field type="text" name="code" as={FormControl} />
                     <div>(only applicable if joining via an organisation)</div>
                   </div>
                   <button type="submit">Continue</button>
@@ -398,8 +452,11 @@ export const Register = () => {
               validateOnChange={false}
               onSubmit={async (values) => {
                 setFormData((prevState) => ({ ...prevState, step3: values }));
-                setRegisterValues((prevState) => ({...prevState,password : values.password}))
-                const val = {...Registervalues,password : values.password}
+                setRegisterValues((prevState) => ({
+                  ...prevState,
+                  password: values.password,
+                }));
+                const val = { ...Registervalues, password: values.password };
                 await navigate("/login");
                 const response = await api(val);
                 toast.success("Candidate Registered Successfully", {
@@ -450,14 +507,9 @@ export const Register = () => {
                 </div>
                 <div className="form-group">
                   <label>Set a Password*</label>
-                 
-                  <Field
-                    type="password"
-                    name="password"
-                    as= {FormControl}
-                  />
-              
-               
+
+                  <Field type="password" name="password" as={FormControl} />
+
                   <ErrorMessage
                     name="password"
                     component="div"
@@ -467,12 +519,7 @@ export const Register = () => {
                 <div className="form-group">
                   <label>Confirm Password*</label>
                   <div>
-                  <Field
-                    type="password"
-                    name="cpassword"
-                    as= {FormControl}
-                  />
-                 
+                    <Field type="password" name="cpassword" as={FormControl} />
                   </div>
                   <ErrorMessage
                     name="cpassword"

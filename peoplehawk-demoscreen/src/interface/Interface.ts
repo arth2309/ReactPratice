@@ -41,3 +41,8 @@ export interface CourseInterest{
  export  interface ForgotPasswordValues {
     email : string
 }
+
+export interface OptionTypes {
+  label : string,
+  value : string | number
+}

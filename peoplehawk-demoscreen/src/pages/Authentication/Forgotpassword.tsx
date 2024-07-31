@@ -13,6 +13,7 @@ import { Bottom,Subject,RightContainer } from "../../components/layout/authentic
 import { Container, FormControl, LeftContainer, MainContainer } from "./styled";
 import { ForgotPasswordValues } from "../../interface/Interface";
 import Input from "../../components/layout/form/Input";
+import { MyComponent } from "../../components/layout/form/Select";
 
 
 
@@ -45,9 +46,10 @@ export const ForgotPassword = () => {
         <MainContainer>
           <Subject
             title1="Whoops"
-            title2="Forgot Your Password"
-            text1="Don't have account?"
-            text2="Remember it?"
+            title2="Forgot Your"
+            title3="Password"
+            text1="Remember it?"
+            text2="Login"
             navigateTo="/login"
           />
           <Formik
@@ -58,18 +60,23 @@ export const ForgotPassword = () => {
             }}
             validateOnBlur={false}
           >
-             {(props) => (
+             {({values}) => (
                 <Form>
              
                 <div className="form-group">
-                <Input label="Email" type="email" name="email" required  />
+                <Input label="Email" type="email" name="email" required onChange={(e) => {values.email = e.target.value;}}  />
+                </div>
+                <div className="form-group">
+                <MyComponent name="country"  />
                 </div>
                  <div>We'll send you instructions by email</div>
                 <button type="submit">Send</button>
               </Form>
-              )}
+ )}
+          
             
           </Formik>
+          
           <Bottom />
           </MainContainer>
       </LeftContainer>

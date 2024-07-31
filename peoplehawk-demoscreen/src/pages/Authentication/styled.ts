@@ -1,4 +1,4 @@
-import { styled ,css} from "styled-components";
+import { styled } from "styled-components";
 
 export const Container = styled.div({
     display: 'flex',
@@ -28,7 +28,7 @@ export const MainContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    width: 80%;
+    width: 70%;
 `
 
 export const FormControl = styled.input`
@@ -39,6 +39,11 @@ export const FormControl = styled.input`
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #F9F9F9;
+
+     &:focus {
+       border: 2px solid #72DBD0;
+       outline: none;
+      }
 `
 
 export const FormSelect = styled.select`
@@ -49,5 +54,10 @@ export const FormSelect = styled.select`
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #F9F9F9;
+
+    &:focus {
+       border: 2px solid #72DBD0;
+       outline: none;
+      }
 `
 

@@ -86,8 +86,8 @@ export const Login = async(data : LoginFormValues): Promise<any> => {
   }
   catch(error : any)
   {
-    console.log(error.response.data);
-    toast.error(error.response.data,{
+    
+    toast.error("Invalid credantials",{
       position: "bottom-center",
       autoClose: 2000,
       hideProgressBar: false,

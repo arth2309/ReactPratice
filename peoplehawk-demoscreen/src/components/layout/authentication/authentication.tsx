@@ -7,6 +7,7 @@ import { styled } from 'styled-components';
 interface SubjectProps {
     title1 : string,
     title2 : string,
+    title3? : string,
     text1 : string,
     text2 : string,
     navigateTo : string
@@ -38,7 +39,7 @@ interface SubjectProps {
         display: none;
     }
   `
-export const Subject : React.FC<SubjectProps> = ({title1,title2,text1,text2,navigateTo}) => {
+export const Subject : React.FC<SubjectProps> = ({title1,title2,title3,text1,text2,navigateTo}) => {
 
     const navigate = useNavigate();
 
@@ -46,15 +47,17 @@ export const Subject : React.FC<SubjectProps> = ({title1,title2,text1,text2,navi
           <Sub>
             <div className="obviously text-darkblue">{title1}</div>
             <div className="obviously text-orange">{title2}</div>
+            {title3!==null && <div className="obviously text-orange">{title3}</div>}
             <div style={{ marginTop: "40px", marginBottom: "30px" }}>
               {text1}
               <span
-                className="text-orange"
+                className="text-orange-link"
+
                 onClick={() => {
                     navigate(navigateTo);
                   }}
               >
-               {text2}
+               {" "} <strong>{text2}</strong>
               </span>
             </div>
             </Sub>
@@ -67,7 +70,7 @@ export const Bottom = () => {
          <Fragment>
         <BorderBottom />
          <Sub>
-            <div>
+            <div style={{fontSize : '10px'}}>
               All use of PeopleHawk is subject to our{" "}
               <span className="text-lightblue">Terms and Conditions</span>
             </div>

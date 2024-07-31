@@ -1,16 +1,16 @@
-
-import React from "react";
-import { useField } from "formik";
 import styled from 'styled-components';
 
 interface InputProps {
-    label?: string,
-    type? : string,
-    name: string,
-    required?: boolean,
-    error? : boolean,
-    onClick? : (event : React.MouseEvent<HTMLInputElement>) => void,
-    onChange? : (event : React.ChangeEvent<HTMLInputElement>) => void,
+    label?: string;
+    type?: string;
+    name?: string; 
+    required?: boolean;
+    error?: boolean;
+    onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+   
+    
 }
 
 const CustomInput = styled.input`
@@ -21,6 +21,11 @@ const CustomInput = styled.input`
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #F9F9F9;
+
+    &:focus {
+       border: 2px solid #72DBD0;
+       outline: none;
+    }
 `;
 
 const CustomLabel = styled.label`
@@ -30,23 +35,21 @@ const CustomLabel = styled.label`
 `;
 
 const Input: React.FC<InputProps> = (props) => {
-    const [field, meta] = useField(props.name);
+    const { label, type = 'text', required = false, onClick, onChange, name} = props;
+  
+    
 
     return (
         <div>
-            {props.label && <CustomLabel>{props.label}{props.required ? '*' : ''}</CustomLabel>}
+            {label && <CustomLabel>{label}{required ? ' *' : ''}</CustomLabel>}
             <CustomInput
-                {...field} type={props.type} onClick={props.onClick}
-                onChange={(e) => {
-                    field.onChange(e);
-                    if (props.onChange) {
-                        props.onChange(e);
-                    }
-                }}
+               
+                type={type}
+                onClick={onClick}
+                onChange={onChange}
+                
             />
-            {meta.touched && meta.error ? (
-                <div style={{ color: 'red' }}>{meta.error}</div>
-            ) : null}
+            
         </div>
     );
 }
