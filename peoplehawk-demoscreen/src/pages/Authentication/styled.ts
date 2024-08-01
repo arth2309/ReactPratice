@@ -33,12 +33,13 @@ export const MainContainer = styled.div`
 
 export const FormControl = styled.input`
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.25rem;
     font-size: 1rem;
     line-height: 1.5;
-    border: 1px solid #ced4da;
+    border: 2px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #F9F9F9;
+    box-sizing: border-box;
 
      &:focus {
        border: 2px solid #72DBD0;

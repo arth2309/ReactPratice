@@ -1,6 +1,6 @@
 import React from "react";
-import { useEffect, useState, useContext } from "react";
-import { getCourseInterest, getChartData, Login } from "./API/apiClient";
+import { useEffect, useState } from "react";
+import { getCourseInterest, getChartData } from "./API/apiClient";
 import { CourseInterest, ChartData } from "./interface/Interface";
 import Routes from "./routes/Routes";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,9 +42,7 @@ function App() {
 
       result && setCourseInterest(result);
       result1 && setChartData(result1);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return <Routes courseInterest={courseInterest} chartData={chartData} />;

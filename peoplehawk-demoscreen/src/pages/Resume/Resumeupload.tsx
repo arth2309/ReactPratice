@@ -2,7 +2,12 @@ import { useRef, useState, useEffect, CSSProperties } from "react";
 import Header from "../../components/layout/header/Header";
 import "./Resumeupload.css";
 import { ReactComponent as Arrow } from "../../assests/img/arrow-dropdown.svg";
-import { uploadFile, fetchFile, deleteFile , updateFile } from "../../API/apiClient";
+import {
+  uploadFile,
+  fetchFile,
+  deleteFile,
+  updateFile,
+} from "../../API/apiClient";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +31,6 @@ const Resumeupload = () => {
     const result = await fetchFile(1);
     if (result) {
       setSelectedFileUrl(result);
-      console.log(result);
     }
   };
 
@@ -37,33 +41,26 @@ const Resumeupload = () => {
     }
   };
 
-
   const handleSelectOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
 
     if (event.target.value === "delete") {
       deleteResume();
-      setSelectedOption('manage')
+      setSelectedOption("manage");
     }
 
-    if(event.target.value === "download" && selectedFileUrl !== null)
-    {
-        
-        const link = document.createElement("a");
-        link.href = selectedFileUrl;
-        link.download = 'Resume.pdf';
-        link.click();
-        setSelectedOption('manage');
+    if (event.target.value === "download" && selectedFileUrl !== null) {
+      const link = document.createElement("a");
+      link.href = selectedFileUrl;
+      link.download = "Resume.pdf";
+      link.click();
+      setSelectedOption("manage");
     }
 
-    if(event.target.value === "update")
-    {
-        console.log('hii');
-        updateResume();
-        setSelectedOption('manage');
+    if (event.target.value === "update") {
+      updateResume();
+      setSelectedOption("manage");
     }
-
-  
   };
 
   const handleButtonClick = () => {
@@ -77,13 +74,8 @@ const Resumeupload = () => {
   };
 
   const updateResume = () => {
-
-    
-        fileInputRef.current?.click();
-
-  }
-
-
+    fileInputRef.current?.click();
+  };
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -91,35 +83,36 @@ const Resumeupload = () => {
     const file = event.target.files?.[0];
 
     if (file) {
-
-        if(selectedFileUrl !== null)
-        {
-            const result = await updateFile(1,{file});
-            setSelectedFileUrl(result);
-        }
-        else
-        {
-            await uploadFile({ file });
-            const url = URL.createObjectURL(file);
-            setSelectedFileUrl(url);
-        }
-     
+      if (selectedFileUrl !== null) {
+        const result = await updateFile(1, { file });
+        setSelectedFileUrl(result);
+      } else {
+        await uploadFile({ file });
+        const url = URL.createObjectURL(file);
+        setSelectedFileUrl(url);
+      }
     }
   };
 
-  
-
   return (
-    <div style={{ backgroundColor: '#DBEFFA',height : selectedFileUrl === null ? '100vh' : '100%'}}>
+    <div
+      style={{
+        backgroundColor: "#DBEFFA",
+        height: selectedFileUrl === null ? "100vh" : "100%",
+      }}
+    >
       <Header />
       <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
       <div className="d-flex justify-content-between px-1 my-1 ">
-        <div className="d-flex align-items-center text-orange" onClick={() => navigate("/")}>
+        <div
+          className="d-flex align-items-center text-orange"
+          onClick={() => navigate("/")}
+        >
           <Arrow
             height="12px"
             color="#F96332"
@@ -132,10 +125,11 @@ const Resumeupload = () => {
         <div>
           <select value={selectedOption} onChange={handleSelectOption}>
             <option value="manage">Manage Your Resume/CV</option>
-            {selectedFileUrl ? (<>
+            {selectedFileUrl ? (
+              <>
                 <option value="update">Update</option>
-             <option value="download">Download</option>
-              <option value="delete">Delete</option>
+                <option value="download">Download</option>
+                <option value="delete">Delete</option>
               </>
             ) : null}
           </select>
@@ -160,7 +154,6 @@ const Resumeupload = () => {
                 <strong>Upload Resume/CV</strong>
               )}
             </button>
-            
           </div>
         ) : (
           <div

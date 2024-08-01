@@ -1,32 +1,27 @@
-import { Formik, Form ,ErrorMessage} from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Login as api } from "../../API/apiClient";
 import AuthContext from "../../store/AuthContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Bottom,Subject,RightContainer } from "../../components/layout/authentication/authentication";
-import { Container, FormControl, LeftContainer, MainContainer } from "./styled";
+import {
+  Bottom,
+  Subject,
+  RightContainer,
+} from "../../components/layout/authentication/authentication";
+import { Container, LeftContainer, MainContainer } from "./styled";
 import { LoginFormValues } from "../../interface/Interface";
 import Input from "../../components/layout/form/Input";
-
-
 
 export const Login = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [inputValue, setInputValue] = useState('');
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  
-  }
-console.log(inputValue);
   const initialValues: LoginFormValues = {
     email: "",
     password: "",
@@ -66,33 +61,45 @@ console.log(inputValue);
             }}
             validateOnBlur={false}
           >
-             {({setFieldValue}) => (
-                <Form>
-             
+            {({ setFieldValue }) => (
+              <Form>
                 <div className="form-group">
-                <Input label="Email" type="email" name="email" required onChange={(e)=> setFieldValue('email', e.target.value)}  />
-                <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="error"
-                    />
-                </div>
-                
-                <div className="form-group">
-                  <Input label="Password" name = "password" type="password" required onChange={(e)=> setFieldValue('password', e.target.value)}  />
+                  <Input
+                    label="Email"
+                    type="email"
+                    name="email"
+                    required
+                    onChange={(e) => setFieldValue("email", e.target.value)}
+                  />
                   <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="error"
-                    />
+                    name="email"
+                    component="div"
+                    className="error"
+                  />
                 </div>
-                <button type="submit"><strong>Log In</strong></button>
+
+                <div className="form-group">
+                  <Input
+                    label="Password"
+                    name="password"
+                    type="password"
+                    required
+                    onChange={(e) => setFieldValue("password", e.target.value)}
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <button type="submit">
+                  <strong>Log In</strong>
+                </button>
               </Form>
-              )}
-            
+            )}
           </Formik>
           <Bottom />
-          </MainContainer>
+        </MainContainer>
       </LeftContainer>
       <RightContainer />
     </Container>

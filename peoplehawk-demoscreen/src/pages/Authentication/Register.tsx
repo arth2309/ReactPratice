@@ -8,13 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import arrow from "../../assests/img/next-step-arrow.png";
 import { toast } from "react-toastify";
-import {
-  Container,
-  LeftContainer,
-  MainContainer,
-  FormControl,
-  FormSelect,
-} from "./styled";
+import { Container, LeftContainer, MainContainer, FormControl } from "./styled";
 import {
   Bottom,
   Subject,
@@ -26,14 +20,17 @@ import {
   userList as user,
 } from "../../API/apiClient";
 import { CountryList as list, OptionTypes } from "../../interface/Interface";
-import { MyComponent } from "../../components/layout/form/Select";
+import { ReactSelect } from "../../components/layout/form/Select";
+import Input from "../../components/layout/form/Input";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [countryList, setCountryList] = useState<list[] | null>(null);
+  // const [countryList, setCountryList] = useState<list[] | null>(null);
   const [options, setOptions] = useState<OptionTypes[] | null>(null);
+
   useEffect(() => {
     fetchCountryList();
+    // eslint-disable-next-line
   }, []);
 
   const convertApiToOptions = (apiData: list[]): OptionTypes[] => {
@@ -46,11 +43,10 @@ export const Register = () => {
   const fetchCountryList = async () => {
     const response = await CountryList();
     const users = await user();
-    response && setCountryList(response);
+    // response && setCountryList(response);
     if (response) {
       const transformedoptions = convertApiToOptions(response);
       setOptions(transformedoptions);
-      console.log(transformedoptions);
     }
 
     users && setUserList(users);
@@ -279,7 +275,7 @@ export const Register = () => {
                   organisationCode: values.code,
                 }));
                 setIsForm2Submitted(true);
-                console.log(values);
+
                 setStep((c) => c + 1);
               }}
             >
@@ -413,18 +409,19 @@ export const Register = () => {
                     </Field> */}
 
                     {options && (
-                      <MyComponent
+                      <ReactSelect
+                        
+                      
                         options={options}
                         name="countryId"
-                         
                         onChange={(e, value) => {
                           if (value === null) {
                             setFieldValue("countryId", 0);
                           } else {
                             setFieldValue("countryId", value.value);
-                  
                           }
                         }}
+                        defaultValue={options.filter((item)=> item.value === formData.step2.countryId)}
                       />
                     )}
                     <ErrorMessage
@@ -438,6 +435,7 @@ export const Register = () => {
                     <Field type="text" name="code" as={FormControl} />
                     <div>(only applicable if joining via an organisation)</div>
                   </div>
+                 
                   <button type="submit">Continue</button>
                 </Form>
               )}
@@ -458,6 +456,7 @@ export const Register = () => {
                 }));
                 const val = { ...Registervalues, password: values.password };
                 await navigate("/login");
+                // eslint-disable-next-line
                 const response = await api(val);
                 toast.success("Candidate Registered Successfully", {
                   hideProgressBar: true,

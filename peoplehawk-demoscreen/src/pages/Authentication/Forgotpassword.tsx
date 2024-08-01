@@ -1,40 +1,34 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { ForgotPassword as api} from "../../API/apiClient";
-import AuthContext from "../../store/AuthContext";
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ForgotPassword as api } from "../../API/apiClient";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { Bottom,Subject,RightContainer } from "../../components/layout/authentication/authentication";
-import { Container, FormControl, LeftContainer, MainContainer } from "./styled";
+import {
+  Bottom,
+  Subject,
+  RightContainer,
+} from "../../components/layout/authentication/authentication";
+import { Container, LeftContainer, MainContainer } from "./styled";
 import { ForgotPasswordValues } from "../../interface/Interface";
 import Input from "../../components/layout/form/Input";
-import { MyComponent } from "../../components/layout/form/Select";
-
-
+import { ReactSelect } from "../../components/layout/form/Select";
 
 export const ForgotPassword = () => {
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  
-
   const initialValues: ForgotPasswordValues = {
-    email: ""
+    email: "",
   };
 
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is Required"),
-   
   });
 
   const loginHandler = async (values: ForgotPasswordValues) => {
+    // eslint-disable-next-line
     const result = await api(values);
   };
 
@@ -60,25 +54,30 @@ export const ForgotPassword = () => {
             }}
             validateOnBlur={false}
           >
-             {({values}) => (
-                <Form>
-             
+            {({ values }) => (
+              <Form>
                 <div className="form-group">
-                <Input label="Email" type="email" name="email" required onChange={(e) => {values.email = e.target.value;}}  />
+                  <Input
+                    label="Email"
+                    type="email"
+                    name="email"
+                    required
+                    onChange={(e) => {
+                      values.email = e.target.value;
+                    }}
+                  />
                 </div>
                 <div className="form-group">
-                <MyComponent name="country"  />
+                  <ReactSelect name="country" />
                 </div>
-                 <div>We'll send you instructions by email</div>
+                <div>We'll send you instructions by email</div>
                 <button type="submit">Send</button>
               </Form>
- )}
-          
-            
+            )}
           </Formik>
-          
+
           <Bottom />
-          </MainContainer>
+        </MainContainer>
       </LeftContainer>
       <RightContainer />
     </Container>

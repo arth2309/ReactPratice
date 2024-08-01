@@ -15,12 +15,13 @@ interface InputProps {
 
 const CustomInput = styled.input`
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.25rem;
     font-size: 1rem;
     line-height: 1.5;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background-color: #F9F9F9;
+    box-sizing: border-box;
 
     &:focus {
        border: 2px solid #72DBD0;
@@ -31,7 +32,8 @@ const CustomInput = styled.input`
 const CustomLabel = styled.label`
     display: block;
     color: #394456;
-    font-weight: 500;
+    font-weight: 450;
+     line-height: 1.5;
 `;
 
 const Input: React.FC<InputProps> = (props) => {
@@ -47,6 +49,7 @@ const Input: React.FC<InputProps> = (props) => {
                 type={type}
                 onClick={onClick}
                 onChange={onChange}
+                name={name}
                 
             />
             

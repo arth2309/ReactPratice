@@ -2,55 +2,47 @@ import React from "react";
 import Select, { StylesConfig } from "react-select";
 import { OptionTypes } from "../../../interface/Interface";
 
-
 interface SelectProps {
   isMulti?: boolean;
   isLoading?: boolean;
   name: string;
-  defaultValue?: any,
+  defaultValue?: any;
   options?: OptionTypes[];
-  onChange?: (field : string, value : any) => void;
+  placeholder? : string;
+  onChange?: (field: string, value: any) => void;
 }
 
-
-
-const customStyles: StylesConfig = {
-  control: (provided) => ({
+const customStyles: StylesConfig<OptionTypes[]> = {
+  control: (provided,state) => ({
     ...provided,
-  
-    border: '2px solid #ced4da',
+
+    border: `2px solid ${state.isFocused ? "#72DBD0" : "#ced4da"}`,
     backgroundColor: "#F9F9F9",
     boxShadow: "none",
     fontSize: "1rem",
     lineHeight: 1.5,
-    padding: "0.25rem",
+    padding: "0rem",
     width: "100%",
-
-    ":focus" :{
-      border: '2px solid #72DBD0',
-      outline : 'none',
-      outlineColor : 'none',
-      outlineStyle : 'none'
-    },
-  
-    ":active" : {
-      border: '2px solid #72DBD0',
-      
-    }
    
+
+    
+
+   
+    ":hover": {
+      border: "2px solid #72DBD0",
+    },
+
+    
+    
   }),
 
-  // menu: (provided) => ({
-  //   ...provided,
-  //   zIndex: 9999,
-  // }),
+  
 
   multiValue: (provided) => ({
-      ...provided,
-      backgroundColor : '#72DBD0',
-      boxShadow : '#72DBD0 0px 2px 4px 0px',
-      color : 'white',
-      
+    ...provided,
+    backgroundColor: "#72DBD0",
+    boxShadow: "#72DBD0 0px 2px 4px 0px",
+    color: "white",
   }),
 
   option: (provided, state) => ({
@@ -72,24 +64,23 @@ const customStyles: StylesConfig = {
   }),
 };
 
+export const ReactSelect: React.FC<SelectProps> = (props) => {
+  const handleChange = (event: any) => {
+    props.onChange && props.onChange(props.name, event);
+  };
 
-
-export const MyComponent: React.FC<SelectProps> = (props) => {
-
-  const handleChange = (event : any) => {
-      props.onChange && props.onChange(props.name,event)
-  }
- 
   return (
+    <div>
     <Select
       options={props.options}
       styles={customStyles}
       isClearable
       isMulti={props.isMulti}
       isLoading={props.isLoading}
-      placeholder="please select a country"
+      placeholder={props.placeholder}
       onChange={handleChange}
-      defaultValue={props.defaultValue}
+      defaultValue = {props.defaultValue}
     />
+    </div>
   );
 };
