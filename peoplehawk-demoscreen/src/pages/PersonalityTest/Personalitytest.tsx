@@ -1,144 +1,186 @@
 import  React,{Fragment} from "react";
 import Header from "../../components/layout/header/Header";
 import {styled} from 'styled-components';
+import { Range,getTrackBackground } from "react-range";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import personalityBaneer from '../../assests/img/personality_test_banner.svg';
 import Slider from "./Slider";
 
-const Personalitytest: React.FC = () => {
+const Container = styled.div({
+    backgroundColor : '#DBEFFA',
+    height : 'calc(100vh + 150px)'
 
-    const Container = styled.div({
-        backgroundColor : '#DBEFFA',
-        height : '100vh'
+})
 
-    })
-
-    const BackButtonContainer = styled.div({
-        display : 'flex',
-        justifyContent : 'start'
-      
-    })
+const BackButtonContainer = styled.div({
+    display : 'flex',
+    justifyContent : 'start'
+  
+})
 
 
-    const BackButton = styled.button({
-        display : 'flex',
-        color : '#F96332',
-        background : 'transparent',
-        cursor : 'pointer',
-        alignItems : 'center',
-        fontWeight : 700,
-        fontSize : '18px'
-    })
+const BackButton = styled.button({
+    display : 'flex',
+    color : '#F96332',
+    background : 'transparent',
+    cursor : 'pointer',
+    alignItems : 'center',
+    fontWeight : 700,
+    fontSize : '18px'
+})
 
-    const MainContainer = styled.div({
-        display : 'flex',
-        flexDirection : 'column',
-        alignItems : 'center',
-        width : '100%',
-        gap : '15px'
-      
-    })
+const MainContainer = styled.div({
+    display : 'flex',
+    flexDirection : 'column',
+    alignItems : 'center',
+    width : '100%',
+    gap : '15px'
+  
+})
 
-    const Container1 = styled.div({
-        width : '90%',
-        backgroundColor : 'white',
-        display : 'flex',
-        padding : '20px',
-        gap : '20px',
-        justifyContent : 'space-between',
-        borderRadius : '8px',
-        marginTop : '15px'
-    
-    })
+const Container1 = styled.div({
+    width : '90%',
+    backgroundColor : 'white',
+    display : 'flex',
+    padding : '20px',
+    gap : '20px',
+    justifyContent : 'space-between',
+    borderRadius : '8px',
+    marginTop : '15px'
+
+})
 
 
-    const SubContainer1 = styled.div({
-        display : 'flex',
-        justifyContent : 'center',
-        width : '50%',
+const SubContainer1 = styled.div({
+    display : 'flex',
+    justifyContent : 'center',
+    width : '50%',
 
-        '@media (max-width : 840px)' : {
-                display : 'none'
-        }
-    })
+    '@media (max-width : 840px)' : {
+            display : 'none'
+    }
+})
 
-    const SubContainer2 = styled.div({
+const SubContainer2 = styled.div({
 
-        paddingTop : '10px',
-        display : 'flex',
-        flexDirection : 'column',
-        justifyContent : 'start',
-         width : '50%',
+    paddingTop : '10px',
+    display : 'flex',
+    flexDirection : 'column',
+    justifyContent : 'start',
+     width : '50%',
 
-         '@media (max-width : 840px)' : {
-                width : '100%'
-        }
-    })
+     '@media (max-width : 840px)' : {
+            width : '100%'
+    }
+})
 
-    const Heading = styled.div({
-        fontSize : '30px',
-        color : '#F96332',
-        lineHeight : '30px',
-        fontWeight : '700'
-    })
+const Heading = styled.div({
+    fontSize : '30px',
+    color : '#F96332',
+    lineHeight : '30px',
+    fontWeight : '700'
+})
 
-    const OutlineButton = styled.button({
-        cursor: "pointer",
-        background: "transparent",
-        border: "1.5px solid #F96332",
-        width: "300px",
-        maxWidth: "100%",
-        display: "flex",
-        justifyContent: "center",
-        borderRadius: "20px",
-        color: "black",
-        fontWeight : '700',
-        fontSize : '14px'
-      });
-
-      const Container1ButtonDiv = styled.div({
-        display : 'flex',
-        gap : '10px'
-      })
-
-      const Paragraph = styled.p({
-        fontSize : '15px',
-        marginTop : '0px',
-        marginBottom : '85px'
-      })
-
-      const Container2 = styled.div({
-        width : '90%',
-        padding : '20px',
-        display : 'flex',
-        flexDirection : 'column',
-        alignItems : 'center',
-        backgroundColor : 'white',
-        borderRadius : '8px'
-      })
-
-      const Text = styled.div({
-        fontSize : '20px',
-        fontWeight : 600,
-        margin : '20px 0px'
-      })
-
-    
-const PrimaryButton = styled.button({
+const OutlineButton = styled.button({
     cursor: "pointer",
-    backgroundColor: "#F96332",
+    background: "transparent",
+    border: "1.5px solid #F96332",
+    width: "300px",
+    maxWidth: "100%",
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: "20px",
+    color: "black",
+    fontWeight : '700',
+    fontSize : '14px'
+  });
+
+  const Container1ButtonDiv = styled.div({
+    display : 'flex',
+    gap : '10px'
+  })
+
+  const Paragraph = styled.p({
+    fontSize : '15px',
+    marginTop : '0px',
+    marginBottom : '85px'
+  })
+
+  const Container2 = styled.div({
+    width : '90%',
+    padding : '20px',
+    display : 'flex',
+    flexDirection : 'column',
+    alignItems : 'center',
+    backgroundColor : 'white',
+    borderRadius : '8px'
+  })
+
+  const Text = styled.div({
+    fontSize : '20px',
+    fontWeight : 600,
+    margin : '20px 0px'
+  })
+
+
+const PrimaryButton = styled.button({
+cursor: "pointer",
+backgroundColor: "#F96332",
+width: "fit-content",
+display: "flex",
+justifyContent: "center",
+borderRadius: "20px",
+padding : '10px 30px',
+boxShadow : "#F96332 0px 2px 4px 0px",
+fontWeight : '600'
+});
+
+const OutlineButton1 = styled.button({
+    cursor: "pointer",
+    background: "transparent",
+    border: "1.5px solid #F96332",
     width: "fit-content",
     display: "flex",
     justifyContent: "center",
     borderRadius: "20px",
-    marginTop: "30px",
+    color: "black",
     padding : '10px 30px',
-    boxShadow : "#F96332 0px 2px 4px 0px",
-    fontWeight : '600'
+    fontWeight : '700',
+    fontSize : '14px'
   });
+
+  interface Quiz{
+         question : string
+         value : number
+  }
+
+  const QuestionBank : Quiz[] = [
+    {question : 'I am not bothered by untidiness.',value : 50},
+    {question : 'I love to help others.',value : 50},
+    {question : 'I work best when I am alone.',value : 50},
+    {question : 'I push myself very hard to succeed.',value : 50},
+    {question : 'I have a soft heart.',value : 50},
+    {question : 'I often forget to put things back in their proper place.',value : 50},
+    {question : 'I have frequent mood swings.',value : 50},
+    {question : 'I am full of ideas.',value : 50},
+    {question : 'I find it difficult to express my feelings to others.',value : 50},
+    {question : 'I am relaxed most of the time.',value : 50}
+  ]
+
+const Personalitytest: React.FC = () => {
+
   
 
-    
+  const [values, setValues] = React.useState([0]);
+ const[quizBank,setQuizBank] = React.useState<Quiz[]>(QuestionBank);
+ 
+ const handleSlideChange = (value : number) => {
+
+    const updatedItems = quizBank.map((item,index) => values[0] === index ? {...item,value : value} : item)
+    setQuizBank(updatedItems);
+ }
+ 
+  
 
   return (
       <Container>
@@ -176,10 +218,53 @@ const PrimaryButton = styled.button({
             </Container1>
             <Container2>
                 <Text>Take the test here,best 10 minutes you'll ever spend!</Text>
-                <Text>Questions 1 of 50</Text>
-                <Text>I am bothered by unitidiness</Text>
-                <Slider />
-                <PrimaryButton>Next Question</PrimaryButton>
+                <Text>Questions {values[0]+1} of 10</Text>
+                <div style={{width : '25%'}}>
+                <Range
+      step={1}
+      min={0}
+      max={9}
+      values={values}
+      onChange={() => {}}
+      renderTrack={({ props, children }) => (
+        <div
+          {...props}
+          style={{
+            ...props.style,
+            height: '6px',
+            width: '100%',
+            cursor: 'initial',
+            background: getTrackBackground({
+              values,
+              colors: ['#0097A2','#E4ECF3'],
+              min: 0,
+              max: 9,
+            }),
+            borderRadius: '3px',
+          }}
+        >
+          {children}
+        </div>
+      )}
+      renderThumb={({ props }) => (
+        <div
+          {...props}
+          style={{
+            ...props.style,
+            height: '0px', // Make the thumb invisible
+            width: '0px',
+            backgroundColor: 'transparent', // No background color
+          }}
+        />
+      )}
+    />
+    </div>
+                <Text>{quizBank[values[0]].question}</Text>
+                <Slider slideValues = {quizBank[values[0]].value} onSlideChange={handleSlideChange} />
+                <div style={{display : 'flex', gap : '10px',marginTop: "60px",}}>
+               { values[0] >  0 && <OutlineButton1   onClick = {() => {setValues((prevstate) => [prevstate[0] - 1])}}>Previous Question</OutlineButton1> }
+               {values[0] < 9 && <PrimaryButton  onClick = {() => {setValues((prevstate) => [prevstate[0] + 1])}}>Next Question</PrimaryButton> }
+                </div>
             </Container2>
         </MainContainer>
       </Container>
