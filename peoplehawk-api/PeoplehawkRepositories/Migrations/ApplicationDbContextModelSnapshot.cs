@@ -118,6 +118,51 @@ namespace PeoplehawkRepositories.Migrations
                     b.ToTable("CourseInterests");
                 });
 
+            modelBuilder.Entity("PeoplehawkRepositories.Models.PersonalityReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Answer")
+                        .HasColumnType("real");
+
+                    b.Property<int>("QuizId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TestNo")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PersonalityReports");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.Quiz", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Question")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Quizes");
+                });
+
             modelBuilder.Entity("PeoplehawkRepositories.Models.ResumeFile", b =>
                 {
                     b.Property<int>("Id")
@@ -212,6 +257,25 @@ namespace PeoplehawkRepositories.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.PersonalityReport", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.Quiz", "quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PeoplehawkRepositories.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("quiz");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.ResumeFile", b =>

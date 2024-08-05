@@ -1,0 +1,17 @@
+.toast-success .Toastify__toast-icon {
+    background: none; /* Remove circular background */
+    border-radius: 0; /* Remove border-radius for icon */
+    color: #4caf50; /* Set color of the tick icon */
+    font-size: 24px; /* Adjust icon size if needed */
+}
+
+/* Add background color with 50% coverage */
+.toast-success {
+    background-color: rgba(76, 175, 80, 0.5); /* 50% opacity green */
+    color: #ffffff; /* Text color */
+}
+
+/* Additional optional customization */
+.toast-success .Toastify__toast-body {
+    color: #ffffff; /* Text color */
+}

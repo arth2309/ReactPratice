@@ -17,48 +17,52 @@ namespace peoplehawk_api.Controllers
         private readonly IResumeFileService _resumeFileService;
         private readonly IUserService _userService;
         private readonly ICountryService _countryService;
-      
+        private readonly IQuizService _quizService;
+        private readonly IPersonalityReportService _personalityReportService;
 
-        public PeoplehawkAPIController(ICourseInterestService courseInterestService,IChartService chartService,IResumeFileService resumeFileService,IUserService userService,ICountryService countryService)    
+
+        public PeoplehawkAPIController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, ICountryService countryService, IQuizService quizService,IPersonalityReportService personalityReportService)
         {
-           _courseInterestService = courseInterestService;
-           _chartService = chartService;
-           _resumeFileService = resumeFileService;
+            _courseInterestService = courseInterestService;
+            _chartService = chartService;
+            _resumeFileService = resumeFileService;
             _userService = userService;
             _countryService = countryService;
-            
-           
+            _quizService = quizService;
+            _personalityReportService = personalityReportService;
+
+
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<UserDTO>> Register([FromBody]UserDTO userDTO)
+        public async Task<ActionResult<UserDTO>> Register([FromBody] UserDTO userDTO)
         {
             try
             {
                 return await _userService.Register(userDTO);
             }
 
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return NotFound(ex);            
+                return NotFound(ex);
             }
         }
 
         [AllowAnonymous]
         [HttpPost("auth")]
-        public async Task<ActionResult<string>> Login([FromBody]  LoginDetails loginDetails)
+        public async Task<ActionResult<string>> Login([FromBody] LoginDetails loginDetails)
         {
 
-                return await _userService.Login(loginDetails.email, loginDetails.password);
+            return await _userService.Login(loginDetails.email, loginDetails.password);
         }
 
         [HttpGet("{UserId:int}")]
-       
+
         public async Task<ActionResult<ChartDTO>> Chart(int UserId)
         {
 
-            return await _chartService.FirstorDefaultAsync(a=>a.UserId == UserId);
+            return await _chartService.FirstorDefaultAsync(a => a.UserId == UserId);
         }
 
 
@@ -73,14 +77,14 @@ namespace peoplehawk_api.Controllers
         [AllowAnonymous]
         [HttpPost("forgotpassword")]
 
-        public  ActionResult<string> SendMail([FromBody] ForgotPasswordDetails forgotPasswordDetails)
+        public ActionResult<string> SendMail([FromBody] ForgotPasswordDetails forgotPasswordDetails)
         {
-           return _userService.SendEmail(forgotPasswordDetails.email);
+            return _userService.SendEmail(forgotPasswordDetails.email);
         }
 
         [HttpGet]
-    
-        public async  Task<List<CourseInterestDTO>> CourseInterests()
+
+        public async Task<List<CourseInterestDTO>> CourseInterests()
         {
             return await _courseInterestService.GetAllAsync();
         }
@@ -92,23 +96,23 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("files/{UserId:int}")]
-     
+
         public async Task<IActionResult> GetFile(int UserId)
         {
-                var result = await _resumeFileService.GetFile(UserId);
-                return File(result.Item1, "application/pdf", result.Item2);
+            var result = await _resumeFileService.GetFile(UserId);
+            return File(result.Item1, "application/pdf", result.Item2);
         }
 
         [HttpDelete("files/{UserId:int}")]
         public async Task<ResumeFileDTO> DeleteFile(int UserId)
-        { 
-           return await _resumeFileService.DeleteAsync(a=>a.UserId == UserId); 
+        {
+            return await _resumeFileService.DeleteAsync(a => a.UserId == UserId);
         }
 
         [HttpPut("files/{UserId:int}")]
         public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
-        { 
-            return  await _resumeFileService.UpdateFile(file, UserId); 
+        {
+            return await _resumeFileService.UpdateFile(file, UserId);
         }
 
         [AllowAnonymous]
@@ -125,5 +129,32 @@ namespace peoplehawk_api.Controllers
         {
             return await _userService.UsersList(a => a.CountryId == 1);
         }
+
+        [AllowAnonymous]
+        [HttpGet("quiz")]
+        
+        public async Task <List<QuizDTO>> QuizList()
+        {
+            return await _quizService.GetAllQuiz();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("personalityreport")]
+
+        public async Task <List<PersonalityReportDTO>> QuizResponse ([FromBody] List<PersonalityReportDTO> personalityReportDTOs)
+        {
+            var result = await _personalityReportService.AddQuizResult(personalityReportDTOs);
+            return result;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("personalityreport/{UserId:int}")]
+        public async Task<bool> QuizEligible(int UserId)
+        {
+            var result = await _personalityReportService.FirstorDefaultAsync(x => x.UserId == UserId && x.TestNo == 3);
+            return result == null ? false : true;
+        }
+
+
     }
 }

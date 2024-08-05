@@ -1,10 +1,14 @@
-import  React,{Fragment} from "react";
+import  React from "react";
 import Header from "../../components/layout/header/Header";
 import {styled} from 'styled-components';
 import { Range,getTrackBackground } from "react-range";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import personalityBaneer from '../../assests/img/personality_test_banner.svg';
 import Slider from "./Slider";
+import { SubmitTest } from "../../interface/Interface";
+import { getQuiz,QuizResponse,QuizEligible } from "../../API/apiClient";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 const Container = styled.div({
     backgroundColor : '#DBEFFA',
@@ -149,38 +153,88 @@ const OutlineButton1 = styled.button({
     fontSize : '14px'
   });
 
-  interface Quiz{
+  interface Quiz1{
+          id : number,
          question : string
          value : number
   }
 
-  const QuestionBank : Quiz[] = [
-    {question : 'I am not bothered by untidiness.',value : 50},
-    {question : 'I love to help others.',value : 50},
-    {question : 'I work best when I am alone.',value : 50},
-    {question : 'I push myself very hard to succeed.',value : 50},
-    {question : 'I have a soft heart.',value : 50},
-    {question : 'I often forget to put things back in their proper place.',value : 50},
-    {question : 'I have frequent mood swings.',value : 50},
-    {question : 'I am full of ideas.',value : 50},
-    {question : 'I find it difficult to express my feelings to others.',value : 50},
-    {question : 'I am relaxed most of the time.',value : 50}
-  ]
-
+ 
 const Personalitytest: React.FC = () => {
 
+  React.useEffect(() => {
+    Quizeligible();
+     if(testCount < 3)
+     {
+      fetchQuizList();
+     }
+    
   
+  },[]);
+
+  const Quizeligible = async() => {
+    const result = await QuizEligible(2);
+    console.log(result);
+    if(result)
+    {
+          setTestCount(4);
+          console.log('here',testCount);
+    }
+  }
+
+  const fetchQuizList = async() => {
+    const result = await getQuiz();
+
+    if(result)
+    {
+      const response : Quiz1[] = result.map((item) =>({...item, value : 50}) );
+      console.log(response);
+      setQuizBank(response);
+    }
+   
+    
+  }
 
   const [values, setValues] = React.useState([0]);
- const[quizBank,setQuizBank] = React.useState<Quiz[]>(QuestionBank);
+ const[quizBank,setQuizBank] = React.useState<Quiz1[] | null>(null);
+ const[isSubmit,SetisSubmit] = React.useState<boolean>(false);
+ const[testCount,setTestCount] = React.useState<number>(0);
+ 
  
  const handleSlideChange = (value : number) => {
 
+  if(quizBank)
+  {
     const updatedItems = quizBank.map((item,index) => values[0] === index ? {...item,value : value} : item)
     setQuizBank(updatedItems);
+  }
+    
  }
  
-  
+  const submitHandler = async() => {
+    
+    setTestCount((c) => c + 1);
+    if(quizBank)
+    {
+      const response : SubmitTest[] = quizBank.map((item) => ({quizId : item.id,userId : 1,answer : item.value,testNo : testCount + 1}))
+      SetisSubmit(true);
+      await QuizResponse(response)
+      console.log(response);
+    }
+   
+  }
+
+  const reTestHandler = () => {
+   
+    SetisSubmit(false);
+    setValues([0]);
+    setQuizBank((currentItems) => 
+      (currentItems || []).map((item) => ({
+          ...item,
+          value: 50 // Set value to 50
+      }))
+  );
+  }
 
   return (
       <Container>
@@ -217,6 +271,9 @@ const Personalitytest: React.FC = () => {
                  </SubContainer1>
             </Container1>
             <Container2>
+            {
+               testCount<=3 && !isSubmit ?
+              <div  style={{display : 'flex', flexDirection : 'column' , alignItems : 'center'}}>
                 <Text>Take the test here,best 10 minutes you'll ever spend!</Text>
                 <Text>Questions {values[0]+1} of 10</Text>
                 <div style={{width : '25%'}}>
@@ -259,12 +316,27 @@ const Personalitytest: React.FC = () => {
       )}
     />
     </div>
-                <Text>{quizBank[values[0]].question}</Text>
-                <Slider slideValues = {quizBank[values[0]].value} onSlideChange={handleSlideChange} />
+              {quizBank &&   <Text>{quizBank[values[0]].question}</Text> }
+              {quizBank && <Slider slideValues = {quizBank[values[0]].value} onSlideChange={handleSlideChange} />  }
                 <div style={{display : 'flex', gap : '10px',marginTop: "60px",}}>
-               { values[0] >  0 && <OutlineButton1   onClick = {() => {setValues((prevstate) => [prevstate[0] - 1])}}>Previous Question</OutlineButton1> }
-               {values[0] < 9 && <PrimaryButton  onClick = {() => {setValues((prevstate) => [prevstate[0] + 1])}}>Next Question</PrimaryButton> }
+               { values[0] >  0 &&  <OutlineButton1   onClick = {() => {setValues((prevstate) => [prevstate[0] - 1])}}>Previous Question</OutlineButton1> }
+               {values[0] < 9 &&  <PrimaryButton  onClick = {() => {setValues((prevstate) => [prevstate[0] + 1])}}>Next Question</PrimaryButton> }
+               {values[0] === 9 &&  <PrimaryButton  onClick = {submitHandler}>Submit</PrimaryButton> }
+              
                 </div>
+                
+                </div>
+               :
+                 <div style={{display : 'flex', flexDirection : 'column' , alignItems : 'center', justifyContent : 'space-between', gap : '20px'}}>
+                  <div style={{fontSize : '20px', fontFamily : 'cursive'}}><strong>Quiz Submitted Succesfully</strong></div>
+                  <CheckCircleIcon htmlColor="#F96332" style={{fontSize : '100px'}} />
+                  {testCount >= 3 && <div style={{fontSize : '20px', fontFamily : 'cursive'}}><strong>As you have re-attempted the quiz twice. re-test option is not available</strong></div>}
+                        {testCount < 3 && <PrimaryButton onClick={reTestHandler} >Re-Test</PrimaryButton> } 
+                  </div>
+               
+               }
+
+               
             </Container2>
         </MainContainer>
       </Container>

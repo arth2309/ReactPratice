@@ -79,6 +79,7 @@ const Label = styled.div`
      justify-content : space-between;
      width: 100%;
      padding-top: 27px;
+    
 `
 
 const LabelLeft = styled.div`
@@ -124,7 +125,7 @@ const Slider : React.FC<SliderProps> = (props) => {
 
    </RightBar>
    <LeftBar percentage={values[0]} screenWidth={screenWidth} />
-   <Label>
+   <Label style={{fontSize : screenWidth > 650 ? '16px'  : '10px'}} >
     <LabelLeft>Strongly <br /> disagree</LabelLeft>
     <LabelCenter>Drag the slider to decide</LabelCenter>
     <LabelRight>Strongly <br /> agree</LabelRight>
@@ -157,11 +158,11 @@ const Slider : React.FC<SliderProps> = (props) => {
           key={props.key}
           style={{
             ...props.style,
-            height: '26px',
-            width: "26px",
+            height: screenWidth > 650 ? '26px' : '13px' ,
+            width: screenWidth > 650 ? '26px' : '13px',
             borderRadius : '50%',
             backgroundColor: "#003B4A",
-            border : '13px solid #0097A2'
+            border : `${ screenWidth > 650 ? '13px' : '6.5px'} solid #0097A2`
           }}
         />
       )}

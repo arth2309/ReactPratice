@@ -5,6 +5,7 @@ import AuthContext from '../../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {toast} from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
+import { showToast } from '../ToastComponent/Toastcomponent';
 
 
 
@@ -20,14 +21,15 @@ const Header = () => {
 
         await authctx.logout();
         await navigate('/Login');
-        toast.success('Successfully logged out',{
-            hideProgressBar : true,
-            autoClose : 2000,
-            position : "bottom-center",
-            closeButton : false,
-            pauseOnHover : false,
+        // toast.success('Successfully logged out',{
+        //     hideProgressBar : true,
+        //     autoClose : 2000,
+        //     position : "bottom-center",
+        //     closeButton : false,
+        //     pauseOnHover : false,
                         
-        });
+        // });
+        showToast('Success', 'You have Successfully Logged out', 'success');
     }
 
     return (

@@ -46,3 +46,15 @@ export interface OptionTypes {
   label : string,
   value : string | number
 }
+
+export interface Quiz {
+  id : number,
+  question : string
+}
+
+export interface SubmitTest {
+  userId : number,
+  quizId : number,
+  answer : number,
+  testNo : number
+}

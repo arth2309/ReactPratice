@@ -21,5 +21,9 @@ namespace PeoplehawkRepositories
         public DbSet<Country> Countrys { get; set; }
 
         public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Quiz> Quizes { get; set; }
+
+        public DbSet<PersonalityReport> PersonalityReports { get; set; }
     }
 }

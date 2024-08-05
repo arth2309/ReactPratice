@@ -9,6 +9,7 @@ import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {
   Bottom,
   Subject,
@@ -42,7 +43,7 @@ export const Login = () => {
 
   return (
     <Container>
-      <ToastContainer />
+     <ToastComponent />
       <LeftContainer>
         <img src={logo} alt="logo" className="logo" />
         <MainContainer>

@@ -6,8 +6,11 @@ import {
   CountryList as list,
   LoginFormValues,
   ForgotPasswordValues,
+  Quiz,
+  SubmitTest
 } from "../interface/Interface";
 import { toast } from "react-toastify";
+
 import { getToken } from "../utils/manageAccessToken";
 
 interface RegisterFormvalues {
@@ -187,4 +190,43 @@ export const updateFile = async (
   } catch (error) {
     throw new Error(`Error updating file`);
   }
+
+  
 };
+
+export const getQuiz = async () : Promise<Quiz[] | null> =>
+  {
+            try {
+              const response = await apiClient.get('/quiz');
+              return response.data;
+            }
+
+            catch(error)
+            {
+              return null;
+            }
+  }
+
+  export const QuizResponse = async (
+    data: SubmitTest[]
+  ): Promise<SubmitTest[] | null> => {
+    try {
+      const response = await apiClient.post<SubmitTest[]>(
+        "/personalityreport",
+        data
+      );
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  export const QuizEligible = async (UserId : number): Promise<boolean | null > => {
+    try {
+      const response = await apiClient.get(`/personalityreport/${UserId}`);
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  };
+  

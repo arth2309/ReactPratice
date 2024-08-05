@@ -43,19 +43,22 @@ builder.Services.AddAuthentication(x =>
     builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICourseInterestRepository , CourseInterestRepository>();
+builder.Services.AddScoped<IPersonalityReportRepository , PersonalityReportRepository>();
 builder.Services.AddScoped<IChartRepository , ChartRepository>();
 builder.Services.AddScoped<IResumeFileRepository, ResumeFileRepository>();
 builder.Services.AddScoped<IUserRepository , UserRepository>();
 builder.Services.AddScoped<ICountryRepository , CountryRepository>();
+builder.Services.AddScoped<IQuizRepository , QuizRepository>();
 builder.Services.AddTransient(typeof(IGenericService<,>), typeof(GenericService<,>));
 builder.Services.AddTransient<ICourseInterestService, CourseInterestService>();
 builder.Services.AddTransient<IChartService, ChartService>();
 builder.Services.AddTransient<IResumeFileService, ResumeFileService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICountryService, CountryService>();
+builder.Services.AddTransient<IQuizService, QuizService>();
+builder.Services.AddTransient<IPersonalityReportService, PersonalityReportService>();
 
 builder.Services.AddSwaggerGen(
     options =>

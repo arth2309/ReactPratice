@@ -29,7 +29,7 @@ const Routes = (props : any) => {
             <Route path = "/personality-test" element = {<Personalitytest />}></Route>
             <Route path = "/register" element = {<Register />}></Route>
             <Route path = "*" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
-
+ 
         </Main>
         </BrowserRouter>
     );
