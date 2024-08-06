@@ -13,7 +13,7 @@ const Memberinterestanalysis = (props : any ) => {
   const array = CourseInterestData.sort((a : any, b : any) => chartData.career_code.indexOf(a.name.charAt(0).toUpperCase()) - chartData.career_code.indexOf(b.name.charAt(0).toUpperCase())).slice(3,6);
   return (
     <>
-      <Accordion open={false} title="Member Interests Test Results:">
+      <Accordion open={true} title="Member Interests Test Results:">
         <div className="heading">Member Interests Analysis</div>
         <div className="main-content">
         <div className="w-50">

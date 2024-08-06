@@ -22,8 +22,8 @@ const Routes = (props : any) => {
 
             <Route path = "/" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
             <Route path="/home" element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to="/login"/>}></Route>
-           <Route path = "/Analysis" element = {authCtx.isLoggedIn ?<Useranalysis courseInterest = {courseInterest} chartData = {chartData} /> : <Navigate to="/login"/>}></Route>  
-            <Route path="/Resume" element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to="/login"/>}></Route>
+           <Route path = "/analysis" element = {authCtx.isLoggedIn ?<Useranalysis courseInterest = {courseInterest} chartData = {chartData} /> : <Navigate to="/login"/>}></Route>  
+            <Route path="/resume" element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to="/login"/>}></Route>
             <Route path = "/login" element = {<Login />}></Route>
             <Route path = "/forgotpassword" element = {<ForgotPassword />}></Route>
             <Route path = "/personality-test" element = {<Personalitytest />}></Route>

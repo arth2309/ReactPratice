@@ -20,6 +20,8 @@ namespace PeoplehawkRepositories.Models
         public string? MemberType { get; set; }
         [ForeignKey("Country")]
         public int CountryId { get; set; }
+
+        public string? ProfilePhoto { get; set; }
         public string? OrganisationCode { get; set; }
         [ForeignKey("Role")]
         public int? RoleId { get; set; }

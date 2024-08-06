@@ -11,7 +11,7 @@ namespace PeoplehawkServices.Interface
 {
     public interface IResumeFileService : IGenericService<ResumeFile,ResumeFileDTO>
     {
-        Task<ResumeFileDTO> UploadFile(IFormFile file);
+        Task<ResumeFileDTO> UploadFile(IFormFile file, int UserId);
 
         Task<(byte[], string)> GetFile(int UserId);
 

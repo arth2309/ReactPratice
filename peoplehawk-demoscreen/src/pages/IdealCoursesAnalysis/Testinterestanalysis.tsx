@@ -43,7 +43,7 @@ const Testinterestanalysis = (props: any) => {
   ).slice(3, 6);
 
   return (
-    <Accordion open={false} title="Member Interests Test Results:">
+    <Accordion open={true} title="Member Interests Test Results:">
       <div className="main-content">
         <div className="w-50">
           <div className="heading">Learn what you Love</div>
@@ -128,9 +128,6 @@ const Testinterestanalysis = (props: any) => {
         </div>
         <div className="w-50">
           <div className="result-heading">Your top 3 results</div>
-          {/* <div style={{ height: "135px" }}>
-            <Testinterestanalysischart onCardHandler={cardHandler} />
-          </div> */}
           {array.map((item, index) => (
             <div className="progress-wrapper">
               <div className="progress-label" style={{ color: item.color1 }}>

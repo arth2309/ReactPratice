@@ -25,8 +25,7 @@ interface RegisterFormvalues {
   roleId: number;
 }
 
-const BASE_URL: string =
-  process.env.REACT_APP_BASE_URL || "https://localhost:7055/api/PeoplehawkAPI";
+const BASE_URL: string = "https://localhost:7055/api/PeoplehawkAPI";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -132,12 +131,12 @@ export const getChartData = async <T>(
   }
 };
 
-export const uploadFile = async (data: FileUploadData): Promise<any> => {
+export const uploadFile = async (data: FileUploadData,UserId : number): Promise<any> => {
   try {
     const formData = new FormData();
-    formData.append("file", data.file);
+    formData.append(`file`, data.file);
 
-    const response = await apiClient.post("/files", formData, {
+    const response = await apiClient.post(`/files/${UserId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -229,4 +228,53 @@ export const getQuiz = async () : Promise<Quiz[] | null> =>
       return null;
     }
   };
+
+  export const uploadPhoto = async (
+    UserId: number,
+    data: FileUploadData
+  ): Promise<string | null> => {
+    try {
+      const formData = new FormData();
+      formData.append("file", data.file);
   
+      await apiClient.put(`/home/${UserId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const url = URL.createObjectURL(data.file);
+      return url;
+    } catch (error) {
+      throw new Error(`Error updating file`);
+    }
+  
+    
+  };
+
+  export const fetchPhoto = async (UserId: number): Promise<string | null> => {
+    try {
+      const response = await apiClient.get(`/home/${UserId}`, {
+        responseType: "blob",
+      });
+  
+      const url = URL.createObjectURL(response.data);
+  
+      return url;
+    } catch (error: any) {
+      return null;
+    }
+  };
+  
+  
+  export const getProgress = async (UserId : number) : Promise<number | null> =>
+    {
+              try {
+                const response = await apiClient.get(`/home/progress/${UserId}`);
+                return response.data;
+              }
+  
+              catch(error)
+              {
+                return null;
+              }
+    }

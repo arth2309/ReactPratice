@@ -58,7 +58,7 @@ const Testinterestanalysischart = (props : any) => {
           anchor: 'end',
           align: 'start',
           formatter: (value : any) => {
-            return value.toFixed(2); // Adjust the formatting as needed
+            return value.toFixed(2); 
           },
         },
         

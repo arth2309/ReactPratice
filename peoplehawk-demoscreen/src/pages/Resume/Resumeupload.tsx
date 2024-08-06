@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, CSSProperties } from "react";
+import { useRef, useState, useEffect, CSSProperties ,useContext} from "react";
 import Header from "../../components/layout/header/Header";
 import "./Resumeupload.css";
 import { ReactComponent as Arrow } from "../../assests/img/arrow-dropdown.svg";
@@ -10,6 +10,9 @@ import {
 } from "../../API/apiClient";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../../store/AuthContext";
+import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
+import {toast,ToastContainer} from 'react-toastify';
 
 const Resumeupload = () => {
   const override: CSSProperties = {
@@ -21,6 +24,7 @@ const Resumeupload = () => {
   const [selectedFileUrl, setSelectedFileUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>("manage");
+  const authCtx = useContext(AuthContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -28,17 +32,24 @@ const Resumeupload = () => {
     fetchData();
   }, []);
   const fetchData = async () => {
-    const result = await fetchFile(1);
-    if (result) {
-      setSelectedFileUrl(result);
+    if(authCtx.userData)
+    {
+      const result = await fetchFile(authCtx.userData.Id);
+      if (result) {
+        setSelectedFileUrl(result);
+      }
     }
+    
   };
 
   const deleteResume = async () => {
-    const result = await deleteFile(1);
+    if(authCtx.userData)
+      {
+    const result = await deleteFile(authCtx.userData.Id);
     if (result) {
       setSelectedFileUrl(null);
     }
+  }
   };
 
   const handleSelectOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,12 +76,10 @@ const Resumeupload = () => {
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
+      
         fileInputRef.current?.click();
-      }, 2000);
-    }
+      }
+    
   };
 
   const updateResume = () => {
@@ -82,14 +91,18 @@ const Resumeupload = () => {
   ) => {
     const file = event.target.files?.[0];
 
-    if (file) {
+    if (file && authCtx.userData) {
       if (selectedFileUrl !== null) {
-        const result = await updateFile(1, { file });
+        const result = await updateFile(authCtx.userData.Id, { file });
         setSelectedFileUrl(result);
-      } else {
-        await uploadFile({ file });
+        toast.success('File updated Successfully');
+      }
+       else 
+      {
+        await uploadFile({ file },authCtx.userData.Id);
         const url = URL.createObjectURL(file);
         setSelectedFileUrl(url);
+        toast.success('File uploaded Successfully');
       }
     }
   };
@@ -101,6 +114,7 @@ const Resumeupload = () => {
         height: selectedFileUrl === null ? "100vh" : "100%",
       }}
     >
+     <ToastContainer />
       <Header />
       <input
         type="file"

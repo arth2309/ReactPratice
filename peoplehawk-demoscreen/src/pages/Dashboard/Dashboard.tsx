@@ -1,5 +1,5 @@
 import Header from "../../components/layout/header/Header";
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useState,useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import "../../stylesheets/obviously-font.css";
 import profile from "../../assests/img/profile_placeholder-3x.png";
@@ -9,6 +9,11 @@ import facebook from "../../assests/img/facebook-icon.svg";
 import linkedin from "../../assests/img/linkedin-icon.svg";
 import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
+import {fetchPhoto,uploadPhoto,getProgress} from "../../API/apiClient";
+
+
 
 interface Card1ItemProps {
   bordercolor: string;
@@ -33,14 +38,21 @@ const LeftContainer = styled.div({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "30%",
   backgroundColor: "#B8DFF5",
   height: "100%",
+  padding : "21px",
+ 
 
   "@media (max-width : 992px)": {
     display: "none",
   },
 });
+
+const BrokerList = styled.div({
+  fontSize : '17px',
+  fontWeight : '600',
+  color : '#394456'
+})
 
 const LeftChildContainer = styled.div({
   width: "80%",
@@ -55,34 +67,37 @@ const LeftChildMainContainer = styled.div({
 const Heading = styled.div({
   fontFamily: "obviously",
   borderBottom: "5px solid #F96332",
-  fontSize: "20px",
+  fontSize: "25px",
+  marginTop : "20px",
+  width : '350px'
 });
 
 const Card1 = styled.div({
-  width: "fit-content",
-  padding: "10px 25px",
+  width: "338px",
+  padding: "5px 10px",
   borderRadius: "8px",
   display: "flex",
   gap: "10px",
   backgroundColor: "#DBEFFA",
-  marginTop: "10px",
+  marginTop: "20px",
 });
 
 const Card1Item = styled.div<Card1ItemProps>((props) => ({
   border: `1px solid ${props.bordercolor}`,
-  borderRadius: "10px",
+  borderRadius: "30px",
   display: "flex",
-  padding: "9px 24px",
+  padding: "9px 0px",
   justifyContent: "center",
   cursor: "pointer",
-  fontSize: "12px",
+  fontSize: "14px",
   color: "#394456",
+  width : "163px"
 }));
 
 const Card2 = styled.div({
   display: "flex",
   gap: "30px",
-  marginTop: "10px",
+  marginTop: "20px",
 });
 
 const Card2Item = styled.div({
@@ -90,20 +105,37 @@ const Card2Item = styled.div({
   flexDirection: "column",
   alignItems: "center",
   backgroundColor: "#DBEFFA",
-  padding: "5px 25px 5px 25px",
-  gap: "5px",
+  padding: "15px 25px 5px 25px",
+  gap: "15px",
   borderRadius: "8px",
+  width : "175px"
 });
+
+
 
 const Card2Sub = styled.div({
   display: "flex",
   flexDirection: "column",
-  gap: "5px",
+  gap: "20px",
 });
 
+const Card2SubItem = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  backgroundColor: "#DBEFFA",
+  padding: "5px 25px 5px 25px",
+  gap: "13px",
+  borderRadius: "8px",
+  width : '50px',
+  height : '100px'
+});
+
+
 const Progress = styled.div({
-  fontSize: "30px",
+  fontSize: "40px",
   color: "#F96332",
+  fontWeight : "600"
 });
 
 const Trophy = styled.div<TrophyProps>((props) => ({
@@ -120,10 +152,11 @@ const Trophy = styled.div<TrophyProps>((props) => ({
 const Card3 = styled.div({
   backgroundColor: "#DBEFFA",
   display: "flex",
-  gap: "50px",
+  gap: "80px",
   marginTop: "20px",
   padding: "10px",
   borderRadius: "8px",
+  width : '337px'
 });
 
 const Card3Item = styled.div({
@@ -132,9 +165,7 @@ const Card3Item = styled.div({
   flexDirection: "column",
 });
 
-// const Card3List = styled.div({
-//    marginTop : '15px'
-// })
+
 
 const Broker = styled.div({
   color: "#F96332",
@@ -151,7 +182,8 @@ const PrimaryButton = styled.button({
   cursor: "pointer",
   backgroundColor: "#F96332",
   width: "300px",
-  maxWidth: "100%",
+  fontSize : '16px',
+  fontWeight : '600',
   display: "flex",
   justifyContent: "center",
   borderRadius: "20px",
@@ -163,11 +195,12 @@ const OutlineButton = styled.button({
   background: "transparent",
   border: "1px solid #F96332",
   width: "300px",
-  maxWidth: "100%",
+  fontSize : '16px',
+  fontWeight : '600',
   display: "flex",
   justifyContent: "center",
   borderRadius: "20px",
-  color: "black",
+  color: "#394456",
 });
 
 const BorderBottom = styled.div<BorderBottomProps>((props) => ({
@@ -219,11 +252,80 @@ const MobileCard2Item = styled.div({
   padding: "0px 10px 0px 10px",
 });
 
-const Dashboard = () => {
+const RightContainer = styled.div({
+    width : 'calc(100% - 400px)',
+    display : 'flex',
+    flexDirection : 'column',
+    padding : '16px 80px'
+})
+
+const RightHeading = styled.div({
+     display : 'flex',
+     justifyContent : 'start'
+})
+
+const RightHeading1 = styled.h1({
+  color : '#394456', 
+  letterSpacing : '1px'
+})
+
+const RightHeadingSpan = styled.span({
+   color : '#F96332',
+   fontFamily : 'obviously',
+   fontWeight : 'bold'
+})
+
+
+const Dashboard : React.FC = () => {
   const authctx = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(3);
+
+  useEffect(() => {
+       fetchdata();
+  },[])
+
+  const fetchdata = async() => {
+    if(authctx.userData)
+    {
+      const result = await fetchPhoto(authctx.userData.Id);
+      if(result)
+        {
+          setImageSrc(result);
+        }
+        const prog = await getProgress(authctx.userData.Id);
+        if(prog)
+        {
+          setProgress(prog);
+        }
+    }
+   
+  }
+
+    const handleFileChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            
+            if (file.size > 15*1024) {
+                showToast('error', 'File size exceeds 15 KB limit.','error');
+                return;
+            }
+                if(authctx.userData)
+                {
+                   await uploadPhoto(authctx.userData.Id,{file : file})
+                }
+            const imageUrl = URL.createObjectURL(file);
+            setImageSrc(imageUrl);
+            return () => URL.revokeObjectURL(imageUrl);
+        }
+      }
+
 
   return (
     <Fragment>
+      <ToastComponent />
       <Header />
       <MobileLeftContainer>
         <MobileCard1>
@@ -245,8 +347,9 @@ const Dashboard = () => {
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
+        <Heading>Welcome <span style={{color : '#F96332'}}>{authctx.userData?.FirstName}</span></Heading>
           <LeftChildContainer>
-            <Heading>Welcome {authctx.userData?.FirstName}</Heading>
+           
             <LeftChildMainContainer>
               <Card1>
                 <Card1Item bordercolor="#F96332">
@@ -257,44 +360,58 @@ const Dashboard = () => {
                 </Card1Item>
               </Card1>
               <Card2>
-                <Card2Item>
+                <Card2Item >
                   <h2 style={{ color: "#394456", margin: "0px" }}>
                     {" "}
                     {authctx.userData?.FirstName} {authctx.userData?.LastName}
                   </h2>
-                  <img src={profile} alt="profile" height={"75px"} />
+                  <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
+                <img
+                   src={imageSrc || profile} alt="profile" 
+                   style={{height : '140px',width : '140px', borderRadius : '50%'}}
+                  
+                />
+                <input
+                    type="file"
+                    id="file-input"
+                    accept="image/png, image/jpeg" 
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                />
+            </label>
+                
                 </Card2Item>
                 <Card2Sub>
-                  <Card2Item>
+                  <Card2SubItem>
                     <div style={{ color: "#394456" }}>
                       <strong> Progress</strong>
                     </div>
-                    <Progress>51%</Progress>
-                  </Card2Item>
-                  <Card2Item>
+                    <Progress>{progress}%</Progress>
+                  </Card2SubItem>
+                  <Card2SubItem>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
                       <strong>Trophies</strong>
                     </div>
-                    <Trophy cHeight="44px" cWidth="80%">
+                    <Trophy cHeight="60px" cWidth="60px">
                       <img src={trophy} alt="trophy" />
                     </Trophy>
-                  </Card2Item>
+                  </Card2SubItem>
                 </Card2Sub>
               </Card2>
               <Card3>
                 <img src={broker} alt="broker" />
                 <Card3Item>
-                  <div>Your personality Type</div>
+                  <div style = {{color:"#394456"}}>Your personality Type</div>
                   <Broker>Broker</Broker>
                   <div>
                     <div style={{ fontSize: "12px", letterSpacing: "1px" }}>
                       <i>Your key strengths:</i>
                     </div>
-                    <div>Unflappable</div>
-                    <div>Concrete</div>
-                    <div>Team-builder</div>
+                    <BrokerList>Unflappable</BrokerList>
+                    <BrokerList>Concrete</BrokerList>
+                    <BrokerList>Team-builder</BrokerList>
                   </div>
-                  <div style={{ marginTop: "20px" }}>
+                  <div style={{ marginTop: "20px",color : '#394456' }}>
                     Share your personality type
                   </div>
                   <Card3Img>
@@ -304,13 +421,19 @@ const Dashboard = () => {
                   </Card3Img>
                 </Card3Item>
               </Card3>
-              <PrimaryButton>Take Your Next Step</PrimaryButton>
-              <OutlineButton>See My Job Opportunities</OutlineButton>
-              <OutlineButton>See My Profile</OutlineButton>
-              <BorderBottom cWidth="300px" />
+              <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
+              <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
+              <OutlineButton onClick={() => {navigate('/resume')}}>Upload / View Your Resume</OutlineButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
+          <BorderBottom cWidth="350px" />
         </LeftContainer>
+        <RightContainer>
+               <RightHeading>
+                <RightHeading1>Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress</RightHeading1>
+               </RightHeading>
+              
+        </RightContainer>
       </Container>
     </Fragment>
   );

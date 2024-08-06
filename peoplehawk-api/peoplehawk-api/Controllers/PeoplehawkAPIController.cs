@@ -89,10 +89,10 @@ namespace peoplehawk_api.Controllers
             return await _courseInterestService.GetAllAsync();
         }
 
-        [HttpPost("files")]
-        public async Task<ResumeFileDTO> UploadFile(IFormFile file)
+        [HttpPost("files/{UserId:int}")]
+        public async Task<ResumeFileDTO> UploadFile(IFormFile file,int UserId)
         {
-            return await _resumeFileService.UploadFile(file);
+            return await _resumeFileService.UploadFile(file,UserId);
         }
 
         [HttpGet("files/{UserId:int}")]
@@ -151,8 +151,44 @@ namespace peoplehawk_api.Controllers
         [HttpGet("personalityreport/{UserId:int}")]
         public async Task<bool> QuizEligible(int UserId)
         {
-            var result = await _personalityReportService.FirstorDefaultAsync(x => x.UserId == UserId && x.TestNo == 3);
+            var result = await _personalityReportService.FirstorDefaultAsync(x => x.UserId == UserId );
             return result == null ? false : true;
+        }
+
+        [HttpPut("home/{UserId:int}")]
+        public async Task<UserDTO> UploadProfilePhoto(IFormFile file,int UserId)
+        {
+            return await _userService.UpdateFile(file,UserId);
+        }
+
+        [HttpGet("home/{UserId:int}")]
+
+        public async Task<IActionResult> GetPhoto(int UserId)
+        {
+            var result = await _userService.GetPhoto(UserId);
+            return File(result.Item1, "application/pdf", result.Item2);
+        }
+
+
+        [HttpGet("home/progress/{UserId:int}")]
+        public async Task<int> Progress(int UserId)
+        {
+            int x = 3;
+            ResumeFileDTO resumeFileDTO = await _resumeFileService.FirstorDefaultAsync(a => a.UserId == UserId);
+            if (resumeFileDTO != null)
+            {
+                x = x + 47;
+            }
+
+            PersonalityReportDTO personalityReportDTO = await _personalityReportService.FirstorDefaultAsync(a => a.UserId == UserId);
+
+            if (personalityReportDTO != null) 
+            {
+                x = x + 50;
+            }
+
+            return x;
+
         }
 
 

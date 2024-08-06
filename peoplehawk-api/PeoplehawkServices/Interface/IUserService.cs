@@ -1,4 +1,5 @@
-﻿using PeoplehawkRepositories.Models;
+﻿using Microsoft.AspNetCore.Http;
+using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,9 @@ namespace PeoplehawkServices.Interface
         string SendEmail(string email);
 
         Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate);
+
+        Task<UserDTO> UpdateFile(IFormFile file, int UserId);
+
+        Task<(byte[], string)> GetPhoto(int UserId);
     }
 }

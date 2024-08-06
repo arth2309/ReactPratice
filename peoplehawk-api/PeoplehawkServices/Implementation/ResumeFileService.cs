@@ -27,7 +27,7 @@ namespace PeoplehawkServices.Implementation
 
         
 
-        public async Task<ResumeFileDTO> UploadFile(IFormFile file)
+        public async Task<ResumeFileDTO> UploadFile(IFormFile file,int UserId)
         {
             string uploadsFolder = Path.Combine("Files");
             string filePath = Path.Combine(uploadsFolder, file.FileName);
@@ -40,7 +40,7 @@ namespace PeoplehawkServices.Implementation
             {
                 FileName = file.FileName,
                 FilePath = Path.Combine("/Files", file.FileName),
-                UserId = 1,
+                UserId = UserId,
                 UploadDate = DateTime.Now
             };
 

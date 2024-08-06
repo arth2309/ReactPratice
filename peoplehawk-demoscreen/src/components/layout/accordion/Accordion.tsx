@@ -9,7 +9,7 @@ interface IProps {
   children: React.ReactNode; 
 }
 
-const Accordion: React.FC<IProps> = ({ open = false, children, title }) => {
+const Accordion: React.FC<IProps> = ({ open = true, children, title }) => {
   const [isOpen, setIsOpen] = useState<boolean>(open);
 
   const handleFilterOpening = () => {

@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
+using PeoplehawkRepositories.Implementation;
+using PeoplehawkServices.Mapping;
 
 namespace PeoplehawkServices.Implementation
 {
@@ -101,5 +104,36 @@ namespace PeoplehawkServices.Implementation
            return  _mapper.Map<List<UserDTO>>(users);
         }
 
+        public async Task<UserDTO> UpdateFile(IFormFile file, int UserId)
+        {
+            User user = await _userRepository.FirstOrDefaultAsync(x => x.Id == UserId);
+
+            string uploadsFolder = Path.Combine("Files");
+            string filePath = Path.Combine(uploadsFolder, file.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            user.ProfilePhoto = file.FileName;
+            User user1 = await _userRepository.UpdateAsync(user);
+            return _mapper.Map<UserDTO>(user1); 
+
+        }
+
+        public async Task<(byte[], string)> GetPhoto(int UserId)
+        {
+            User user = await _userRepository.FirstOrDefaultAsync(x => x.Id == UserId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException();
+            }
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", user.ProfilePhoto);
+            var fileBytes = File.ReadAllBytes(filePath);
+            return (fileBytes, user.ProfilePhoto);
+        }
+
     }
+
+
 }
