@@ -10,6 +10,6 @@ namespace PeoplehawkServices.Interface
 {
     public interface ICourseInterestService : IGenericService<CourseInterest,CourseInterestDTO>
     {
-       
+        Task<List<CourseInterestDTO>> GetCourseInterestLists();
     }
 }

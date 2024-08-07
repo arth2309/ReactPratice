@@ -11,8 +11,7 @@ import {
 import ClipLoader from "react-spinners/ClipLoader";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
-import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {toast,ToastContainer} from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 
 const Resumeupload = () => {
   const override: CSSProperties = {
@@ -95,14 +94,14 @@ const Resumeupload = () => {
       if (selectedFileUrl !== null) {
         const result = await updateFile(authCtx.userData.Id, { file });
         setSelectedFileUrl(result);
-        toast.success('File updated Successfully');
+        
       }
        else 
       {
         await uploadFile({ file },authCtx.userData.Id);
         const url = URL.createObjectURL(file);
         setSelectedFileUrl(url);
-        toast.success('File uploaded Successfully');
+        
       }
     }
   };

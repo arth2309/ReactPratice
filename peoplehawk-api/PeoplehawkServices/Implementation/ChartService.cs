@@ -19,6 +19,11 @@ namespace PeoplehawkServices.Implementation
             _mapper = mapper;
         }
         
+        public async Task<ChartDTO> GetChartdata(int UserId)
+        {
+            Chart chart = await _chartRepository.FirstOrDefaultAsync(a => a.UserId == UserId);
+            return _mapper.Map<ChartDTO>(chart);
+        }
 
     }
 }

@@ -29,6 +29,11 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<ResumeFileDTO> UploadFile(IFormFile file,int UserId)
         {
+            if (UserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException("user is not found");
+            }
+
             string uploadsFolder = Path.Combine("Files");
             string filePath = Path.Combine(uploadsFolder, file.FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -78,6 +83,12 @@ namespace PeoplehawkServices.Implementation
             var resume = await _resumeFileRepository.UpdateAsync(resumeFile);
             return resumeFile.ToDto();
           
+        }
+
+        public async Task<ResumeFileDTO> GetUserResume(int UserId)
+        {
+            ResumeFile resumeFile = await _resumeFileRepository.FirstOrDefaultAsync(x=>x.UserId == UserId);
+            return _mapper.Map<ResumeFileDTO>(resumeFile);
         }
     }
 }

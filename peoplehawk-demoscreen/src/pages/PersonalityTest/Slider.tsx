@@ -17,7 +17,8 @@ interface ConProps {
 
 interface SliderProps {
     slideValues : number,
-    onSlideChange : (value : number) => void
+    onSlideChange : (value : number) => void,
+    onTouch : () => void
 }
 
 
@@ -103,6 +104,7 @@ const Slider : React.FC<SliderProps> = (props) => {
    
   const [values, setValues] = React.useState([50]);
   const[screenWidth,setScreenWidth] = React.useState<number>(window.screen.width);
+ 
 
 
   React.useEffect(() => {
@@ -135,7 +137,7 @@ const Slider : React.FC<SliderProps> = (props) => {
       min={0}
       max={100}
       values={values}
-      onChange={(values) => {setValues(values) ; props.onSlideChange(values[0])}}
+      onChange={(values) => {setValues(values) ; props.onSlideChange(values[0]) ; props.onTouch()}}
       renderTrack={({ props, children }) => (
         <div
           {...props}

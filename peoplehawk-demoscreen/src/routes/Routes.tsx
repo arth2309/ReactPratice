@@ -8,28 +8,23 @@ import { Register } from "../pages/Authentication/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import { ForgotPassword } from "../pages/Authentication/Forgotpassword";
 import Personalitytest from "../pages/PersonalityTest/Personalitytest";
-const Routes = (props : any) => {
 
-    const {courseInterest, chartData} = props;
+const Routes = () => {
     const authCtx = useContext(AuthContext);
     const token = localStorage.getItem("token");
 
     return(
-
-        
         <BrowserRouter>
         <Main>
-
             <Route path = "/" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
             <Route path="/home" element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to="/login"/>}></Route>
-           <Route path = "/analysis" element = {authCtx.isLoggedIn ?<Useranalysis courseInterest = {courseInterest} chartData = {chartData} /> : <Navigate to="/login"/>}></Route>  
+           <Route path = "/analysis" element = {authCtx.isLoggedIn ?<Useranalysis /> : <Navigate to="/login"/>}></Route>  
             <Route path="/resume" element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to="/login"/>}></Route>
             <Route path = "/login" element = {<Login />}></Route>
             <Route path = "/forgotpassword" element = {<ForgotPassword />}></Route>
             <Route path = "/personality-test" element = {<Personalitytest />}></Route>
             <Route path = "/register" element = {<Register />}></Route>
             <Route path = "*" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
- 
         </Main>
         </BrowserRouter>
     );

@@ -10,6 +10,6 @@ namespace PeoplehawkServices.Interface
 {
     public interface IChartService : IGenericService<Chart,ChartDTO>
     {
-        
+        Task<ChartDTO> GetChartdata(int UserId);
     }
 }

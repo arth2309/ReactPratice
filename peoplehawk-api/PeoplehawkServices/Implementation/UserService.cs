@@ -5,21 +5,16 @@ using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using PeoplehawkServices.Common;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http;
-using PeoplehawkRepositories.Implementation;
-using PeoplehawkServices.Mapping;
+
 
 namespace PeoplehawkServices.Implementation
 {
@@ -43,7 +38,7 @@ namespace PeoplehawkServices.Implementation
 
             if (user == null) 
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException("Invalid credantials");
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -66,6 +61,7 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<UserDTO> Register(UserDTO userDTO)
         {
+           
             userDTO.Password = HashHelper.HashedInput(userDTO.Password);
             await _userRepository.AddAsync(_mapper.Map<User>(userDTO));
             return userDTO;
@@ -100,14 +96,12 @@ namespace PeoplehawkServices.Implementation
         public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
         {
             List<User> users =  await _userRepository.GetByCriteria(predicate);
-     
-           return  _mapper.Map<List<UserDTO>>(users);
+            return  _mapper.Map<List<UserDTO>>(users);
         }
 
         public async Task<UserDTO> UpdateFile(IFormFile file, int UserId)
         {
             User user = await _userRepository.FirstOrDefaultAsync(x => x.Id == UserId);
-
             string uploadsFolder = Path.Combine("Files");
             string filePath = Path.Combine(uploadsFolder, file.FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -118,7 +112,6 @@ namespace PeoplehawkServices.Implementation
             user.ProfilePhoto = file.FileName;
             User user1 = await _userRepository.UpdateAsync(user);
             return _mapper.Map<UserDTO>(user1); 
-
         }
 
         public async Task<(byte[], string)> GetPhoto(int UserId)

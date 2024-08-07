@@ -11,5 +11,7 @@ namespace PeoplehawkServices.Interface
     public interface IPersonalityReportService : IGenericService<PersonalityReport,PersonalityReportDTO>
     {
         Task<List<PersonalityReportDTO>> AddQuizResult(List<PersonalityReportDTO> personalityReportDTOs);
+
+        Task<PersonalityReportDTO> GetReport(int UserId);
     }
 }

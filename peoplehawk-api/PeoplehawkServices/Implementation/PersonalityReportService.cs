@@ -34,7 +34,11 @@ namespace PeoplehawkServices.Implementation
             return personalityReportDTOs;
         }
 
-       
+       public async Task<PersonalityReportDTO> GetReport(int UserId)
+        {
+            PersonalityReport personalityReport = await _personalityReportRepository.FirstOrDefaultAsync(x => x.UserId == UserId);
+            return _mapper.Map<PersonalityReportDTO>(personalityReport);
+        }
 
     }
 }

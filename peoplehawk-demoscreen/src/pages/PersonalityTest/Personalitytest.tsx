@@ -14,7 +14,8 @@ import AuthContext from "../../store/AuthContext";
 
 const Container = styled.div({
   backgroundColor: "#DBEFFA",
-  height: "calc(100vh + 150px)",
+  height: "100vh",
+  minHeight : '1200px',
 });
 
 const BackButtonContainer = styled.div({
@@ -49,6 +50,10 @@ const Container1 = styled.div({
   justifyContent: "space-between",
   borderRadius: "8px",
   marginTop: "15px",
+
+  '@media (max-width : 576px)' : {
+    width : '70%'
+  }
 });
 
 const SubContainer1 = styled.div({
@@ -84,20 +89,35 @@ const OutlineButton = styled.button({
   cursor: "pointer",
   background: "transparent",
   border: "1.5px solid #F96332",
-  width: "300px",
-  maxWidth: "100%",
+  width: "245px",
   display: "flex",
   justifyContent: "center",
   borderRadius: "20px",
   color: "black",
   fontWeight: "700",
   fontSize: "14px",
+
 });
 
-const Container1ButtonDiv = styled.div({
-  display: "flex",
-  gap: "10px",
-});
+const OutlineButtonDiv = styled.div({
+   display : 'flex',
+   gap : '10px',
+
+   "@media (max-width : 1150px)": {
+    display: 'block'
+  },
+
+  "@media (max-width : 840px)": {
+    display: "flex",
+  },
+
+  "@media (max-width : 576px)": {
+    display: "block",
+  },
+
+})
+
+
 
 const Paragraph = styled.p({
   fontSize: "15px",
@@ -113,6 +133,10 @@ const Container2 = styled.div({
   alignItems: "center",
   backgroundColor: "white",
   borderRadius: "8px",
+
+  '@media (max-width : 576px)' : {
+    width : '70%'
+  }
 });
 
 const Text = styled.div({
@@ -189,6 +213,8 @@ const Personalitytest: React.FC = () => {
   const [quizBank, setQuizBank] = React.useState<Quiz1[] | null>(null);
   const [isSubmit, SetisSubmit] = React.useState<boolean>(false);
   const [testCount, setTestCount] = React.useState<number>(0);
+  const [isSliderTouched,setIsSliderTouched] = React.useState<boolean>(false);
+  const [currentQuestion,setCurrentQuestion] = React.useState<number>(0);
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -227,6 +253,10 @@ const Personalitytest: React.FC = () => {
     );
   };
 
+  const handleTouch = () => {
+    setIsSliderTouched(true);
+  }
+
   return (
     <Container>
       <Header />
@@ -252,10 +282,10 @@ const Personalitytest: React.FC = () => {
               know what instincts you’ve got, and how your judgement and
               business radar has served you and your employers in the past.
             </Paragraph>
-            <Container1ButtonDiv>
+            <OutlineButtonDiv>
               <OutlineButton>Sample Personality Guide</OutlineButton>
               <OutlineButton>Famous Personalities</OutlineButton>
-            </Container1ButtonDiv>
+            </OutlineButtonDiv>
           </SubContainer2>
 
           <SubContainer1>
@@ -322,6 +352,7 @@ const Personalitytest: React.FC = () => {
                 <Slider
                   slideValues={quizBank[values[0]].value}
                   onSlideChange={handleSlideChange}
+                  onTouch={handleTouch}
                 />
               )}
               <div style={{ display: "flex", gap: "10px", marginTop: "60px" }}>
@@ -329,6 +360,15 @@ const Personalitytest: React.FC = () => {
                   <OutlineButton1
                     onClick={() => {
                       setValues((prevstate) => [prevstate[0] - 1]);
+                      if(values[0] >= currentQuestion || values[0] === 1)
+                        {
+                          setIsSliderTouched(true)
+                        }
+                        else
+                        {
+                          setIsSliderTouched(false)
+                        }
+      
                     }}
                   >
                     Previous Question
@@ -336,8 +376,26 @@ const Personalitytest: React.FC = () => {
                 )}
                 {values[0] < 9 && (
                   <PrimaryButton
+                  disabled = {!isSliderTouched}
                     onClick={() => {
+                      
+                        
                       setValues((prevstate) => [prevstate[0] + 1]);
+                      if(values[0] - 1 === currentQuestion)
+                        {
+                         setCurrentQuestion((c) => c +1);
+                        }
+                      
+                      setIsSliderTouched(false);
+                      if(values[0] >= currentQuestion)
+                        {
+                          setIsSliderTouched(false)
+                        }
+                        else
+                        {
+                          setIsSliderTouched(true)
+                        }
+                      
                     }}
                   >
                     Next Question

@@ -10,8 +10,8 @@ import {
   SubmitTest
 } from "../interface/Interface";
 import { toast } from "react-toastify";
-
 import { getToken } from "../utils/manageAccessToken";
+
 
 interface RegisterFormvalues {
   id: number;
@@ -25,7 +25,7 @@ interface RegisterFormvalues {
   roleId: number;
 }
 
-const BASE_URL: string = "https://localhost:7055/api/PeoplehawkAPI";
+const BASE_URL: string = "https://localhost:7055/api/candidate/";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -84,7 +84,9 @@ export const Login = async (data: LoginFormValues): Promise<any> => {
     const response = await apiClient.post(`/auth`, data);
     return response.data;
   } catch (error: any) {
-    toast.error("Invalid credantials", {
+
+   
+    toast.error(error.response.data.error, {
       position: "bottom-center",
       autoClose: 2000,
       hideProgressBar: false,
@@ -105,12 +107,9 @@ export const ForgotPassword = async (
 };
 
 // eslint-disable-next-line
-export const getCourseInterest = async <T>(
-  url: string,
-  config = {}
-): Promise<CourseInterest[]> => {
+export const getCourseInterest = async(): Promise<CourseInterest[]> => {
   try {
-    const response = await apiClient.get<CourseInterest[]>(url, config);
+    const response = await apiClient.get<CourseInterest[]>('/courseInterests');
     return response.data;
   } catch (error) {
     return [];
@@ -118,13 +117,9 @@ export const getCourseInterest = async <T>(
 };
 
 // eslint-disable-next-line
-export const getChartData = async <T>(
-  url: string,
-  config = {}
-): Promise<ChartData> => {
+export const getChartData = async(): Promise<ChartData> => {
   try {
-    const response = await apiClient.get<ChartData>(url, config);
-
+    const response = await apiClient.get<ChartData>('1/chart');
     return response.data;
   } catch (error) {
     return { id: 1, a: 1, s: 1, c: 1, i: 1, r: 1, e: 1, career_code: "asi" };
@@ -142,9 +137,22 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
       },
     });
 
+    setTimeout(() => {toast.success("File uploaded Successfully", {
+      position: "bottom-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });},2000)
+    
+
     return response;
   } catch (error) {
-    throw new Error(`Error uploading file`);
+    
+    
   }
 };
 
@@ -237,7 +245,7 @@ export const getQuiz = async () : Promise<Quiz[] | null> =>
       const formData = new FormData();
       formData.append("file", data.file);
   
-      await apiClient.put(`/home/${UserId}`, formData, {
+      await apiClient.put(`${UserId}/uploadPhoto`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -253,7 +261,7 @@ export const getQuiz = async () : Promise<Quiz[] | null> =>
 
   export const fetchPhoto = async (UserId: number): Promise<string | null> => {
     try {
-      const response = await apiClient.get(`/home/${UserId}`, {
+      const response = await apiClient.get(`${UserId}/candidatePhoto`, {
         responseType: "blob",
       });
   
@@ -269,7 +277,7 @@ export const getQuiz = async () : Promise<Quiz[] | null> =>
   export const getProgress = async (UserId : number) : Promise<number | null> =>
     {
               try {
-                const response = await apiClient.get(`/home/progress/${UserId}`);
+                const response = await apiClient.get(`${UserId}/progress`);
                 return response.data;
               }
   

@@ -21,5 +21,11 @@ namespace PeoplehawkServices.Implementation
             _countryRepository = countryRepository;
             _mapper = mapper;
         }
+
+        public async Task<List<CountryDTO>> GetCountryList()
+        {
+            List<Country> country = await _countryRepository.GetAllAsync();
+            return _mapper.Map<List<CountryDTO>>(country);
+        }
     }
 }

@@ -23,6 +23,11 @@ namespace PeoplehawkServices.Implementation
             _mapper = mapper;
         }
 
+        public async  Task<List<CourseInterestDTO>> GetCourseInterestLists()
+        {
+            List<CourseInterest> courseInterests = await _courseInterestRepository.GetAllAsync();
+            return _mapper.Map<List<CourseInterestDTO>>(courseInterests);   
+        }
        
        
         

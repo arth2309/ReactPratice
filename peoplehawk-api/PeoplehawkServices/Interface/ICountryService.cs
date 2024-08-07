@@ -11,5 +11,6 @@ namespace PeoplehawkServices.Interface
 {
     public interface ICountryService : IGenericService<Country,CountryDTO>
     {
+        Task<List<CountryDTO>> GetCountryList();
     }
 }

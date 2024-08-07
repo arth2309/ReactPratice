@@ -41,6 +41,7 @@ const LeftContainer = styled.div({
   backgroundColor: "#B8DFF5",
   height: "100%",
   padding : "21px",
+  minHeight : '900px',
  
 
   "@media (max-width : 992px)": {
@@ -227,6 +228,7 @@ const MobileCard1 = styled.div({
   flexDirection: "column",
   gap: "10px",
   alignItems: "center",
+  marginBottom : '15px'
 });
 
 const MobileCard2 = styled.div({
@@ -234,6 +236,7 @@ const MobileCard2 = styled.div({
   flexDirection: "column",
   justifyContent: "start",
   width: "50%",
+  marginTop : '20px',
 
   "@media (max-width : 768px)": {
     width: "70%",
@@ -242,26 +245,37 @@ const MobileCard2 = styled.div({
 
 const Obviously = styled.div({
   fontFamily: "obviously",
-  fontSize: "20px",
+  fontSize: "25px",
   lineHeight: "25px",
 });
 
-const MobileCard2Item = styled.div({
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "0px 10px 0px 10px",
+const ObviouslyOrange = styled.div({
+  fontFamily: "obviously",
+  fontSize: "25px",
+  lineHeight: "25px",
+  color : '#F96332'
 });
 
+
 const RightContainer = styled.div({
-    width : 'calc(100% - 400px)',
+    width : '100%',
     display : 'flex',
     flexDirection : 'column',
-    padding : '16px 80px'
+    padding : '16px 80px',
+
+    "@media (max-width : 992px)": {
+       padding : '16px 0px'
+  },
 })
 
 const RightHeading = styled.div({
      display : 'flex',
-     justifyContent : 'start'
+     justifyContent : 'start',
+
+     "@media (max-width : 992px)": {
+       paddingLeft : '16px'
+  },
+    
 })
 
 const RightHeading1 = styled.h1({
@@ -275,13 +289,23 @@ const RightHeadingSpan = styled.span({
    fontWeight : 'bold'
 })
 
+const MobileButtonDiv = styled.div({
+    display : 'none',
+    flexDirection : 'column',
+    alignItems : 'center',
+
+    "@media (max-width : 992px)": {
+       display : 'flex'
+  },
+})
+
 
 const Dashboard : React.FC = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [progress, setProgress] = useState<number>(3);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
        fetchdata();
@@ -329,20 +353,29 @@ const Dashboard : React.FC = () => {
       <Header />
       <MobileLeftContainer>
         <MobileCard1>
-          <img src={profile} alt="profile" height={"100px"} />
-          <Trophy cHeight="22px" cWidth="22px">
+        <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
+                <img
+                   src={imageSrc || profile} alt="profile" 
+                   style={{height : '120px',width : '120px', borderRadius : '50%'}}
+                  
+                />
+                <input
+                    type="file"
+                    id="file-input"
+                    accept="image/png, image/jpeg" 
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                />
+            </label>
+          <Trophy cHeight="40px" cWidth="40px">
             <img src={trophy} alt="trophy" />
           </Trophy>
         </MobileCard1>
         <MobileCard2>
           <Obviously>Welcome</Obviously>
-          <Obviously>{authctx.userData?.FirstName}</Obviously>
+          <ObviouslyOrange>{authctx.userData?.FirstName}</ObviouslyOrange>
           <BorderBottom cWidth="100%" />
           <div>Build a Epic Career here</div>
-          <MobileCard2Item>
-            <Card1Item bordercolor="black">What's Included</Card1Item>
-            <Card1Item bordercolor="black">View My Profile</Card1Item>
-          </MobileCard2Item>
         </MobileCard2>
       </MobileLeftContainer>
       <Container>
@@ -432,7 +465,11 @@ const Dashboard : React.FC = () => {
                <RightHeading>
                 <RightHeading1>Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress</RightHeading1>
                </RightHeading>
-              
+              <MobileButtonDiv>
+              <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
+              <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
+              <OutlineButton onClick={() => {navigate('/resume')}}>Upload / View Your Resume</OutlineButton>
+              </MobileButtonDiv>
         </RightContainer>
       </Container>
     </Fragment>
