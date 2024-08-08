@@ -58,3 +58,13 @@ export interface SubmitTest {
   answer : number,
   testNo : number
 }
+
+export interface CandidateProgress {
+  isResumeUpload : boolean,
+  progress : number
+}
+
+export interface QuizStatus {
+  isFirstTestGiven : boolean,
+  testNo : number
+}

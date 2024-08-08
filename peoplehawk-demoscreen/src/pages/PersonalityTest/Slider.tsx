@@ -3,7 +3,7 @@ import { Range } from "react-range";
 import barsEmpty from '../../assests/img/bars-empty.png';
 import {styled} from 'styled-components';
 import barsFull from '../../assests/img/bars-full.png';
-import { parseJsonSourceFileConfigFileContent } from "typescript";
+
 
 
 interface imgProps {
@@ -108,7 +108,8 @@ const Slider : React.FC<SliderProps> = (props) => {
 
 
   React.useEffect(() => {
-    setScreenWidth(window.screen.width);  
+    setScreenWidth(window.screen.width);
+    // eslint-disable-next-line  
   },[window.screen.width])
 
   React.useEffect(() => {

@@ -1,24 +1,17 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
 using PeoplehawkServices.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PeoplehawkServices.Implementation
 {
-    public class PersonalityReportService : GenericService<PersonalityReport,PersonalityReportDTO>, IPersonalityReportService
+    public class PersonalityReportService : GenericService<PersonalityReport>, IPersonalityReportService
     {
         private readonly IPersonalityReportRepository _personalityReportRepository;
         private readonly IMapper _mapper;
-        public PersonalityReportService(IPersonalityReportRepository personalityReportRepository,IMapper mapper) : base(personalityReportRepository,mapper)
+        public PersonalityReportService(IPersonalityReportRepository personalityReportRepository,IMapper mapper) : base(personalityReportRepository)
         {
             _personalityReportRepository = personalityReportRepository;
             _mapper = mapper;
@@ -28,16 +21,34 @@ namespace PeoplehawkServices.Implementation
         {
             foreach(var personalityReportDTO in personalityReportDTOs)
             {
-                var result = await _personalityReportRepository.AddAsync(personalityReportDTO.FromDto());
+                var result = await AddAsync(personalityReportDTO.FromDto());
             }
 
             return personalityReportDTOs;
         }
 
-       public async Task<PersonalityReportDTO> GetReport(int UserId)
+       public async Task<QuizStatus> GetReport(int UserId)
         {
-            PersonalityReport personalityReport = await _personalityReportRepository.FirstOrDefaultAsync(x => x.UserId == UserId);
-            return _mapper.Map<PersonalityReportDTO>(personalityReport);
+            QuizStatus quizStatus = new QuizStatus();
+            PersonalityReport personalityReport = await LastOrDefaultAsync(x => x.UserId == UserId);
+            if(personalityReport == null) 
+            {
+                quizStatus.IsFirstTestGiven = false;
+                quizStatus.testNo = 0;
+            }
+
+            else if(personalityReport.TestNo < 3)
+            {
+                quizStatus.IsFirstTestGiven = true;
+                quizStatus.testNo = personalityReport.TestNo;
+            }
+
+            else
+            {
+                quizStatus.IsFirstTestGiven = true;
+                quizStatus.testNo = 3;
+            }
+            return quizStatus;
         }
 
     }

@@ -6,6 +6,7 @@ interface InputProps {
     name?: string; 
     required?: boolean;
     error?: boolean;
+    className? : string;
     onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 
@@ -37,18 +38,19 @@ const CustomLabel = styled.label`
 `;
 
 const Input: React.FC<InputProps> = (props) => {
-    const { label, type = 'text', required = false, onClick, onChange, name} = props;
+    const { label, type = 'text', required = false, onClick, onChange, name,className} = props;
   
     
 
     return (
-        <div>
+        <div >
             {label && <CustomLabel>{label}{required ? ' *' : ''}</CustomLabel>}
             <CustomInput
                
                 type={type}
                 onClick={onClick}
                 onChange={onChange}
+                className= {className}
                 name={name}
                 
             />

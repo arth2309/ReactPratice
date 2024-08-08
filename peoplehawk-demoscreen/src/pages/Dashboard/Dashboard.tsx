@@ -1,5 +1,5 @@
 import Header from "../../components/layout/header/Header";
-import { Fragment, useContext, useState,useRef, useEffect } from "react";
+import { Fragment, useContext, useState, useEffect } from "react";
 import { styled } from "styled-components";
 import "../../stylesheets/obviously-font.css";
 import profile from "../../assests/img/profile_placeholder-3x.png";
@@ -11,7 +11,8 @@ import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {fetchPhoto,uploadPhoto,getProgress} from "../../API/apiClient";
+import {fetchPhoto,uploadPhoto,getProgress} from "../../services/HomeService";
+import { CandidateProgress } from "../../interface/Interface";
 
 
 
@@ -299,16 +300,28 @@ const MobileButtonDiv = styled.div({
   },
 })
 
+const Images = styled.img({
+
+  cursor : 'pointer',
+  height : '30px',
+
+  '&:hover' : {
+    filter : 'invert(43%) sepia(93%) saturate(2389%) hue-rotate(154deg) brightness(101%) contrast(101%)',
+  }
+}) 
+
+
 
 const Dashboard : React.FC = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState<CandidateProgress | null>(null);
 
   useEffect(() => {
        fetchdata();
+       // eslint-disable-next-line
   },[])
 
   const fetchdata = async() => {
@@ -419,7 +432,7 @@ const Dashboard : React.FC = () => {
                     <div style={{ color: "#394456" }}>
                       <strong> Progress</strong>
                     </div>
-                    <Progress>{progress}%</Progress>
+                    <Progress>{progress ? progress.progress : 0}%</Progress>
                   </Card2SubItem>
                   <Card2SubItem>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
@@ -448,15 +461,15 @@ const Dashboard : React.FC = () => {
                     Share your personality type
                   </div>
                   <Card3Img>
-                    <img src={facebook} alt="facebook" height="30px" />
-                    <img src={twitter} alt="twitter" height="30px" />
-                    <img src={linkedin} alt="linkedin" height="30px" />
+                    <Images src={facebook} alt="facebook"  />
+                    <Images src={twitter} alt="twitter" />
+                    <Images src={linkedin} alt="linkedin"  />
                   </Card3Img>
                 </Card3Item>
               </Card3>
               <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate('/resume')}}>Upload / View Your Resume</OutlineButton>
+              <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom cWidth="350px" />
@@ -468,7 +481,7 @@ const Dashboard : React.FC = () => {
               <MobileButtonDiv>
               <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate('/resume')}}>Upload / View Your Resume</OutlineButton>
+              <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '}Your Resume</OutlineButton>
               </MobileButtonDiv>
         </RightContainer>
       </Container>

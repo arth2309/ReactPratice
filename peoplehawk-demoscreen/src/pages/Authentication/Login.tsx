@@ -1,15 +1,16 @@
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Login as api } from "../../API/apiClient";
+import { Login as api } from "../../services/AuthService";
 import AuthContext from "../../store/AuthContext";
-import { useContext } from "react";
+import { useContext,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Bottom,
   Subject,
@@ -22,6 +23,7 @@ import Input from "../../components/layout/form/Input";
 export const Login = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const[showPassword,setShowPassword] = useState<boolean>(false);
 
   const initialValues: LoginFormValues = {
     email: "",
@@ -40,6 +42,10 @@ export const Login = () => {
     result && authCtx.login(result);
     result && navigate("/home");
   };
+
+  const passwordHandler = () => {
+    setShowPassword(!showPassword);
+  }
 
   return (
     <Container>
@@ -79,14 +85,22 @@ export const Login = () => {
                   />
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" style={{position : 'relative',display : 'flex', marginBottom : '45px'}}>
+                 
+                    
                   <Input
                     label="Password"
                     name="password"
-                    type="password"
+                    type= {showPassword ? 'text' : 'password'}
+                    className="password"
                     required
                     onChange={(e) => setFieldValue("password", e.target.value)}
                   />
+                 
+                  <div style={{position : 'absolute' , top : '31px' , right : '13px'}} onClick={passwordHandler}>
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon /> } 
+                  </div>
+                  
                   <ErrorMessage
                     name="password"
                     component="div"

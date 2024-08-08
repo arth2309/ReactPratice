@@ -1,6 +1,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { ForgotPassword as api } from "../../API/apiClient";
+import { ForgotPassword as api } from "../../services/AuthService";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
@@ -14,7 +14,7 @@ import {
 import { Container, LeftContainer, MainContainer } from "./styled";
 import { ForgotPasswordValues } from "../../interface/Interface";
 import Input from "../../components/layout/form/Input";
-import { ReactSelect } from "../../components/layout/form/Select";
+
 
 export const ForgotPassword = () => {
   const initialValues: ForgotPasswordValues = {
@@ -68,7 +68,7 @@ export const ForgotPassword = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <ReactSelect name="country" />
+                  
                 </div>
                 <div>We'll send you instructions by email</div>
                 <button type="submit">Send</button>

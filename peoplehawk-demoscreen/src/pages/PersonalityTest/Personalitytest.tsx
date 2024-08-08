@@ -5,11 +5,12 @@ import { Range, getTrackBackground } from "react-range";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import personalityBaneer from "../../assests/img/personality_test_banner.svg";
 import Slider from "./Slider";
-import { SubmitTest } from "../../interface/Interface";
-import { getQuiz, QuizResponse, QuizEligible } from "../../API/apiClient";
+import { SubmitTest,QuizStatus } from "../../interface/Interface";
+import { getQuiz, QuizResponse, QuizEligible } from "../../services/PersonalityTestService";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
+
 
 
 const Container = styled.div({
@@ -183,6 +184,7 @@ const Personalitytest: React.FC = () => {
     if (testCount < 3) {
       fetchQuizList();
     }
+    // eslint-disable-next-line
   }, []);
 
   const Quizeligible = async () => {
@@ -192,8 +194,8 @@ const Personalitytest: React.FC = () => {
       const result = await QuizEligible(authCtx.userData.Id);
     
       if (result) {
-        setTestCount(4);
-        console.log("here", testCount);
+        setTestCount(result.testNo);
+        
       }
     }
    
@@ -204,7 +206,6 @@ const Personalitytest: React.FC = () => {
 
     if (result) {
       const response: Quiz1[] = result.map((item) => ({ ...item, value: 50 }));
-      console.log(response);
       setQuizBank(response);
     }
   };
@@ -238,7 +239,7 @@ const Personalitytest: React.FC = () => {
       }));
       SetisSubmit(true);
       await QuizResponse(response);
-      console.log(response);
+
     }
   };
 
@@ -297,7 +298,7 @@ const Personalitytest: React.FC = () => {
           </SubContainer1>
         </Container1>
         <Container2>
-          {testCount <= 3 && !isSubmit ? (
+          {testCount < 3 && !isSubmit ? (
             <div
               style={{
                 display: "flex",

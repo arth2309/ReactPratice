@@ -3,21 +3,15 @@ using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace PeoplehawkServices.Implementation
 {
-    public class CourseInterestService : GenericService<CourseInterest,CourseInterestDTO>, ICourseInterestService
+    public class CourseInterestService : GenericService<CourseInterest>, ICourseInterestService
     {
         private readonly ICourseInterestRepository _courseInterestRepository;
         private readonly IMapper _mapper;
     
-        public CourseInterestService(ICourseInterestRepository courseInterestRepository,IMapper mapper) : base(courseInterestRepository,mapper) 
+        public CourseInterestService(ICourseInterestRepository courseInterestRepository,IMapper mapper) : base(courseInterestRepository) 
         {
             _courseInterestRepository = courseInterestRepository;
             _mapper = mapper;
@@ -25,7 +19,7 @@ namespace PeoplehawkServices.Implementation
 
         public async  Task<List<CourseInterestDTO>> GetCourseInterestLists()
         {
-            List<CourseInterest> courseInterests = await _courseInterestRepository.GetAllAsync();
+            List<CourseInterest> courseInterests = await GetAllAsync();
             return _mapper.Map<List<CourseInterestDTO>>(courseInterests);   
         }
        

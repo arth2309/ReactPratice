@@ -3,7 +3,6 @@ import './Header.css'
 import logo from '../../../assests/img/logo@2x.png';
 import AuthContext from '../../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import {toast} from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { showToast } from '../ToastComponent/Toastcomponent';
 

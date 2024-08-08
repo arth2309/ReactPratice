@@ -20,7 +20,7 @@ export const fetchParticipants = createAsyncThunk(
   "participants/fetchParticipants",
   async () => {
     try {
-      const data = await getParticipantsDetails(""); // Adjust endpoint as per your API
+      const data = await getParticipantsDetails(""); 
       return data;
     } catch (error) {
       console.log(error);

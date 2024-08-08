@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PeoplehawkServices.Interface
 {
-    public interface IResumeFileService : IGenericService<ResumeFile,ResumeFileDTO>
+    public interface IResumeFileService : IGenericService<ResumeFile>
     {
         Task<ResumeFileDTO> UploadFile(IFormFile file, int UserId);
 

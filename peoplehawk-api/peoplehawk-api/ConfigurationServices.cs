@@ -21,7 +21,7 @@ namespace peoplehawk_api
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IQuizRepository, QuizRepository>();
-            services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+            services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             services.AddScoped<ICourseInterestService, CourseInterestService>();
             services.AddScoped<IChartService, ChartService>();
             services.AddScoped<IResumeFileService, ResumeFileService>();

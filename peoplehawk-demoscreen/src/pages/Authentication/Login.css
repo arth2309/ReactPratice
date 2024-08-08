@@ -129,3 +129,8 @@ label {
   font-size: 12px;
   cursor: pointer;
 }
+
+.password
+{
+  position: absolute;
+}

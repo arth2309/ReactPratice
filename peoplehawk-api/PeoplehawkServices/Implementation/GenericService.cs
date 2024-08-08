@@ -1,62 +1,67 @@
-﻿using AutoMapper;
-using PeoplehawkRepositories.Interface;
+﻿using PeoplehawkRepositories.Interface;
 using PeoplehawkServices.Interface;
 using System.Linq.Expressions;
 
 namespace PeoplehawkServices.Implementation
 {
     
-    public class GenericService<TModel,TDto> : IGenericService<TModel, TDto> where TModel : class where TDto : class
+    public class GenericService<T> : IGenericService<T> where T : class 
     {
-        private readonly IGenericRepository<TModel> _genericRepository;
-        private readonly IMapper _mapper;
+        private readonly IGenericRepository<T> _genericRepository;
+     
+      
 
-        public GenericService(IGenericRepository<TModel> genericRepository, IMapper mapper)
+        public GenericService(IGenericRepository<T> genericRepository)
         {
             _genericRepository = genericRepository;
-            _mapper = mapper;
+            
+            
         }
 
-        public async Task<List<TDto>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
-            var model = await _genericRepository.GetAllAsync();
-            return _mapper.Map<List<TDto>>(model);
+            return await _genericRepository.GetAllAsync();
+           
         }
 
-        public async Task<TDto> GetByIdAsync(int Id)
+        public async Task<T> GetByIdAsync(int Id)
         {
             if (Id <=  0)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            var model = await _genericRepository.GetByIdAsync(Id);
-            return _mapper.Map<TDto>(model);
+            return await _genericRepository.GetByIdAsync(Id);
+            
         }
 
-        public async Task<TDto> DeleteAsync(Expression<Func<TModel, bool>> predicate)
+        public async Task<T> DeleteAsync(Expression<Func<T, bool>> predicate)
         {
-            var model = await _genericRepository.DeleteAsync(predicate);
-            return _mapper.Map<TDto>(model);    
+            return await _genericRepository.DeleteAsync(predicate);
+            
         }
 
-        public async Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate)
+        public async Task<T> FirstorDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            var model = await _genericRepository.FirstOrDefaultAsync(predicate);
-            return _mapper.Map<TDto>(model);
+             return await _genericRepository.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<TDto> AddAsync(TDto tDto)
+        public async Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            TModel model = _mapper.Map<TModel>(tDto);
-            await _genericRepository.AddAsync(model);
-            return tDto;
+            return await _genericRepository.LastOrDefaultAsync(predicate);
         }
 
-        public async Task<List<TDto>> GetByCriteria(Expression<Func<TModel, bool>> predicate)
+        public async Task<T> AddAsync(T entity)
         {
-            List<TModel> models = await _genericRepository.GetByCriteria(predicate);
-            return _mapper.Map<List<TDto>>(models);
+            
+            await _genericRepository.AddAsync(entity);
+            return entity;
+        }
+
+        public async Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate)
+        {
+            return await _genericRepository.GetByCriteria(predicate);
+           
         }
     }
 }

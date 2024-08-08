@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+
 
 namespace PeoplehawkServices.Interface
 {
-    public interface IGenericService<TModel, TDto> where TModel : class where TDto : class
+    public interface IGenericService<T> where T : class 
     {
-        Task<List<TDto>> GetAllAsync();
+        Task<List<T>> GetAllAsync();
 
-        Task<TDto> GetByIdAsync(int Id);
+        Task<T> GetByIdAsync(int Id);
 
-        Task<TDto> DeleteAsync(Expression<Func<TModel, bool>> predicate);
+        Task<T> DeleteAsync(Expression<Func<T, bool>> predicate);
 
-        Task<TDto> FirstorDefaultAsync(Expression<Func<TModel, bool>> predicate);
+        Task<T> FirstorDefaultAsync(Expression<Func<T, bool>> predicate);
 
-        Task<TDto> AddAsync(TDto tDto);
+        Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
-        Task<List<TDto>> GetByCriteria(Expression<Func<TModel, bool>> predicate);
+        Task<T> AddAsync(T entity);
+
+        Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
 
     }
 }

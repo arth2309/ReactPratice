@@ -18,23 +18,23 @@ using Microsoft.AspNetCore.Http;
 
 namespace PeoplehawkServices.Implementation
 {
-    public class UserService : GenericService<User,UserDTO>,IUserService
+    public class UserService : GenericService<User>,IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private string secretKey;
 
-        public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration) : base(userRepository,mapper)
+        public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration) : base(userRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             secretKey = configuration.GetValue<string>("Jwt:Secret");
         }
 
-        public async Task<string> Login(string email,string password)
+        public async Task<string> Login(LoginDetails loginDetails)
         {
 
-            User user = await _userRepository.FirstOrDefaultAsync(a => a.Email == email && a.Password == HashHelper.HashedInput(password));
+            User user = await FirstorDefaultAsync(a => a.Email == loginDetails.email && a.Password == HashHelper.HashedInput(loginDetails.password));
 
             if (user == null) 
             {
@@ -63,7 +63,7 @@ namespace PeoplehawkServices.Implementation
         {
            
             userDTO.Password = HashHelper.HashedInput(userDTO.Password);
-            await _userRepository.AddAsync(_mapper.Map<User>(userDTO));
+            await AddAsync(_mapper.Map<User>(userDTO));
             return userDTO;
         }
 
@@ -95,13 +95,13 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
         {
-            List<User> users =  await _userRepository.GetByCriteria(predicate);
+            List<User> users =  await GetByCriteria(predicate);
             return  _mapper.Map<List<UserDTO>>(users);
         }
 
         public async Task<UserDTO> UpdateFile(IFormFile file, int UserId)
         {
-            User user = await _userRepository.FirstOrDefaultAsync(x => x.Id == UserId);
+            User user = await FirstorDefaultAsync(x => x.Id == UserId);
             string uploadsFolder = Path.Combine("Files");
             string filePath = Path.Combine(uploadsFolder, file.FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -116,7 +116,7 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<(byte[], string)> GetPhoto(int UserId)
         {
-            User user = await _userRepository.FirstOrDefaultAsync(x => x.Id == UserId);
+            User user = await FirstorDefaultAsync(x => x.Id == UserId);
             if (user == null)
             {
                 throw new KeyNotFoundException();
@@ -125,8 +125,5 @@ namespace PeoplehawkServices.Implementation
             var fileBytes = File.ReadAllBytes(filePath);
             return (fileBytes, user.ProfilePhoto);
         }
-
     }
-
-
 }

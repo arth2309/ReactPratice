@@ -18,10 +18,10 @@ import {
   Register as api,
   CountryList,
   userList as user,
-} from "../../API/apiClient";
+} from "../../services/AuthService";
 import { CountryList as list, OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
-import Input from "../../components/layout/form/Input";
+
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -398,15 +398,7 @@ export const Register = () => {
                   </div>
                   <div className="form-group">
                     <label>Base Country*</label>
-                    {/* <Field
-                      name="countryId"
-                      as= {FormSelect}
-                    >
-                       <option  value = {0}>Please Select a Country</option>
-                     {
-                       countryList && countryList.map((item) => <option key={item.id} value= {item.id}>{item.countryName}</option>)
-                     }
-                    </Field> */}
+                    
 
                     {options && (
                       <ReactSelect

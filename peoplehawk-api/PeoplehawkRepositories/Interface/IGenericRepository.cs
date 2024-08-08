@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace PeoplehawkRepositories.Interface
 {
@@ -23,15 +18,8 @@ namespace PeoplehawkRepositories.Interface
 
         Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
 
-        Task<List<T>> GetPagedAsync(int pageNumber, int pageSize);
+        Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
-        Task<List<T>> GetSortedAsync(Expression<Func<T, object>> orderBy, bool isDescending = false);
-
-        Task<IEnumerable<T>> GetFilteredAsync(
-         Expression<Func<T, bool>> filter = null,
-         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-         int? pageNumber = null,
-         int? pageSize = null);
 
 
     }

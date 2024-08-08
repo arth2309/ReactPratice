@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
 
@@ -8,65 +9,29 @@ namespace peoplehawk_api.Controllers
     [Authorize]
     [Route("api/candidate")]
     [ApiController]
-    public class PeoplehawkAPIController : ControllerBase
+    public class CandidateController : ControllerBase
     {
         private readonly ICourseInterestService _courseInterestService;
         private readonly IChartService _chartService;
         private readonly IResumeFileService _resumeFileService;
         private readonly IUserService _userService;
-        private readonly ICountryService _countryService;
         private readonly IQuizService _quizService;
         private readonly IPersonalityReportService _personalityReportService;
 
-
-        public PeoplehawkAPIController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, ICountryService countryService, IQuizService quizService, IPersonalityReportService personalityReportService)
+        public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService)
         {
             _courseInterestService = courseInterestService;
             _chartService = chartService;
             _resumeFileService = resumeFileService;
             _userService = userService;
-            _countryService = countryService;
             _quizService = quizService;
             _personalityReportService = personalityReportService;
-
-
-        }
-
-        [AllowAnonymous]
-        [HttpPost("register")]
-        public async Task<ActionResult<UserDTO>> Register([FromBody] UserDTO userDTO)
-        {
-            return await _userService.Register(userDTO);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("auth")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDetails loginDetails)
-        {
-            return await _userService.Login(loginDetails.email, loginDetails.password);
         }
 
         [HttpGet("{UserId:int}/chart")]
-
         public async Task<ActionResult<ChartDTO>> Chart(int UserId)
         {
             return await _chartService.GetChartdata(UserId);
-        }
-
-
-        [AllowAnonymous]
-        [HttpGet("users")]
-        public async Task<List<UserDTO>> Users()
-        {
-            return await _userService.GetAllAsync();
-        }
-
-        [AllowAnonymous]
-        [HttpPost("forgotpassword")]
-
-        public ActionResult<string> SendMail([FromBody] ForgotPasswordDetails forgotPasswordDetails)
-        {
-            return _userService.SendEmail(forgotPasswordDetails.email);
         }
 
         [HttpGet("courseInterests")]
@@ -82,7 +47,6 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("files/{UserId:int}")]
-
         public async Task<IActionResult> GetFile(int UserId)
         {
             var result = await _resumeFileService.GetFile(UserId);
@@ -90,93 +54,72 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpDelete("files/{UserId:int}")]
-        public async Task<ResumeFileDTO> DeleteFile(int UserId)
+        public async Task<ResumeFile> DeleteFile(int UserId)
         {
             return await _resumeFileService.DeleteAsync(a => a.UserId == UserId);
         }
 
         [HttpPut("files/{UserId:int}")]
-        public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
+        public async Task<ActionResult<ResumeFileDTO>> UpdateFile(IFormFile file, int UserId)
         {
-            return await _resumeFileService.UpdateFile(file, UserId);
+            return file != null && UserId > 0 ? await _resumeFileService.UpdateFile(file, UserId) : BadRequest();
         }
 
-        [AllowAnonymous]
-        [HttpGet("country")]
-        public async Task<List<CountryDTO>> Country()
-        {
-            return await _countryService.GetCountryList();
-        }
-
-        [AllowAnonymous]
-        [HttpGet("criteria")]
-
-        public async Task<List<UserDTO>> UsersList()
-        {
-            return await _userService.UsersList(a => a.CountryId == 1);
-        }
-
-        [AllowAnonymous]
         [HttpGet("quiz")]
-
         public async Task<List<QuizDTO>> QuizList()
         {
             return await _quizService.GetAllQuiz();
         }
 
-        [AllowAnonymous]
         [HttpPost("personalityreport")]
-
-        public async Task<List<PersonalityReportDTO>> QuizResponse([FromBody] List<PersonalityReportDTO> personalityReportDTOs)
+        public async Task<ActionResult<List<PersonalityReportDTO>>> QuizResponse([FromBody] List<PersonalityReportDTO> personalityReportDTOs)
         {
             var result = await _personalityReportService.AddQuizResult(personalityReportDTOs);
-            return result;
+            return ModelState.IsValid ? result : BadRequest();
         }
 
-        [AllowAnonymous]
         [HttpGet("personalityreport/{UserId:int}")]
-        public async Task<bool> QuizEligible(int UserId)
+        public async Task<QuizStatus> QuizEligible(int UserId)
         {
-            var result = await _personalityReportService.FirstorDefaultAsync(x => x.UserId == UserId);
-            return result == null ? false : true;
+            return await _personalityReportService.GetReport(UserId);
+           
         }
 
         [HttpPut("{UserId:int}/uploadPhoto")]
-        public async Task<UserDTO> UploadProfilePhoto(IFormFile file, int UserId)
+        public async Task<ActionResult<UserDTO>> UploadProfilePhoto(IFormFile file, int UserId)
         {
-            return await _userService.UpdateFile(file, UserId);
+            return file != null && UserId > 0 ? await _userService.UpdateFile(file, UserId) : BadRequest();
         }
 
         [HttpGet("{UserId:int}/candidatePhoto")]
-
-        public async Task<IActionResult> GetPhoto(int UserId)
+        public async Task<IActionResult> ProfilePhoto(int UserId)
         {
             var result = await _userService.GetPhoto(UserId);
             return File(result.Item1, "application/pdf", result.Item2);
         }
 
-
         [HttpGet("{UserId:int}/progress")]
-        public async Task<int> Progress(int UserId)
+        public async Task<ProgressDTO> Progress(int UserId)
         {
+            ProgressDTO progressDTO = new ProgressDTO();
             int x = 0;
             ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);
             if (resumeFileDTO != null)
             {
+
                 x = x + 50;
             }
 
-            PersonalityReportDTO personalityReportDTO = await _personalityReportService.GetReport(UserId);
+            QuizStatus quizStatus = await _personalityReportService.GetReport(UserId);
 
-            if (personalityReportDTO != null)
+            if (quizStatus.IsFirstTestGiven == true)
             {
                 x = x + 50;
             }
 
-            return x;
-
+            progressDTO.isResumeUpload = resumeFileDTO != null ? true : false;
+            progressDTO.Progress = x;
+            return progressDTO;
         }
-
-
     }
 }

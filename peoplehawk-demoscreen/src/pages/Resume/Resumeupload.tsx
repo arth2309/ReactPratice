@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, CSSProperties ,useContext} from "react";
+import { useRef, useState, useEffect,useContext} from "react";
 import Header from "../../components/layout/header/Header";
 import "./Resumeupload.css";
 import { ReactComponent as Arrow } from "../../assests/img/arrow-dropdown.svg";
@@ -7,21 +7,15 @@ import {
   fetchFile,
   deleteFile,
   updateFile,
-} from "../../API/apiClient";
-import ClipLoader from "react-spinners/ClipLoader";
+} from "../../services/ResumeService";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import {ToastContainer} from 'react-toastify';
 
 const Resumeupload = () => {
-  const override: CSSProperties = {
-    borderWidth: "5px",
-    width: "20px",
-    height: "20px",
-  };
+
 
   const [selectedFileUrl, setSelectedFileUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>("manage");
   const authCtx = useContext(AuthContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,6 +23,7 @@ const Resumeupload = () => {
 
   useEffect(() => {
     fetchData();
+   // eslint-disable-next-line
   }, []);
   const fetchData = async () => {
     if(authCtx.userData)
@@ -161,11 +156,8 @@ const Resumeupload = () => {
               the file must be pdf and less than 10MB
             </div>
             <button style={{ marginTop: "45px" }} onClick={handleButtonClick}>
-              {loading ? (
-                <ClipLoader color="white" cssOverride={override} />
-              ) : (
+              
                 <strong>Upload Resume/CV</strong>
-              )}
             </button>
           </div>
         ) : (

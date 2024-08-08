@@ -1,10 +1,10 @@
-import React,{useState,useEffect} from 'react';
+import {useState,useEffect} from 'react';
 import Header from "../../components/layout/header/Header";
 import Banner from "./Banner";
 import Memberinterestanalysis from "./Memberinterestanalysis";
 import Testinterestanalysis from "./Testinterestanalysis";
 import { CourseInterest,ChartData } from '../../interface/Interface';
-import { getCourseInterest, getChartData } from '../../API/apiClient';
+import { getCourseInterest, getChartData } from '../../services/IdealCoursesServices';
 
 
 const Useranalysis = () => {
@@ -36,7 +36,6 @@ const Useranalysis = () => {
       });
     
       useEffect(() => {
-        console.log('here')
         fetchData();
       }, []);
     
