@@ -25,5 +25,9 @@ namespace PeoplehawkRepositories
         public DbSet<Quiz> Quizes { get; set; }
 
         public DbSet<PersonalityReport> PersonalityReports { get; set; }
+
+        public DbSet<Competency> Competencys { get; set;}
+
+        public DbSet<UserCompentencyDetail> UserCompentencyDetails { get; set; }
     }
 }

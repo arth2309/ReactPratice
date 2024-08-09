@@ -1,9 +1,8 @@
 import Routes from "./routes/Routes";
-import "react-toastify/dist/ReactToastify.css";
 
 function App() 
 {
-  return <Routes  />;
+  return <Routes />;
 }
 
 export default App;

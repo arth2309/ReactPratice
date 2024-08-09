@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {fetchPhoto,uploadPhoto,getProgress} from "../../services/HomeService";
 import { CandidateProgress } from "../../interface/Interface";
+import Compentencytestanalytics from "./Compentencytestanalytics";
 
 
 
@@ -359,9 +360,13 @@ const Dashboard : React.FC = () => {
         }
       }
 
+      const [isModalOpen, setModalOpen] = useState(false);
+      const openModal = () => setModalOpen(true);
+      const closeModal = () => setModalOpen(false);
 
   return (
     <Fragment>
+      <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} />
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
@@ -393,6 +398,7 @@ const Dashboard : React.FC = () => {
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
+        <button onClick={openModal}>Open Modal</button>
         <Heading>Welcome <span style={{color : '#F96332'}}>{authctx.userData?.FirstName}</span></Heading>
           <LeftChildContainer>
            

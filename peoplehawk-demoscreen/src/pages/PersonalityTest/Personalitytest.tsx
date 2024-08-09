@@ -181,10 +181,10 @@ interface Quiz1 {
 const Personalitytest: React.FC = () => {
   React.useEffect(() => {
     Quizeligible();
-    if (testCount < 3) {
-      fetchQuizList();
-    }
-    // eslint-disable-next-line
+    // if (testCount < 3) {
+    //   fetchQuizList();
+    // }
+    // // eslint-disable-next-line
   }, []);
 
   const Quizeligible = async () => {
@@ -195,7 +195,12 @@ const Personalitytest: React.FC = () => {
     
       if (result) {
         setTestCount(result.testNo);
+        SetisSubmit(result.isFirstTestGiven);
         
+        if(result.testNo < 3)
+        {
+           await fetchQuizList();
+        }
       }
     }
    
@@ -298,7 +303,7 @@ const Personalitytest: React.FC = () => {
           </SubContainer1>
         </Container1>
         <Container2>
-          {testCount < 3 && !isSubmit ? (
+          {!isSubmit ? (
             <div
               style={{
                 display: "flex",
@@ -424,17 +429,14 @@ const Personalitytest: React.FC = () => {
                 htmlColor="#F96332"
                 style={{ fontSize: "100px" }}
               />
-              {testCount >= 3 && (
+              {testCount >= 3 ? (
                 <div style={{ fontSize: "20px", fontFamily: "cursive" }}>
                   <strong>
                     As you have re-attempted the quiz twice. re-test option is
                     not available
                   </strong>
                 </div>
-              )}
-              {testCount < 3 && (
-                <PrimaryButton onClick={reTestHandler}>Re-Test</PrimaryButton>
-              )}
+              ) : <PrimaryButton onClick={reTestHandler}>Re-Test</PrimaryButton> }
             </div>
           )}
         </Container2>

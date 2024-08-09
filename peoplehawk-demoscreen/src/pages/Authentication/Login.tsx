@@ -85,9 +85,9 @@ export const Login = () => {
                   />
                 </div>
 
-                <div className="form-group" style={{position : 'relative',display : 'flex', marginBottom : '45px'}}>
+                <div className="form-group" >
                  
-                    
+                    <div style={{position : 'relative',display : 'flex', marginBottom : '38px'}}>
                   <Input
                     label="Password"
                     name="password"
@@ -100,7 +100,7 @@ export const Login = () => {
                   <div style={{position : 'absolute' , top : '31px' , right : '13px'}} onClick={passwordHandler}>
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon /> } 
                   </div>
-                  
+                  </div>
                   <ErrorMessage
                     name="password"
                     component="div"
