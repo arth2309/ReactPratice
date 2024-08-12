@@ -1,14 +1,21 @@
-import React, {useContext} from 'react';
-import './Header.css'
+import {useContext} from 'react';
 import logo from '../../../assests/img/logo@2x.png';
 import AuthContext from '../../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import { showToast } from '../ToastComponent/Toastcomponent';
+import {styled} from 'styled-components';
 
 
 
+const Container = styled.header`
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    align-items: center;
+    padding: 15px;`
 
+const Logo = styled.img`
+ height: 60px;`
 
 
 const Header = () => {
@@ -20,24 +27,16 @@ const Header = () => {
 
         await authctx.logout();
         await navigate('/Login');
-        // toast.success('Successfully logged out',{
-        //     hideProgressBar : true,
-        //     autoClose : 2000,
-        //     position : "bottom-center",
-        //     closeButton : false,
-        //     pauseOnHover : false,
-                        
-        // });
         showToast('Success', 'You have Successfully Logged out', 'success');
     }
 
     return (
         <>
-        <header>
-           <img src={logo} alt='logo' className='logo' />
+        <Container>
+           <Logo src={logo} alt='logo'  />
            <button onClick={logoutHandler}>Logout</button>
-        </header>
-         <ToastContainer />
+        </Container>
+        
          </>
     )
 

@@ -17,8 +17,10 @@ namespace peoplehawk_api.Controllers
         private readonly IUserService _userService;
         private readonly IQuizService _quizService;
         private readonly IPersonalityReportService _personalityReportService;
+        private readonly ICompentencyService _compentencyService;
+        private readonly IUserCompentencyDetailService _userCompentencyDetailService;
 
-        public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService)
+        public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService)
         {
             _courseInterestService = courseInterestService;
             _chartService = chartService;
@@ -26,6 +28,8 @@ namespace peoplehawk_api.Controllers
             _userService = userService;
             _quizService = quizService;
             _personalityReportService = personalityReportService;
+            _compentencyService = compentencyService;
+            _userCompentencyDetailService = userCompentencyDetailService;
         }
 
         [HttpGet("{UserId:int}/chart")]
@@ -125,5 +129,18 @@ namespace peoplehawk_api.Controllers
             progressDTO.Progress = x;
             return progressDTO;
         }
+
+        [HttpGet("compentencies")]
+        public async Task<ActionResult<List<CompetencyDTO>>> Compentencies()
+        {
+            return await _compentencyService.GetList();
+        }
+
+        [HttpGet("user-compentencies")]
+        public async Task<ActionResult<List<UserCompentencyDetailDTO>>> UserCompentencies()
+        {
+            return await _userCompentencyDetailService.GetList();
+        }
+
     }
 }

@@ -31,6 +31,8 @@ namespace peoplehawk_api
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IQuizService, QuizService>();
             services.AddScoped<IPersonalityReportService, PersonalityReportService>();
+            services.AddScoped<ICompentencyService, CompentencyService>();
+            services.AddScoped<IUserCompentencyDetailService, UserCompentencyDetailService>();
 
         }
 

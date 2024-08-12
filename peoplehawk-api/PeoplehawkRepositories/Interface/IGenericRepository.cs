@@ -6,6 +6,8 @@ namespace PeoplehawkRepositories.Interface
     {
         Task<List<T>> GetAllAsync();
 
+        Task<List<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includeProperties);
+
         Task<T> GetByIdAsync(int id);
 
         Task<T> AddAsync(T entity);

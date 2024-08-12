@@ -5,6 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { ReactSelect } from '../../components/layout/form/Select';
 import { OptionTypes } from '../../interface/Interface';
 import chartImage from '../../assests/img/competency-test-analytics.png';
+import { Competency,UserCompetency } from '../../interface/Interface';
 
 // Register Chart.js components
 ChartJS.register(
@@ -17,40 +18,10 @@ ChartJS.register(
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
+    competencies : Competency[] | null;
+    candidates : UserCompetency[] | null;
   }
-  
-
-// Mock data
-const candidates = [
-  { id: 6, name: 'Clare Thompson', competencies: [2.4, 2.26, 3.4, 3.82, 2, 2.72, 4.1, 2.8, 3.62, 3.4, 4.02, 1.4, 3, 1.4, 2.8, 1.8, 3.4, 3.2, 2.8, 3.1] },
-  { id: 434, name: 'Nimesh Test', competencies: [4.56, 1, 5.56, 4.46, 1, 1, 1, 4.58, 4.6, 4.34, 4.42, 1, 4.58, 1, 3.86, 1, 4.6, 4.6, 4.6, 1] },
-  { id: 99349, name: 'Nimeshedit Yadav', competencies: [2, 1.4, 2.8, 3, 1.6, 1.4, 1.2, 1.8, 1.8, 2.2, 2.4, 1.4, 2.4, 1.4, 2.2, 1.6, 2.4, 2.4, 2.8, 1.2] },
-  { id: 99934, name: 'Kruti Candidate', competencies: [4.7, 4.54, 5.02, 5.02, 5.06, 4.74, 4.5, 4.62, 4.38, 4.72, 4.88, 4.92, 4.86, 4.64, 5.04, 4.74, 4.86, 4.9, 4.92, 4.36] }
-];
-
-const competencies = [
-  { id: 1, title: "Knowing Yourself & Others" },
-  { id: 2, title: "Communicating Clearly" },
-  { id: 3, title: "Supporting Others" },
-  { id: 4, title: "Leading Teams" },
-  { id: 5, title: "Resolving Differences" },
-  { id: 6, title: "Managing Information" },
-  { id: 7, title: "Working With Different People" },
-  { id: 8, title: "Organising Projects" },
-  { id: 9, title: "Tracking Progress" },
-  { id: 10, title: "Following Rules" },
-  { id: 11, title: "Preparing & Presenting Plans" },
-  { id: 12, title: "Setting Targets" },
-  { id: 13, title: "Being Inspirational" },
-  { id: 14, title: "Showing Initiative" },
-  { id: 15, title: "Getting Results" },
-  { id: 16, title: "Using Influence" },
-  { id: 17, title: "Sharing Ideas" },
-  { id: 18, title: "Being Creative" },
-  { id: 19, title: "Getting Agreement" },
-  { id: 20, title: "Welcoming Change" }
-];
-
+ 
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -96,7 +67,7 @@ const ModalClose = styled.button`
 `;
 
 const ModalBody = styled.div`
-   height: 700px;
+   height: 815px;
   overflow-y: auto;
 `;
 
@@ -117,17 +88,53 @@ const ChartContainer = styled.div`
    display: flex;
     justify-content: center;
     position: absolute;
-    height: 722px;
-    top: -64px;
-    width: 889px;
+    height: 674px;
+    top: -38px;
+    padding-right: 80px;
 `;
+
+const Create = styled.div`
+   position: absolute;
+    top: 102px;
+    padding-left: 232px;
+    rotate: 48deg;
+    color: white;
+    font-size: 30px;
+    font-weight: 600;`
+
+    const Collaborate = styled.div`
+    position: absolute;
+    top: 58px;
+    padding-right: 354px;
+    rotate: -46deg;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;`
+
+    const Control = styled.div`
+     position: absolute;
+    top: 495px;
+    padding-right: 316px;
+    rotate: 44deg;
+    color: white;
+    font-size: 25px;
+    font-weight: 600;`
+
+     const Compete = styled.div`
+    position: absolute;
+    top: 430px;
+    padding-left: 148px;
+    rotate: -36deg;
+    color: white;
+    font-size: 25px;
+    font-weight: 600;`
 
 const ImageContainer = styled.div`
   display: flex;
     justify-content: center;
     margin-top: 30px;
     position: absolute;
-    height: 466px;
+    height: 468px;
     top: 34px;
     padding-right: 53px;
 `;
@@ -135,37 +142,52 @@ const ImageContainer = styled.div`
 const radarOptions = {
   scales: {
     r: {
+       grid : {
+          display : false,
+       },
       angleLines: {
-        display: true,
+        display: false,
       },
       suggestedMin: 0,
       suggestedMax: 5,
       ticks: {
         display: false,
-      },
+        color : 'red'
+      } 
     },
   },
   plugins: {
     legend: {
       display: false,
     },
+    
   },
+
+ 
 };
 
 
 
-const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,competencies,candidates }) => {
  
   const [filteredData, setFilteredData] = useState<any[]>([]);
   useEffect(() => {setFilteredData([])},[isOpen])
   const radarData = {
-    labels: competencies.map(c => c.title),
+    labels: competencies?.map(c => c.title),
     datasets: filteredData.map(candidate => ({
-      data: candidate.competencies,
+      data: candidate.compentencies,
       label: candidate.name,
-      backgroundColor: 'rgba(255, 99, 132, 0.2)', 
-      borderColor: 'rgba(255, 99, 132, 1)',
+      fill : true,
+      backgroundColor: 'red', 
+      defaultBackgroundColor : 'red',
+      hoverBackgroundColor: 'blue',
+      borderColor: ['green','blue'],
+      // hoverBorderColor : ['red','orange'],
       borderWidth: 1,
+      pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+
     })),
 
   };
@@ -183,14 +205,14 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose }) => 
           <SelectContainer>
             <label>Find and Compare Members</label>
             <ReactSelect
-              options={candidates.map(candidate => ({ label: candidate.name, value: candidate.id }))}
+              options={candidates?.map(candidate => ({ label: candidate.name, value: candidate.id }))}
               name="test"
               isMulti
               onChange={(e,value) => {
                 const ids : number[] = value.map((option : OptionTypes) => option.value);
-                const newFilteredData =candidates.filter(candidate => 
+                const newFilteredData =candidates?.filter(candidate => 
                      ids.includes(candidate.id));
-                  setFilteredData(newFilteredData);
+                     newFilteredData &&  setFilteredData(newFilteredData);
                    
               }}
             />
@@ -199,6 +221,10 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose }) => 
             <ImageContainer>
               <img src={chartImage} alt="chartimage" />
             </ImageContainer>
+            <Collaborate>COLLABORATE</Collaborate>
+            <Create>CREATE</Create>
+            <Control>CONTROL</Control>
+            <Compete>COMPETE</Compete>
             <ChartContainer>
               <Radar data={radarData} options={radarOptions} />
             </ChartContainer>

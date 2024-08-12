@@ -1,4 +1,4 @@
-import { CandidateProgress, FileUploadData } from "../interface/Interface";
+import { CandidateProgress, FileUploadData,Competency,UserCompetency } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 
 export const uploadPhoto = async (
@@ -50,3 +50,29 @@ export const uploadPhoto = async (
                 return null;
               }
     }
+
+    export const getCompentencies = async () : Promise<Competency[] | null> =>
+      {
+                try {
+                  const response = await apiClient.get(`candidate/compentencies`);
+                  return response.data;
+                }
+    
+                catch(error)
+                {
+                  return null;
+                }
+      }
+
+      export const getUserCompentencies = async () : Promise<UserCompetency[] | null> =>
+        {
+                  try {
+                    const response = await apiClient.get(`candidate/user-compentencies`);
+                    return response.data;
+                  }
+      
+                  catch(error)
+                  {
+                    return null;
+                  }
+        }

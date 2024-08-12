@@ -13,6 +13,7 @@ import Hotspot from "./Hotspot";
 import Diamond from "../../assests/img/vector-diamond.svg";
 import idealCourse from "../../assests/img/ideal.png";
 import { CourseInterest as Course } from "../../interface/Interface";
+import { Heading, MainContent } from "./styled";
 
 const Testinterestanalysis = (props: any) => {
   const { courseInterest, chartData } = props;
@@ -44,9 +45,9 @@ const Testinterestanalysis = (props: any) => {
 
   return (
     <Accordion open={true} title="Member Interests Test Results:">
-      <div className="main-content">
+      <MainContent>
         <div className="w-50">
-          <div className="heading">Learn what you Love</div>
+          <Heading>Learn what you Love</Heading>
           If you are geniunely interested in what you study you fill find the
           course more enjoyable be more motivated to learn and develop relevant
           skills. andoverco
@@ -129,7 +130,7 @@ const Testinterestanalysis = (props: any) => {
         <div className="w-50">
           <div className="result-heading">Your top 3 results</div>
           {array.map((item, index) => (
-            <div className="progress-wrapper">
+            <div key={index} className="progress-wrapper">
               <div className="progress-label" style={{ color: item.color1 }}>
                 {item.name}
               </div>
@@ -212,7 +213,7 @@ const Testinterestanalysis = (props: any) => {
             </div>
           </div>
         </div>
-      </div>
+      </MainContent>
     </Accordion>
   );
 };

@@ -1,23 +1,3 @@
-.banner
-{
-    height: 400px;
-    width: 100%;
-    opacity: 0.7;
-    object-fit: cover;
-    
-}
-
-.banner-content
-{
-    position: absolute;
-    z-index: 2;
-    margin-top: -350px;
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-}
-
 .text-orange
 {
     color: #F96332;
@@ -28,64 +8,12 @@
     color: white;
 }
 
-.text-banner
+.background-black
 {
-    font-size: 80px;
-    font-family: obviously;
-    padding-bottom: 15px;
-    border-bottom-style: solid;
-    border-bottom-color: #F96332;
-    border-bottom-width: 8.1px;
-    width: fit-content;
-    margin-bottom: 10px;
-}
-
-
-@media only screen and (max-width : 992px) {
-
-    .text-banner
-    {
-        font-size: 60px;
-    }
-    .banner-content
-    {
-        margin-top: -325px;
-    }
-
-
-    
-}
-
-@media only screen and (max-width : 660px) {
-
-    .text-banner
-    {
-        font-size: 45px;
-    }
-    .banner-content
-    {
-        margin-top: -310px;
-    }
-
-
-    
+    background-color: black;
 }
 
 
 
-@media only screen and (max-width : 490px) {
-
-    .text-banner
-    {
-        font-size: 32px;
-    }
-    .banner-content
-    {
-        margin-top: -292px;
-    }
-
-
-    
-}
 
 

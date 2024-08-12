@@ -11,23 +11,32 @@ import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {fetchPhoto,uploadPhoto,getProgress} from "../../services/HomeService";
-import { CandidateProgress } from "../../interface/Interface";
+import {fetchPhoto,uploadPhoto,getProgress,getCompentencies,getUserCompentencies} from "../../services/HomeService";
+import { CandidateProgress,Competency,UserCompetency } from "../../interface/Interface";
 import Compentencytestanalytics from "./Compentencytestanalytics";
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+`;
 
 
 
-interface Card1ItemProps {
-  bordercolor: string;
-}
 
 interface TrophyProps {
-  cHeight: string;
-  cWidth: string;
+  trophyHeight: string;
+  trophyWidth: string;
 }
 
 interface BorderBottomProps {
-  cWidth: string;
+  bw: string;
 }
 
 const Container = styled.div({
@@ -85,8 +94,8 @@ const Card1 = styled.div({
   marginTop: "20px",
 });
 
-const Card1Item = styled.div<Card1ItemProps>((props) => ({
-  border: `1px solid ${props.bordercolor}`,
+const Card1Item = styled.div({
+  border: `1px solid #F96332`,
   borderRadius: "30px",
   display: "flex",
   padding: "9px 0px",
@@ -95,7 +104,7 @@ const Card1Item = styled.div<Card1ItemProps>((props) => ({
   fontSize: "14px",
   color: "#394456",
   width : "163px"
-}));
+});
 
 const Card2 = styled.div({
   display: "flex",
@@ -142,12 +151,12 @@ const Progress = styled.div({
 });
 
 const Trophy = styled.div<TrophyProps>((props) => ({
-  width: props.cWidth,
+  width: props.trophyWidth,
   backgroundColor: "#F96332",
   borderRadius: "50%",
   display: "flex",
   justifyContent: "center",
-  height: props.cHeight,
+  height: props.trophyHeight,
   padding: "2px",
   cursor: "pointer",
 }));
@@ -208,7 +217,7 @@ const OutlineButton = styled.button({
 
 const BorderBottom = styled.div<BorderBottomProps>((props) => ({
   borderBottom: "3px solid #F96332",
-  width: props.cWidth,
+  width:  `${props.bw}px`,
   maxWidth: "100%",
   marginTop: "10px",
 }));
@@ -313,12 +322,14 @@ const Images = styled.img({
 
 
 
-const Dashboard : React.FC = () => {
+const Dashboard  = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [progress, setProgress] = useState<CandidateProgress | null>(null);
+  const[competencies,setCompetencies] = useState<Competency[] | null>(null);
+  const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
 
   useEffect(() => {
        fetchdata();
@@ -329,15 +340,16 @@ const Dashboard : React.FC = () => {
     if(authctx.userData)
     {
       const result = await fetchPhoto(authctx.userData.Id);
-      if(result)
-        {
-          setImageSrc(result);
-        }
+         result && setImageSrc(result);
+
         const prog = await getProgress(authctx.userData.Id);
-        if(prog)
-        {
-          setProgress(prog);
-        }
+        prog && setProgress(prog);
+
+        const comp = await getCompentencies();
+        comp && setCompetencies(comp);
+
+        const cand = await getUserCompentencies();
+        cand && setCandidates(cand);
     }
    
   }
@@ -365,8 +377,9 @@ const Dashboard : React.FC = () => {
       const closeModal = () => setModalOpen(false);
 
   return (
-    <Fragment>
-      <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} />
+    <Fragment> 
+      <GlobalStyle />
+      <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} competencies = {competencies} candidates = {candidates} />
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
@@ -385,32 +398,32 @@ const Dashboard : React.FC = () => {
                     style={{ display: 'none' }}
                 />
             </label>
-          <Trophy cHeight="40px" cWidth="40px">
+          <Trophy trophyHeight="40px" trophyWidth="40px">
             <img src={trophy} alt="trophy" />
           </Trophy>
         </MobileCard1>
         <MobileCard2>
           <Obviously>Welcome</Obviously>
           <ObviouslyOrange>{authctx.userData?.FirstName}</ObviouslyOrange>
-          <BorderBottom cWidth="100%" />
+          <BorderBottom bw="100%" />
           <div>Build a Epic Career here</div>
         </MobileCard2>
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
-        <button onClick={openModal}>Open Modal</button>
         <Heading>Welcome <span style={{color : '#F96332'}}>{authctx.userData?.FirstName}</span></Heading>
+       
           <LeftChildContainer>
-           
             <LeftChildMainContainer>
               <Card1>
-                <Card1Item bordercolor="#F96332">
+                <Card1Item >
                   <strong>View My Profile</strong>
                 </Card1Item>
-                <Card1Item bordercolor="#F96332">
+                <Card1Item >
                   <strong>What's included</strong>
                 </Card1Item>
               </Card1>
+              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
               <Card2>
                 <Card2Item >
                   <h2 style={{ color: "#394456", margin: "0px" }}>
@@ -444,7 +457,7 @@ const Dashboard : React.FC = () => {
                     <div style={{ color: "#394456", fontSize: "12px" }}>
                       <strong>Trophies</strong>
                     </div>
-                    <Trophy cHeight="60px" cWidth="60px">
+                    <Trophy trophyHeight="60px" trophyWidth="60px">
                       <img src={trophy} alt="trophy" />
                     </Trophy>
                   </Card2SubItem>
@@ -478,7 +491,7 @@ const Dashboard : React.FC = () => {
               <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
-          <BorderBottom cWidth="350px" />
+          <BorderBottom bw="350px" />
         </LeftContainer>
         <RightContainer>
                <RightHeading>

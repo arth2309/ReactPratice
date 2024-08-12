@@ -10,7 +10,18 @@ import { getQuiz, QuizResponse, QuizEligible } from "../../services/PersonalityT
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
+import { createGlobalStyle } from 'styled-components';
 
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+`;
 
 
 const Container = styled.div({
@@ -265,6 +276,7 @@ const Personalitytest: React.FC = () => {
 
   return (
     <Container>
+      <GlobalStyle />
       <Header />
       <BackButtonContainer>
         <BackButton onClick={() => {navigate('/home')}}>
@@ -305,6 +317,7 @@ const Personalitytest: React.FC = () => {
         <Container2>
           {!isSubmit ? (
             <div
+
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -342,7 +355,9 @@ const Personalitytest: React.FC = () => {
                   )}
                   renderThumb={({ props }) => (
                     <div
+                       
                       {...props}
+                      key={props.key}
                       style={{
                         ...props.style,
                         height: "0px", 

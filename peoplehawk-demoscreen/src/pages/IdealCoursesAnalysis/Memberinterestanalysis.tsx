@@ -3,6 +3,7 @@ import Memberinterestanalysischart from "./Memberinterestanalysischart";
 import "./Memberinterestanalysis.css";
 import "../../stylesheets/obviously-font.css";
 import { CourseInterestData } from "../../IdealCourseInterests";
+import { Heading, MainContent } from "./styled";
 
 
 
@@ -14,8 +15,8 @@ const Memberinterestanalysis = (props : any ) => {
   return (
     <>
       <Accordion open={true} title="Member Interests Test Results:">
-        <div className="heading">Member Interests Analysis</div>
-        <div className="main-content">
+        <Heading>Member Interests Analysis</Heading>
+        <MainContent>
         <div className="w-50">
           <div>
           Our Member Test uses a series of questions to understand your likes
@@ -33,7 +34,7 @@ const Memberinterestanalysis = (props : any ) => {
         </div>
         <div>Your top 3 interest areas are <b>{array[0].name}, {array[1].name} and {array[2].name}</b></div>
       </div>
-      </div>
+      </MainContent>
       </Accordion>
      
     </>

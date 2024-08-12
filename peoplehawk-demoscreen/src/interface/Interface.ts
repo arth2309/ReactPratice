@@ -68,3 +68,15 @@ export interface QuizStatus {
   isFirstTestGiven : boolean,
   testNo : number
 }
+
+export interface Competency {
+  id : number,
+  title : string,
+  competency_part : string
+}
+
+export interface UserCompetency {
+  id : number,
+  name : string,
+  compentencies : number
+}

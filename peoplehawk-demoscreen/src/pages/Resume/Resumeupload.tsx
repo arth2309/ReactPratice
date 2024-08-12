@@ -86,7 +86,7 @@ const Resumeupload = () => {
     const file = event.target.files?.[0];
 
     if (file && authCtx.userData) {
-      if (selectedFileUrl !== null) {
+      if (selectedFileUrl) {
         const result = await updateFile(authCtx.userData.Id, { file });
         setSelectedFileUrl(result);
         

@@ -5,6 +5,18 @@ import Memberinterestanalysis from "./Memberinterestanalysis";
 import Testinterestanalysis from "./Testinterestanalysis";
 import { CourseInterest,ChartData } from '../../interface/Interface';
 import { getCourseInterest, getChartData } from '../../services/IdealCoursesServices';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+`;
 
 
 const Useranalysis = () => {
@@ -51,6 +63,7 @@ const Useranalysis = () => {
 
    return(
     <div>
+      <GlobalStyle />
      <Header />
      <Banner />
      <Memberinterestanalysis courseInterest = {courseInterest} chartData = {chartData} />
