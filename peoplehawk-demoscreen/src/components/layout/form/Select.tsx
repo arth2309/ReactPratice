@@ -6,11 +6,19 @@ interface SelectProps {
   isMulti?: boolean;
   isLoading?: boolean;
   name: string;
+  isClearable? : boolean;
+  isSearchable? : boolean;
+  className? : string;
   defaultValue?: any;
+  value? : any;
   options?: OptionTypes[];
   placeholder? : string;
   onChange?: (field: string, value: any) => void;
 }
+
+
+    
+
 
 const customStyles: StylesConfig<OptionTypes[]> = {
   control: (provided,state) => ({
@@ -23,6 +31,7 @@ const customStyles: StylesConfig<OptionTypes[]> = {
     lineHeight: 1.5,
     padding: "0rem",
     width: "100%",
+    zIndex : 4,
    
 
     
@@ -50,7 +59,7 @@ const customStyles: StylesConfig<OptionTypes[]> = {
     backgroundColor: state.isSelected
       ? "#3CD0C3"
       : state.isFocused
-      ? "#72DBD0"
+      ? "transparent"
       : "#fff",
     cursor: "pointer",
     ":hover": {
@@ -74,12 +83,16 @@ export const ReactSelect: React.FC<SelectProps> = (props) => {
     <Select
       options={props.options}
       styles={customStyles}
-      isClearable
+      isClearable = {props.isClearable}
       isMulti={props.isMulti}
       isLoading={props.isLoading}
       placeholder={props.placeholder}
       onChange={handleChange}
       defaultValue = {props.defaultValue}
+      className={props.className}
+      value={props.value}
+      isSearchable = {props.isSearchable}
+  
     />
     </div>
   );

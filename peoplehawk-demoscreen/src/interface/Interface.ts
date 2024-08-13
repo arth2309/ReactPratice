@@ -44,7 +44,8 @@ export interface CourseInterest{
 
 export interface OptionTypes {
   label : string,
-  value : string | number
+  value : string | number,
+  isDisabled? : boolean 
 }
 
 export interface Quiz {

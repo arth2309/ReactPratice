@@ -30,6 +30,19 @@ body
   }
 }
 
+.arrow
+{
+  height : 12px;
+ color : #F96332;
+  rotate: 90deg; 
+margin-right: 5px;
+}
+
+.d-none
+{
+  display: none;
+}
+
 .px-1
 {
     padding-left: 12px;

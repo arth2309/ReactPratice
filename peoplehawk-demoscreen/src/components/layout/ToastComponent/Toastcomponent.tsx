@@ -47,7 +47,7 @@ const ToastComponent: React.FC = () => (
   <ToastContainer
     position="bottom-center"
     closeButton = {false}
-    autoClose={5000}
+    autoClose={2000}
     hideProgressBar
     newestOnTop={false}
     closeOnClick

@@ -11,12 +11,57 @@ import {
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import {ToastContainer} from 'react-toastify';
+import {styled} from 'styled-components';
+import { OptionTypes } from "../../interface/Interface";
+import { ReactSelect } from "../../components/layout/form/Select";
+
+
+
+const Container = styled.div`
+  background-color : #DBEFFA;
+  height : 100%;
+  min-height : 100vh;
+`
+const NavigateContainer = styled.div`
+display : flex;
+justify-content : space-between;
+padding : 0px 12px;
+margin : 20px 0px 0px 0px;`
+
+
+const BackButton = styled.div`
+display : flex;
+align-items : center;
+color : #F96332;
+svg{
+    path {
+      fill: #F96332! important;
+    }
+   
+  }
+`
+const UploadButton = styled.button`
+   background-color: #F96332;
+    border: none;
+    color: white;
+    padding: 12px 33px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    width: -moz-fit-content;
+    width: fit-content;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-top : 45px`
 
 const Resumeupload = () => {
 
+  const [isDisabled,setIsDisabled] = useState<boolean>(true);
+  const option : OptionTypes[] = [{label : 'Update',value : 'update', isDisabled : isDisabled},{label :'Download', value :'download',isDisabled :isDisabled },{label : 'Delete',value : 'delete',isDisabled : isDisabled}]
 
   const [selectedFileUrl, setSelectedFileUrl] = useState<string | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("manage");
+  const [selectedOption, setSelectedOption] = useState<OptionTypes | null>(null);
   const authCtx = useContext(AuthContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -31,6 +76,7 @@ const Resumeupload = () => {
       const result = await fetchFile(authCtx.userData.Id);
       if (result) {
         setSelectedFileUrl(result);
+        setIsDisabled(false);
       }
     }
     
@@ -42,29 +88,30 @@ const Resumeupload = () => {
     const result = await deleteFile(authCtx.userData.Id);
     if (result) {
       setSelectedFileUrl(null);
+      setIsDisabled(true);
     }
   }
   };
 
-  const handleSelectOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(event.target.value);
+  const handleSelectOption = (field: string, value: any) => {
 
-    if (event.target.value === "delete") {
+   
+    if (value.value === "delete") {
       deleteResume();
-      setSelectedOption("manage");
+      setSelectedOption(null);
     }
 
-    if (event.target.value === "download" && selectedFileUrl !== null) {
+    if (value.value === "download" && selectedFileUrl !== null) {
       const link = document.createElement("a");
       link.href = selectedFileUrl;
       link.download = "Resume.pdf";
       link.click();
-      setSelectedOption("manage");
+      setSelectedOption(null);
     }
 
-    if (event.target.value === "update") {
+    if (value.value === "update") {
       updateResume();
-      setSelectedOption("manage");
+      setSelectedOption(null);
     }
   };
 
@@ -72,6 +119,7 @@ const Resumeupload = () => {
     if (fileInputRef.current) {
       
         fileInputRef.current?.click();
+        setIsDisabled(false);
       }
     
   };
@@ -89,7 +137,7 @@ const Resumeupload = () => {
       if (selectedFileUrl) {
         const result = await updateFile(authCtx.userData.Id, { file });
         setSelectedFileUrl(result);
-        
+        setIsDisabled(false);
       }
        else 
       {
@@ -102,36 +150,27 @@ const Resumeupload = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#DBEFFA",
-        height: selectedFileUrl === null ? "100vh" : "100%",
-      }}
+    <Container
     >
      <ToastContainer />
       <Header />
       <input
         type="file"
         ref={fileInputRef}
-        style={{ display: "none" }}
+        className="d-none"
         onChange={handleFileChange}
       />
-      <div className="d-flex justify-content-between px-1 my-1 ">
-        <div
-          className="d-flex align-items-center text-orange"
-          onClick={() => navigate("/")}
-        >
+      <NavigateContainer>
+        <BackButton onClick={() => navigate("/")}>
           <Arrow
-            height="12px"
-            color="#F96332"
-            style={{ rotate: "90deg", marginRight: "5px" }}
+            className="arrow"
           />
           <div>
             <strong>Back</strong>
           </div>
-        </div>
+        </BackButton>
         <div>
-          <select value={selectedOption} onChange={handleSelectOption}>
+          {/* <select value={selectedOption} onChange={handleSelectOption}>
             <option value="manage">Manage Your Resume/CV</option>
             {selectedFileUrl ? (
               <>
@@ -140,9 +179,17 @@ const Resumeupload = () => {
                 <option value="delete">Delete</option>
               </>
             ) : null}
-          </select>
+          </select> */}
+          <ReactSelect
+              value={selectedOption}
+              options={option}
+              isSearchable = {false}
+              name="test"
+              placeholder="Manage Your Resume/CV"
+              onChange={handleSelectOption}
+          />
         </div>
-      </div>
+      </NavigateContainer>
       <div className="border-bottom"></div>
       <div className="d-flex  justify-content-center">
         {selectedFileUrl === null ? (
@@ -155,10 +202,9 @@ const Resumeupload = () => {
             <div className="mt-1" style={{ fontSize: "14px" }}>
               the file must be pdf and less than 10MB
             </div>
-            <button style={{ marginTop: "45px" }} onClick={handleButtonClick}>
-              
+            <UploadButton onClick={handleButtonClick}>
                 <strong>Upload Resume/CV</strong>
-            </button>
+            </UploadButton>
           </div>
         ) : (
           <div
@@ -186,7 +232,7 @@ const Resumeupload = () => {
           </div>
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 

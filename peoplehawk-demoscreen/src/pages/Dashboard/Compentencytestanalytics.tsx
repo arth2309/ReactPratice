@@ -21,6 +21,10 @@ interface ModalProps {
     competencies : Competency[] | null;
     candidates : UserCompetency[] | null;
   }
+
+  interface WidthProps {
+        screenWidth : number;
+  }
  
 const ModalOverlay = styled.div`
   position: fixed;
@@ -35,13 +39,15 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<WidthProps>`
   background: #eef2f6;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 800px;
+  width: ${props => props.screenWidth > 883 ? 800 : props.screenWidth - 83}px;
   padding: 20px 10px;
   position: relative;
+  overflow-x : ${props => props.screenWidth > 883 ? 'hidden' : 'auto'};
+   overflow-y: hidden;
 `;
 
 const ModalHeader = styled.div`
@@ -67,8 +73,7 @@ const ModalClose = styled.button`
 `;
 
 const ModalBody = styled.div`
-   height: 815px;
-  overflow-y: auto;
+   height: 603px;
 `;
 
 const SelectContainer = styled.div`
@@ -76,15 +81,17 @@ const SelectContainer = styled.div`
   margin-top: 20px;
   width: 75%;
   margin-bottom : 64px;
+
 `;
 
 const Container = styled.div`
  display : flex;
   position : relative;
   justify-content : center;
+  margin-top : -80px;
 `;
 
-const ChartContainer = styled.div`
+const ChartContainer = styled.div<WidthProps>`
    display: flex;
     justify-content: center;
     position: absolute;
@@ -129,7 +136,7 @@ const Create = styled.div`
     font-size: 25px;
     font-weight: 600;`
 
-const ImageContainer = styled.div`
+const ImageContainer = styled.div<WidthProps>`
   display: flex;
     justify-content: center;
     margin-top: 30px;
@@ -138,6 +145,11 @@ const ImageContainer = styled.div`
     top: 34px;
     padding-right: 53px;
 `;
+
+const ErrorMessage = styled.div`
+font-size : 12px;
+color : #FF9862;
+margin-top : 1px`
 
 const radarOptions = {
   scales: {
@@ -163,7 +175,62 @@ const radarOptions = {
     
   },
 
- 
+  elements: {
+    radar: {
+      fill : true,
+      backgroundColor: ['transparent','transparent','transparent'], // Default background color for radar
+      borderColor: ['red','green','blue'], // Default border color for radar
+      hoverBackgroundColor:  ['red','green','blue'], // Background color on hover
+      hoverBorderColor:  ['red','green','blue'], // Border color on hover
+    },
+    point: {
+      hoverBackgroundColor:  'white', // Point background color on hover
+      hoverBorderColor:  'white', // Point border color on hover
+    },
+  },
+
+  onHover
+  :
+  (event : any, chartElement : any) =>
+  {    
+  const
+  chart = event.chart;    
+  const
+  ctx = chart.ctx;    
+  const
+  { chartArea } = chart;    
+  // Reset the background of radar chart when not hovering
+      chart.data.datasets.
+  forEach
+  (
+  (dataset : any, i : any) =>
+  {      
+  if
+  (chartElement.length) {        
+  // Hovering over a point
+  const
+  point = chartElement[0];        
+  const
+  datasetIndex = point.datasetIndex;        
+  const
+  index = point.index;        
+  // Change background color of the radar chart dynamically
+          dataset.backgroundColor = dataset.backgroundColor
+            ?
+            ['red','green','blue']
+            :
+            ['transparent','transparent','transparent']
+  ; }
+  else
+  {
+  // Reset the color when not hovering
+  dataset.backgroundColor =
+  ['transparent','transparent','transparent']
+  ; } }); chart.
+  update
+  ();
+  // Update chart to reflect changes
+  },
 };
 
 
@@ -171,22 +238,31 @@ const radarOptions = {
 const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,competencies,candidates }) => {
  
   const [filteredData, setFilteredData] = useState<any[]>([]);
-  useEffect(() => {setFilteredData([])},[isOpen])
+  const[screenWidth,setScreenWidth] =  useState<number>(window.screen.width);
+  const [selectedoption,setSelectedOption] = useState<OptionTypes[] | null>(null);
+  const [error,setError] = useState<string>('');
+
+
+  useEffect(() => {
+    setScreenWidth(window.screen.width);
+    // eslint-disable-next-line  
+  },[window.screen.width])
+  useEffect(() => {setFilteredData([]);setSelectedOption(null)},[isOpen])
   const radarData = {
     labels: competencies?.map(c => c.title),
     datasets: filteredData.map(candidate => ({
       data: candidate.compentencies,
       label: candidate.name,
       fill : true,
-      backgroundColor: 'red', 
-      defaultBackgroundColor : 'red',
-      hoverBackgroundColor: 'blue',
-      borderColor: ['green','blue'],
-      // hoverBorderColor : ['red','orange'],
-      borderWidth: 1,
-      pointBackgroundColor: 'rgba(0, 123, 255, 1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
+      // backgroundColor: ['transparent','transparent','transparent'], 
+      // defaultBackgroundColor : ['transparent','transparent','transparent'],
+      // hoverBackgroundColor: ['red','green','blue'],
+      borderColor: ['red','green','blue'],
+      // hoverBorderColor : ['red','green','blue'],
+      // borderWidth: 1,
+      // pointBackgroundColor: 'black',
+      // pointBorderColor: 'black',
+      // pointHoverBackgroundColor: ['red','green','blue'],
 
     })),
 
@@ -196,7 +272,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
 
   return (
     <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+      <ModalContent screenWidth = {screenWidth} onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <Title>Competency Test Analytics</Title>
           <ModalClose onClick={onClose}>X</ModalClose>
@@ -205,27 +281,36 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
           <SelectContainer>
             <label>Find and Compare Members</label>
             <ReactSelect
+              value={selectedoption}
               options={candidates?.map(candidate => ({ label: candidate.name, value: candidate.id }))}
               name="test"
               isMulti
               onChange={(e,value) => {
+               
+                if(value.length > 3)
+                {
+                      setError('Maximum 3 option are allowed');
+                      return;
+                }
+                setSelectedOption(value);
                 const ids : number[] = value.map((option : OptionTypes) => option.value);
                 const newFilteredData =candidates?.filter(candidate => 
                      ids.includes(candidate.id));
                      newFilteredData &&  setFilteredData(newFilteredData);
-                   
+                  setError('');
               }}
             />
+            <ErrorMessage>{error}</ErrorMessage>
           </SelectContainer>
           <Container>
-            <ImageContainer>
+            <ImageContainer screenWidth = {screenWidth}>
               <img src={chartImage} alt="chartimage" />
             </ImageContainer>
             <Collaborate>COLLABORATE</Collaborate>
             <Create>CREATE</Create>
             <Control>CONTROL</Control>
             <Compete>COMPETE</Compete>
-            <ChartContainer>
+            <ChartContainer screenWidth = {screenWidth}>
               <Radar data={radarData} options={radarOptions} />
             </ChartContainer>
           </Container>

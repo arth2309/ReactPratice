@@ -330,11 +330,17 @@ const Dashboard  = () => {
   const [progress, setProgress] = useState<CandidateProgress | null>(null);
   const[competencies,setCompetencies] = useState<Competency[] | null>(null);
   const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
+  const[screenWidth,setScreenWidth] =  useState<number>(window.screen.width);
 
   useEffect(() => {
        fetchdata();
        // eslint-disable-next-line
   },[])
+
+  useEffect(() => {
+    setScreenWidth(window.screen.width);
+    // eslint-disable-next-line  
+  },[window.screen.width])
 
   const fetchdata = async() => {
     if(authctx.userData)
@@ -373,7 +379,7 @@ const Dashboard  = () => {
       }
 
       const [isModalOpen, setModalOpen] = useState(false);
-      const openModal = () => setModalOpen(true);
+      const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast('Warning','Mobile view is not supported','warning')};
       const closeModal = () => setModalOpen(false);
 
   return (
@@ -408,6 +414,7 @@ const Dashboard  = () => {
           <BorderBottom bw="100%" />
           <div>Build a Epic Career here</div>
         </MobileCard2>
+       
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
@@ -423,7 +430,6 @@ const Dashboard  = () => {
                   <strong>What's included</strong>
                 </Card1Item>
               </Card1>
-              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
               <Card2>
                 <Card2Item >
                   <h2 style={{ color: "#394456", margin: "0px" }}>
@@ -489,6 +495,7 @@ const Dashboard  = () => {
               <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
               <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
+              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />
@@ -501,6 +508,7 @@ const Dashboard  = () => {
               <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
               <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '}Your Resume</OutlineButton>
+              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
               </MobileButtonDiv>
         </RightContainer>
       </Container>
