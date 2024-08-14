@@ -5,23 +5,12 @@ import { Range, getTrackBackground } from "react-range";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import personalityBaneer from "../../assests/img/personality_test_banner.svg";
 import Slider from "./Slider";
-import { SubmitTest,QuizStatus } from "../../interface/Interface";
+import { SubmitTest} from "../../interface/Interface";
 import { getQuiz, QuizResponse, QuizEligible } from "../../services/PersonalityTestService";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
-import { createGlobalStyle } from 'styled-components';
-
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
-
-  body {
-    font-family: 'Barlow', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-`;
+import { ROUTES } from "../../constants/routes";
 
 
 const Container = styled.div({
@@ -192,10 +181,7 @@ interface Quiz1 {
 const Personalitytest: React.FC = () => {
   React.useEffect(() => {
     Quizeligible();
-    // if (testCount < 3) {
-    //   fetchQuizList();
-    // }
-    // // eslint-disable-next-line
+   // eslint-disable-next-line
   }, []);
 
   const Quizeligible = async () => {
@@ -276,10 +262,9 @@ const Personalitytest: React.FC = () => {
 
   return (
     <Container>
-      <GlobalStyle />
       <Header />
       <BackButtonContainer>
-        <BackButton onClick={() => {navigate('/home')}}>
+        <BackButton onClick={() => {navigate(ROUTES.HOME)}}>
           <ArrowBackIosIcon />
           Back
         </BackButton>

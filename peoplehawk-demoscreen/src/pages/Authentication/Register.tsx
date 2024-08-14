@@ -1,5 +1,4 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
@@ -7,7 +6,6 @@ import logo from "../../assests/img/logo@2x.png";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import arrow from "../../assests/img/next-step-arrow.png";
-import { toast } from "react-toastify";
 import { Container, LeftContainer, MainContainer, FormControl } from "./styled";
 import {
   Bottom,
@@ -21,6 +19,8 @@ import {
 } from "../../services/AuthService";
 import { CountryList as list, OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
+import {ROUTES} from '../../constants/routes';
+import {REGISTER_FORM} from "../../constants/formConstants";
 
 
 export const Register = () => {
@@ -72,50 +72,18 @@ export const Register = () => {
     email: string;
   }
 
-  const validationSchema1 = Yup.object({
-    firstname: Yup.string().required("First Name is required"),
-    lastname: Yup.string().required("Last Name is required"),
-    email: Yup.string()
-      .email("Enter a valid email")
-      .test("email exists", "Email already exist", (email) => {
-        return userList ? !userList.some((item) => item.email === email) : true;
-      })
-      .required("Email is required"),
-  });
-
   interface Form2Values {
     membertype: string;
     countryId: number;
     code: string | null;
   }
 
-  const validationSchema2 = Yup.object({
-    membertype: Yup.string().required("Please select a Member Type"),
-    countryId: Yup.number()
-      .moreThan(0, "Please select a Country")
-      .required("Please select a Country"),
-  });
 
   interface Form3Values {
     password: string;
     cpassword: string;
     termsAccepted: boolean;
   }
-
-  const validationSchema3 = Yup.object({
-    password: Yup.string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must be at least 8 characters long, use upper-case and lower-case letters, and include both digits and special characters."
-      )
-      .required("Please enter a password"),
-    cpassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Password does not match")
-      .required("Please repeat a password"),
-    termsAccepted: Yup.boolean()
-      .oneOf([true], "Please accept Terms and Conditions")
-      .required("Please accept Terms and Conditions"),
-  });
 
   interface FormData {
     step1: Form1Values;
@@ -124,21 +92,11 @@ export const Register = () => {
   }
 
   const [formData, setFormData] = useState<FormData>({
-    step1: { firstname: "", lastname: "", email: "" },
-    step2: { countryId: 0, code: null, membertype: "" },
-    step3: { password: "", cpassword: "", termsAccepted: false },
+    step1: REGISTER_FORM.STEP_1_INTIAL_VALUES,
+    step2: REGISTER_FORM.STEP_2_INTIAL_VALUES,
+    step3: REGISTER_FORM.STEP_3_INTIAL_VALUES,
   });
-  const [Registervalues, setRegisterValues] = useState<RegisterFormvalues>({
-    id: 0,
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    memberType: "",
-    countryId: 1,
-    organisationCode: null,
-    roleId: 1,
-  });
+  const [Registervalues, setRegisterValues] = useState<RegisterFormvalues>(REGISTER_FORM.INTIAL_VALUES);
   const [step, setStep] = useState<number>(1);
   const [isForm1Submitted, setIsForm1Submitted] = useState<boolean>(false);
   const [isForm2Submitted, setIsForm2Submitted] = useState<boolean>(false);
@@ -160,12 +118,12 @@ export const Register = () => {
             title2="For Free"
             text1="Already have an account?"
             text2="Log in here"
-            navigateTo="/login"
+            navigateTo={ROUTES.LOGIN}
           />
           {step === 1 && (
             <Formik
               initialValues={formData.step1}
-              validationSchema={validationSchema1}
+              validationSchema={REGISTER_FORM.STEP_1_VALIDATION_SCHEMA}
               validateOnBlur={false}
               validateOnChange={false}
               onSubmit={(values) => {
@@ -263,7 +221,7 @@ export const Register = () => {
           {step === 2 && (
             <Formik
               initialValues={formData.step2}
-              validationSchema={validationSchema2}
+              validationSchema={REGISTER_FORM.STEP_2_VALIDATION_SCHEMA}
               validateOnBlur={false}
               validateOnChange={false}
               onSubmit={(values) => {
@@ -437,7 +395,7 @@ export const Register = () => {
           {step === 3 && (
             <Formik
               initialValues={formData.step3}
-              validationSchema={validationSchema3}
+              validationSchema={REGISTER_FORM.STEP_3_VALIDATION_SCHEMA}
               validateOnBlur={false}
               validateOnChange={false}
               onSubmit={async (values) => {
@@ -447,15 +405,9 @@ export const Register = () => {
                   password: values.password,
                 }));
                 const val = { ...Registervalues, password: values.password };
-                await navigate("/login");
+                await navigate(ROUTES.LOGIN);
                 // eslint-disable-next-line
                 const response = await api(val);
-                toast.success("Candidate Registered Successfully", {
-                  hideProgressBar: true,
-                  closeButton: false,
-                  autoClose: 2000,
-                  position: "bottom-center",
-                });
               }}
             >
               <Form>

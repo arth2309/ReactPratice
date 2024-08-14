@@ -1,30 +1,21 @@
-import { toast } from "react-toastify";
+import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
 import { FileUploadData } from "../interface/Interface";
 import { apiClient } from "./BaseService";
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
+import {TOAST} from '../constants/toast';
 
 export const uploadFile = async (data: FileUploadData,UserId : number): Promise<any> => {
     try {
       const formData = new FormData();
       formData.append(`file`, data.file);
   
-      const response = await apiClient.post(`candidate/files/${UserId}`, formData, {
+      const response = await apiClient.post(API_ENDPOINTS.CRUD_FILE(UserId), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
   
-      setTimeout(() => {toast.success("File uploaded Successfully", {
-        position: "bottom-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });},2000)
-      
-  
+      setTimeout(() => {showToast(TOAST.UPLOAD_RESUME.title,TOAST.UPLOAD_RESUME.description,TOAST.UPLOAD_RESUME.type)},1000)
       return response;
     } catch (error) {
       
@@ -34,7 +25,7 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
   
   export const fetchFile = async (fileId: number): Promise<string | null> => {
     try {
-      const response = await apiClient.get(`candidate/files/${fileId}`, {
+      const response = await apiClient.get(API_ENDPOINTS.CRUD_FILE(fileId), {
         responseType: "blob",
       });
   
@@ -48,9 +39,11 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
   
   export const deleteFile = async (fileId: number): Promise<any> => {
     try {
-      const response = await apiClient.delete(`candidate/files/${fileId}`);
+      const response = await apiClient.delete(API_ENDPOINTS.CRUD_FILE(fileId));
+      setTimeout(() => {showToast(TOAST.DELETE_RESUME.title,TOAST.DELETE_RESUME.description,TOAST.DELETE_RESUME.type)},1000);
       return response.data;
     } catch (error) {
+      
       throw new Error(`Error fetching file`);
     }
   };
@@ -63,14 +56,16 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
       const formData = new FormData();
       formData.append("file", data.file);
   
-      await apiClient.put(`candidate/files/${fileId}`, formData, {
+      await apiClient.put(API_ENDPOINTS.CRUD_FILE(fileId), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       const url = URL.createObjectURL(data.file);
+      setTimeout(() => {showToast(TOAST.UPDATE_RESUME.title,TOAST.UPDATE_RESUME.description,TOAST.UPDATE_RESUME.type)},1000)
       return url;
     } catch (error) {
+      
       throw new Error(`Error updating file`);
     }
   

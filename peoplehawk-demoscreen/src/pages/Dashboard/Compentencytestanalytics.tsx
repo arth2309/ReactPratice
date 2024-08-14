@@ -22,10 +22,6 @@ interface ModalProps {
     candidates : UserCompetency[] | null;
   }
 
-  interface WidthProps {
-        screenWidth : number;
-  }
- 
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -39,15 +35,13 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContent = styled.div<WidthProps>`
+const ModalContent = styled.div`
   background: #eef2f6;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: ${props => props.screenWidth > 883 ? 800 : props.screenWidth - 83}px;
+  width: 800px;
   padding: 20px 10px;
   position: relative;
-  overflow-x : ${props => props.screenWidth > 883 ? 'hidden' : 'auto'};
-   overflow-y: hidden;
 `;
 
 const ModalHeader = styled.div`
@@ -91,7 +85,7 @@ const Container = styled.div`
   margin-top : -80px;
 `;
 
-const ChartContainer = styled.div<WidthProps>`
+const ChartContainer = styled.div`
    display: flex;
     justify-content: center;
     position: absolute;
@@ -136,7 +130,7 @@ const Create = styled.div`
     font-size: 25px;
     font-weight: 600;`
 
-const ImageContainer = styled.div<WidthProps>`
+const ImageContainer = styled.div`
   display: flex;
     justify-content: center;
     margin-top: 30px;
@@ -195,25 +189,22 @@ const radarOptions = {
   {    
   const
   chart = event.chart;    
-  const
-  ctx = chart.ctx;    
-  const
-  { chartArea } = chart;    
+  // const
+  // ctx = chart.ctx;    
+  // const
+  // { chartArea } = chart;    
   // Reset the background of radar chart when not hovering
-      chart.data.datasets.
-  forEach
-  (
-  (dataset : any, i : any) =>
+      chart.data.datasets.forEach((dataset : any, i : any) =>
   {      
   if
   (chartElement.length) {        
   // Hovering over a point
-  const
-  point = chartElement[0];        
-  const
-  datasetIndex = point.datasetIndex;        
-  const
-  index = point.index;        
+  // const
+  // point = chartElement[0];        
+  // const
+  // datasetIndex = point.datasetIndex;        
+  // const
+  // index = point.index;        
   // Change background color of the radar chart dynamically
           dataset.backgroundColor = dataset.backgroundColor
             ?
@@ -226,9 +217,8 @@ const radarOptions = {
   // Reset the color when not hovering
   dataset.backgroundColor =
   ['transparent','transparent','transparent']
-  ; } }); chart.
-  update
-  ();
+  ; } }); 
+  chart.update();
   // Update chart to reflect changes
   },
 };
@@ -238,15 +228,11 @@ const radarOptions = {
 const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,competencies,candidates }) => {
  
   const [filteredData, setFilteredData] = useState<any[]>([]);
-  const[screenWidth,setScreenWidth] =  useState<number>(window.screen.width);
   const [selectedoption,setSelectedOption] = useState<OptionTypes[] | null>(null);
   const [error,setError] = useState<string>('');
 
 
-  useEffect(() => {
-    setScreenWidth(window.screen.width);
-    // eslint-disable-next-line  
-  },[window.screen.width])
+  
   useEffect(() => {setFilteredData([]);setSelectedOption(null)},[isOpen])
   const radarData = {
     labels: competencies?.map(c => c.title),
@@ -254,16 +240,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
       data: candidate.compentencies,
       label: candidate.name,
       fill : true,
-      // backgroundColor: ['transparent','transparent','transparent'], 
-      // defaultBackgroundColor : ['transparent','transparent','transparent'],
-      // hoverBackgroundColor: ['red','green','blue'],
       borderColor: ['red','green','blue'],
-      // hoverBorderColor : ['red','green','blue'],
-      // borderWidth: 1,
-      // pointBackgroundColor: 'black',
-      // pointBorderColor: 'black',
-      // pointHoverBackgroundColor: ['red','green','blue'],
-
     })),
 
   };
@@ -272,7 +249,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
 
   return (
     <ModalOverlay onClick={onClose}>
-      <ModalContent screenWidth = {screenWidth} onClick={(e) => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <Title>Competency Test Analytics</Title>
           <ModalClose onClick={onClose}>X</ModalClose>
@@ -303,14 +280,14 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
             <ErrorMessage>{error}</ErrorMessage>
           </SelectContainer>
           <Container>
-            <ImageContainer screenWidth = {screenWidth}>
+            <ImageContainer >
               <img src={chartImage} alt="chartimage" />
             </ImageContainer>
             <Collaborate>COLLABORATE</Collaborate>
             <Create>CREATE</Create>
             <Control>CONTROL</Control>
             <Compete>COMPETE</Compete>
-            <ChartContainer screenWidth = {screenWidth}>
+            <ChartContainer>
               <Radar data={radarData} options={radarOptions} />
             </ChartContainer>
           </Container>

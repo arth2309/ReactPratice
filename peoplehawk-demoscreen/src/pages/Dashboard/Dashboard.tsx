@@ -14,20 +14,8 @@ import { showToast, ToastComponent } from "../../components/layout/ToastComponen
 import {fetchPhoto,uploadPhoto,getProgress,getCompentencies,getUserCompentencies} from "../../services/HomeService";
 import { CandidateProgress,Competency,UserCompetency } from "../../interface/Interface";
 import Compentencytestanalytics from "./Compentencytestanalytics";
-import { createGlobalStyle } from 'styled-components';
-
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap');
-
-  body {
-    font-family: 'Barlow', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-`;
-
-
+import { ROUTES } from "../../constants/routes";
+import { TOAST } from "../../constants/toast";
 
 
 interface TrophyProps {
@@ -123,8 +111,6 @@ const Card2Item = styled.div({
   width : "175px"
 });
 
-
-
 const Card2Sub = styled.div({
   display: "flex",
   flexDirection: "column",
@@ -143,14 +129,13 @@ const Card2SubItem = styled.div({
   height : '100px'
 });
 
-
 const Progress = styled.div({
   fontSize: "40px",
   color: "#F96332",
   fontWeight : "600"
 });
 
-const Trophy = styled.div<TrophyProps>((props) => ({
+const Trophy = styled.div.withConfig({shouldForwardProp: (prop) => !['trophyWidth','trophyHeight'].includes(prop)})<TrophyProps>((props) => ({
   width: props.trophyWidth,
   backgroundColor: "#F96332",
   borderRadius: "50%",
@@ -164,20 +149,24 @@ const Trophy = styled.div<TrophyProps>((props) => ({
 const Card3 = styled.div({
   backgroundColor: "#DBEFFA",
   display: "flex",
-  gap: "80px",
+  gap: "37px",
   marginTop: "20px",
   padding: "10px",
   borderRadius: "8px",
   width : '337px'
 });
 
+const BrokerImg = styled.img`
+    object-fit: cover;
+    object-position: center;
+    height: 200px;
+}`
+
 const Card3Item = styled.div({
   display: "flex",
   gap: "5px",
   flexDirection: "column",
 });
-
-
 
 const Broker = styled.div({
   color: "#F96332",
@@ -215,7 +204,7 @@ const OutlineButton = styled.button({
   color: "#394456",
 });
 
-const BorderBottom = styled.div<BorderBottomProps>((props) => ({
+const BorderBottom = styled.div.withConfig({shouldForwardProp: (prop) => ['bw'].includes(prop)})<BorderBottomProps>((props) => ({
   borderBottom: "3px solid #F96332",
   width:  `${props.bw}px`,
   maxWidth: "100%",
@@ -266,7 +255,6 @@ const ObviouslyOrange = styled.div({
   lineHeight: "25px",
   color : '#F96332'
 });
-
 
 const RightContainer = styled.div({
     width : '100%',
@@ -320,8 +308,6 @@ const Images = styled.img({
   }
 }) 
 
-
-
 const Dashboard  = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
@@ -330,17 +316,11 @@ const Dashboard  = () => {
   const [progress, setProgress] = useState<CandidateProgress | null>(null);
   const[competencies,setCompetencies] = useState<Competency[] | null>(null);
   const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
-  const[screenWidth,setScreenWidth] =  useState<number>(window.screen.width);
-
+  
   useEffect(() => {
        fetchdata();
        // eslint-disable-next-line
   },[])
-
-  useEffect(() => {
-    setScreenWidth(window.screen.width);
-    // eslint-disable-next-line  
-  },[window.screen.width])
 
   const fetchdata = async() => {
     if(authctx.userData)
@@ -357,7 +337,6 @@ const Dashboard  = () => {
         const cand = await getUserCompentencies();
         cand && setCandidates(cand);
     }
-   
   }
 
     const handleFileChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -365,7 +344,7 @@ const Dashboard  = () => {
         if (file) {
             
             if (file.size > 15*1024) {
-                showToast('error', 'File size exceeds 15 KB limit.','error');
+                showToast(TOAST.FILE_LIMIT.title, TOAST.FILE_LIMIT.description,TOAST.FILE_LIMIT.type);
                 return;
             }
                 if(authctx.userData)
@@ -379,12 +358,11 @@ const Dashboard  = () => {
       }
 
       const [isModalOpen, setModalOpen] = useState(false);
-      const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast('Warning','Mobile view is not supported','warning')};
+      const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast(TOAST.MOBILE_VIEW_NOT_SUPPORTED.title,TOAST.MOBILE_VIEW_NOT_SUPPORTED.description,TOAST.MOBILE_VIEW_NOT_SUPPORTED.type)};
       const closeModal = () => setModalOpen(false);
 
   return (
     <Fragment> 
-      <GlobalStyle />
       <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} competencies = {competencies} candidates = {candidates} />
       <ToastComponent />
       <Header />
@@ -414,7 +392,6 @@ const Dashboard  = () => {
           <BorderBottom bw="100%" />
           <div>Build a Epic Career here</div>
         </MobileCard2>
-       
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
@@ -450,7 +427,6 @@ const Dashboard  = () => {
                     style={{ display: 'none' }}
                 />
             </label>
-                
                 </Card2Item>
                 <Card2Sub>
                   <Card2SubItem>
@@ -470,7 +446,7 @@ const Dashboard  = () => {
                 </Card2Sub>
               </Card2>
               <Card3>
-                <img src={broker} alt="broker" />
+                <BrokerImg src={broker} alt="broker" />
                 <Card3Item>
                   <div style = {{color:"#394456"}}>Your personality Type</div>
                   <Broker>Broker</Broker>
@@ -492,9 +468,9 @@ const Dashboard  = () => {
                   </Card3Img>
                 </Card3Item>
               </Card3>
-              <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
-              <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
+              <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
@@ -505,9 +481,9 @@ const Dashboard  = () => {
                 <RightHeading1>Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress</RightHeading1>
                </RightHeading>
               <MobileButtonDiv>
-              <PrimaryButton onClick={() => {navigate('/personality-test')}}>Take Your Personality Test</PrimaryButton>
-              <OutlineButton onClick={() => {navigate('/analysis')}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate('/resume')}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '}Your Resume</OutlineButton>
+              <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
               </MobileButtonDiv>
         </RightContainer>

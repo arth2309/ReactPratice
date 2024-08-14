@@ -117,6 +117,10 @@ namespace PeoplehawkServices.Implementation
         public async Task<(byte[], string)> GetPhoto(int UserId)
         {
             User user = await FirstorDefaultAsync(x => x.Id == UserId);
+            if(user == null || user.ProfilePhoto == null)
+            {
+                throw new KeyNotFoundException("Photo is not present");
+            }
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", user.ProfilePhoto);
             var fileBytes = File.ReadAllBytes(filePath);
             return (fileBytes, user.ProfilePhoto);

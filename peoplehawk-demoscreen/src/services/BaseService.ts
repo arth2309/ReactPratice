@@ -1,12 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { getToken } from "../utils/manageAccessToken";
-
-
-
-const BASE_URL: string = "https://localhost:7055/api/";
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
 
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_ENDPOINTS.BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -24,3 +21,6 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+
+

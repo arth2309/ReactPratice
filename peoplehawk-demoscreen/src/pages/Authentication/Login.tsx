@@ -1,5 +1,4 @@
 import { Formik, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { Login as api } from "../../services/AuthService";
 import AuthContext from "../../store/AuthContext";
 import { useContext,useState } from "react";
@@ -7,40 +6,37 @@ import { useNavigate } from "react-router-dom";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
-import "react-toastify/dist/ReactToastify.css";
 import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {
-  Bottom,
-  Subject,
-  RightContainer,
-} from "../../components/layout/authentication/authentication";
+import {Bottom,Subject,RightContainer} from "../../components/layout/authentication/authentication";
 import { Container, LeftContainer, MainContainer } from "./styled";
 import { LoginFormValues } from "../../interface/Interface";
 import Input from "../../components/layout/form/Input";
+import {ROUTES} from '../../constants/routes'
+import {LOGIN_FORM} from "../../constants/formConstants";
+import {styled} from 'styled-components';
+
+const PasswordContainer = styled.div`
+position : relative;
+display : flex;
+margin-bottom : 38px;`
+
+const EyeIcon = styled.div`
+position : absolute;
+top : 31px;
+right : 13px;
+`
 
 export const Login = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   const[showPassword,setShowPassword] = useState<boolean>(false);
 
-  const initialValues: LoginFormValues = {
-    email: "",
-    password: "",
-  };
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is Required"),
-    password: Yup.string().required("Password is required"),
-  });
-
   const loginHandler = async (values: LoginFormValues) => {
     const result = await api(values);
     result && authCtx.login(result);
-    result && navigate("/home");
+    result && navigate(ROUTES.HOME);
   };
 
   const passwordHandler = () => {
@@ -58,11 +54,11 @@ export const Login = () => {
             title2="PeopleHawk"
             text1="Don't have account?"
             text2="Register Here"
-            navigateTo="/Register"
+            navigateTo= {ROUTES.REGISTER}
           />
           <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
+            initialValues={LOGIN_FORM.INTIAL_VALUES}
+            validationSchema={LOGIN_FORM.VALIDATION_SCHEMA}
             onSubmit={(values) => {
               loginHandler(values);
             }}
@@ -84,10 +80,8 @@ export const Login = () => {
                     className="error"
                   />
                 </div>
-
                 <div className="form-group" >
-                 
-                    <div style={{position : 'relative',display : 'flex', marginBottom : '38px'}}>
+                    <PasswordContainer>
                   <Input
                     label="Password"
                     name="password"
@@ -97,10 +91,10 @@ export const Login = () => {
                     onChange={(e) => setFieldValue("password", e.target.value)}
                   />
                  
-                  <div style={{position : 'absolute' , top : '31px' , right : '13px'}} onClick={passwordHandler}>
+                  <EyeIcon onClick={passwordHandler}>
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon /> } 
-                  </div>
-                  </div>
+                  </EyeIcon>
+                  </PasswordContainer>
                   <ErrorMessage
                     name="password"
                     component="div"

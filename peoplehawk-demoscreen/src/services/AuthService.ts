@@ -1,6 +1,9 @@
 import { apiClient } from "./BaseService";
-import {toast} from 'react-toastify';
+import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
 import {CountryList as List,LoginFormValues,ForgotPasswordValues} from '../interface/Interface';
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
+import {TOAST} from '../constants/toast'
+
 
 interface RegisterFormvalues {
     id: number;
@@ -19,7 +22,7 @@ export const Register = async (
   ): Promise<RegisterFormvalues | null> => {
     try {
       const response = await apiClient.post<RegisterFormvalues>(
-        "auth/register",
+        API_ENDPOINTS.REGISTER,
         data
       );
       return response.data;
@@ -30,7 +33,7 @@ export const Register = async (
   
   export const userList = async (): Promise<RegisterFormvalues[] | null> => {
     try {
-      const response = await apiClient.get<RegisterFormvalues[]>("auth/candidateslist");
+      const response = await apiClient.get<RegisterFormvalues[]>(API_ENDPOINTS.CANDIDATES_LIST);
       return response.data;
     } catch (error) {
       return null;
@@ -39,7 +42,7 @@ export const Register = async (
   
   export const CountryList = async (): Promise<List[] | null> => {
     try {
-      const response = await apiClient.get("auth/country");
+      const response = await apiClient.get(API_ENDPOINTS.COUNTRY_LIST);
       return response.data;
     } catch (error) {
       return null;
@@ -48,27 +51,16 @@ export const Register = async (
   
   export const Login = async (data: LoginFormValues): Promise<any> => {
     try {
-      const response = await apiClient.post(`auth`, data);
+      const response = await apiClient.post(API_ENDPOINTS.LOGIN, data);
       return response.data;
-    } catch (error: any) {
-  
-     
-      toast.error(error.response.data.error, {
-        position: "bottom-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+    } catch (error) {
+          showToast(TOAST.INVALID_CREDENTIALS.title,TOAST.INVALID_CREDENTIALS.description,TOAST.INVALID_CREDENTIALS.type);
     }
   };
   
   export const ForgotPassword = async (
     data: ForgotPasswordValues
   ): Promise<any> => {
-    const response = apiClient.post<string>("auth/forgotpassword", data);
-    toast.success((await response).data);
+    const response = apiClient.post<string>(API_ENDPOINTS.FORGOT_PASSWORD, data);
+    showToast(TOAST.INVALID_CREDENTIALS.title,(await response).data,TOAST.INVALID_CREDENTIALS.type);
   };

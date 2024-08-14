@@ -8,27 +8,28 @@ import { Register } from "../pages/Authentication/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import { ForgotPassword } from "../pages/Authentication/Forgotpassword";
 import Personalitytest from "../pages/PersonalityTest/Personalitytest";
+import {ROUTES} from '../constants/routes';
+import { getToken } from "../utils/manageAccessToken";
 
 const Routes = () => {
     const authCtx = useContext(AuthContext);
-    const token = localStorage.getItem("token");
-
+    const token = getToken();
+    
     return(
         <BrowserRouter>
         <Main>
-            <Route path = "/" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
-            <Route path="/home" element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to="/login"/>}></Route>
-           <Route path = "/analysis" element = {authCtx.isLoggedIn ?<Useranalysis /> : <Navigate to="/login"/>}></Route>  
-            <Route path="/resume" element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to="/login"/>}></Route>
-            <Route path = "/login" element = {<Login />}></Route>
-            <Route path = "/forgotpassword" element = {<ForgotPassword />}></Route>
-            <Route path = "/personality-test" element = {<Personalitytest />}></Route>
-            <Route path = "/register" element = {<Register />}></Route>
-            <Route path = "*" element = {!token ?<Navigate to = "/login" /> :  <Navigate to = "/home" />}></Route>
+            <Route path = {ROUTES.BASE} element = {!token ?<Navigate to = {ROUTES.LOGIN}/> :  <Navigate to = {ROUTES.HOME} />}></Route>
+            <Route path={ROUTES.HOME} element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
+           <Route path = {ROUTES.IDEAL_COURSES} element = {authCtx.isLoggedIn ?<Useranalysis /> : <Navigate to={ROUTES.LOGIN}/>}></Route>  
+            <Route path= {ROUTES.RESUME} element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
+            <Route path = {ROUTES.LOGIN} element = {<Login />}></Route>
+            <Route path = {ROUTES.FORGOT_PASSWORD} element = {<ForgotPassword />}></Route>
+            <Route path = {ROUTES.PERSONALITY_TEST} element = {authCtx.isLoggedIn ?<Personalitytest /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
+            <Route path = {ROUTES.REGISTER} element = {<Register />}></Route>
+            <Route path = {ROUTES.OTHERS} element = {!token ?<Navigate to = {ROUTES.LOGIN} /> :  <Navigate to = {ROUTES.HOME} />}></Route>
         </Main>
         </BrowserRouter>
     );
-
 }
 
 export default Routes

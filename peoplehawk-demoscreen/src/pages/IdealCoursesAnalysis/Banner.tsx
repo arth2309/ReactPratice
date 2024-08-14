@@ -5,6 +5,7 @@ import "../../stylesheets/obviously-font.css";
 import {styled} from 'styled-components';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes';
 
 const BackButtonContainer = styled.div({
     display: "flex",
@@ -84,7 +85,7 @@ const  Banner = () => {
         </BannerContent>
         </div>
         <BackButtonContainer>
-        <BackButton onClick={() => {navigate('/home')}}>
+        <BackButton onClick={() => {navigate(ROUTES.HOME)}}>
           <ArrowBackIosIcon />
           Back
         </BackButton>

@@ -1,5 +1,6 @@
 import { CandidateProgress, FileUploadData,Competency,UserCompetency } from "../interface/Interface";
 import { apiClient } from "./BaseService";
+import { API_ENDPOINTS } from "../constants/apiEndpoints";
 
 export const uploadPhoto = async (
     UserId: number,
@@ -9,7 +10,7 @@ export const uploadPhoto = async (
       const formData = new FormData();
       formData.append("file", data.file);
   
-      await apiClient.put(`candidate/${UserId}/uploadPhoto`, formData, {
+      await apiClient.put(API_ENDPOINTS.UPLOAD_PROFILE_PHOTO(UserId), formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -25,14 +26,12 @@ export const uploadPhoto = async (
 
   export const fetchPhoto = async (UserId: number): Promise<string | null> => {
     try {
-      const response = await apiClient.get(`candidate/${UserId}/candidatePhoto`, {
-        responseType: "blob",
-      });
-  
+
+      const response = await apiClient.get(API_ENDPOINTS.GET_PROFILE_PHOTO(UserId),{responseType : 'blob'});
       const url = URL.createObjectURL(response.data);
-  
       return url;
     } catch (error: any) {
+      
       return null;
     }
   };
@@ -41,11 +40,11 @@ export const uploadPhoto = async (
   export const getProgress = async (UserId : number) : Promise<CandidateProgress | null> =>
     {
               try {
-                const response = await apiClient.get(`candidate/${UserId}/progress`);
+                const response = await apiClient.get(API_ENDPOINTS.GET_PROGRESS(UserId));
                 return response.data;
               }
   
-              catch(error)
+              catch(error  : any)
               {
                 return null;
               }
@@ -54,12 +53,13 @@ export const uploadPhoto = async (
     export const getCompentencies = async () : Promise<Competency[] | null> =>
       {
                 try {
-                  const response = await apiClient.get(`candidate/compentencies`);
+                  const response = await apiClient.get(API_ENDPOINTS.COMPENTENCIES_LIST);
                   return response.data;
                 }
     
-                catch(error)
+                catch(error : any)
                 {
+                 
                   return null;
                 }
       }
@@ -67,11 +67,11 @@ export const uploadPhoto = async (
       export const getUserCompentencies = async () : Promise<UserCompetency[] | null> =>
         {
                   try {
-                    const response = await apiClient.get(`candidate/user-compentencies`);
+                    const response = await apiClient.get(API_ENDPOINTS.USER_COMPENTENCIES_LIST);
                     return response.data;
                   }
       
-                  catch(error)
+                  catch(error : any)
                   {
                     return null;
                   }

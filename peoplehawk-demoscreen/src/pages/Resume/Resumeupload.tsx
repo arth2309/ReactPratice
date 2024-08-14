@@ -10,11 +10,11 @@ import {
 } from "../../services/ResumeService";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
-import {ToastContainer} from 'react-toastify';
+import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {styled} from 'styled-components';
 import { OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
-
+import { ROUTES } from "../../constants/routes";
 
 
 const Container = styled.div`
@@ -152,7 +152,7 @@ const Resumeupload = () => {
   return (
     <Container
     >
-     <ToastContainer />
+     <ToastComponent />
       <Header />
       <input
         type="file"
@@ -161,7 +161,7 @@ const Resumeupload = () => {
         onChange={handleFileChange}
       />
       <NavigateContainer>
-        <BackButton onClick={() => navigate("/")}>
+        <BackButton onClick={() => navigate(ROUTES.HOME)}>
           <Arrow
             className="arrow"
           />
@@ -170,16 +170,7 @@ const Resumeupload = () => {
           </div>
         </BackButton>
         <div>
-          {/* <select value={selectedOption} onChange={handleSelectOption}>
-            <option value="manage">Manage Your Resume/CV</option>
-            {selectedFileUrl ? (
-              <>
-                <option value="update">Update</option>
-                <option value="download">Download</option>
-                <option value="delete">Delete</option>
-              </>
-            ) : null}
-          </select> */}
+
           <ReactSelect
               value={selectedOption}
               options={option}

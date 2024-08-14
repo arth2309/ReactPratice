@@ -4,6 +4,8 @@ import AuthContext from '../../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { showToast } from '../ToastComponent/Toastcomponent';
 import {styled} from 'styled-components';
+import { ROUTES } from '../../../constants/routes';
+import {TOAST} from '../../../constants/toast'
 
 
 
@@ -26,8 +28,8 @@ const Header = () => {
     const logoutHandler = async() => {
 
         await authctx.logout();
-        await navigate('/Login');
-        showToast('Success', 'You have Successfully Logged out', 'success');
+        await navigate(ROUTES.LOGIN);
+        showToast(TOAST.LOGGED_OUT.title,TOAST.LOGGED_OUT.description,TOAST.LOGGED_OUT.type);
     }
 
     return (

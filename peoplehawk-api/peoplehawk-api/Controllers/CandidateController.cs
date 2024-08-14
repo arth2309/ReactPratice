@@ -99,10 +99,10 @@ namespace peoplehawk_api.Controllers
         public async Task<IActionResult> ProfilePhoto(int UserId)
         {
             var result = await _userService.GetPhoto(UserId);
-            if(result.Item2 == null)
-            {
-                return NoContent();
-            }
+            //if(result.Item2 == null)
+            //{
+            //    return NoContent();
+            //}
             return  File(result.Item1, "application/pdf", result.Item2) ;
         }
 
