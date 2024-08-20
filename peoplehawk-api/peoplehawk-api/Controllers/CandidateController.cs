@@ -9,7 +9,7 @@ namespace peoplehawk_api.Controllers
     [Authorize]
     [Route("api/candidate")]
     [ApiController]
-    public class CandidateController : ControllerBase
+    public class CandidateController : BaseController
     {
         private readonly ICourseInterestService _courseInterestService;
         private readonly IChartService _chartService;

@@ -18,5 +18,11 @@ namespace PeoplehawkServices.Interface
         Task<UserDTO> UpdateFile(IFormFile file, int UserId);
 
         Task<(byte[], string)> GetPhoto(int UserId);
+
+        Task<List<User>> GetUserByCriteria(Expression<Func<User, bool>>? filter = null,
+            Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
+            int? page = null,
+            int? pageSize = null,
+            params Expression<Func<User, object>>[]? includes);
     }
 }

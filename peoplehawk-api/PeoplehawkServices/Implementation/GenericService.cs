@@ -58,11 +58,7 @@ namespace PeoplehawkServices.Implementation
             return entity;
         }
 
-        public async Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate)
-        {
-            return await _genericRepository.GetByCriteria(predicate);
-           
-        }
+        
     }
 }
  

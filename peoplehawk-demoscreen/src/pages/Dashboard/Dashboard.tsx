@@ -363,6 +363,8 @@ const Dashboard  = () => {
 
   return (
     <Fragment> 
+
+      
       <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} competencies = {competencies} candidates = {candidates} />
       <ToastComponent />
       <Header />
@@ -467,6 +469,7 @@ const Dashboard  = () => {
                     <Images src={linkedin} alt="linkedin"  />
                   </Card3Img>
                 </Card3Item>
+                
               </Card3>
               <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>

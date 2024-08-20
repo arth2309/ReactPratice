@@ -4,6 +4,8 @@ import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import {TOAST} from '../constants/toast';
 
+
+
 export const uploadFile = async (data: FileUploadData,UserId : number): Promise<any> => {
     try {
       const formData = new FormData();
@@ -44,7 +46,7 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
       return response.data;
     } catch (error) {
       
-      throw new Error(`Error fetching file`);
+  
     }
   };
   

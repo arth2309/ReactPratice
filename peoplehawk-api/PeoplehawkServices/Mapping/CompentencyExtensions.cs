@@ -10,7 +10,7 @@ namespace PeoplehawkServices.Mapping
 {
     public static class CompentencyExtensions
     {
-        public static CompetencyDTO ToDto(this Competency competency)
+        public static CompetencyDTO? ToDto(this Competency competency)
         {
             return new CompetencyDTO
             {
@@ -20,8 +20,10 @@ namespace PeoplehawkServices.Mapping
             };
         }
 
-        public static Competency FromDto(this CompetencyDTO competencyDTO)
+        public static Competency? FromDto(this CompetencyDTO competencyDTO)
+
         {
+ 
             return new Competency
             {
                 Title = competencyDTO.Title,
@@ -29,7 +31,7 @@ namespace PeoplehawkServices.Mapping
 
             };
         }
-        public static List<CompetencyDTO> ToDtoList(this List<Competency> competencys)
+        public static List<CompetencyDTO>? ToDtoList(this List<Competency> competencys)
         {
             return competencys.Select(quiz => quiz.ToDto()).OrderBy(a => a.Id).ToList();
         }

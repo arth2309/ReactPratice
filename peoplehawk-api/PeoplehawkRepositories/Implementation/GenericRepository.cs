@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PeoplehawkRepositories.Interface;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace PeoplehawkRepositories.Implementation
@@ -77,10 +78,44 @@ namespace PeoplehawkRepositories.Implementation
             return entity;
         }
 
-        public async Task<List<T>> GetByCriteria (Expression<Func<T, bool>> predicate)
+
+        public async Task<List<T>> GetByCriteriaAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>?, IOrderedQueryable<T>>? orderBy = null,
+            int? page = null,
+            int? pageSize = null,
+            params Expression<Func<T, object>>[]? includes 
+        )
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            IQueryable<T> query = _dbSet;
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (page.HasValue && pageSize.HasValue)
+            {
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
+            return await query.ToListAsync();
         }
+
+
 
     }
 }

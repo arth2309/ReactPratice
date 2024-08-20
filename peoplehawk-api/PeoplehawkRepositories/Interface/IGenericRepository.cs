@@ -18,11 +18,15 @@ namespace PeoplehawkRepositories.Interface
 
         Task<T> UpdateAsync(T entity);
 
-        Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
-
         Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
-
+        Task<List<T>> GetByCriteriaAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>?, IOrderedQueryable<T>>? orderBy = null,
+            int? page = null,
+            int? pageSize = null,
+            params Expression<Func<T, object>>[]? includes
+        );
 
     }
 }

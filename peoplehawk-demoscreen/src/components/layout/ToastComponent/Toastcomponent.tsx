@@ -1,7 +1,7 @@
 import React from 'react';
 import { ToastContainer, toast, ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import default styles
-import './customToastStyles.css'; 
+
 
 // Define a custom Toast content component
 interface ToastContentProps {

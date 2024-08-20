@@ -95,7 +95,7 @@ namespace PeoplehawkServices.Implementation
 
         public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
         {
-            List<User> users =  await GetByCriteria(predicate);
+            List<User> users =  await _userRepository.GetByCriteriaAsync( filter : predicate);
             return  _mapper.Map<List<UserDTO>>(users);
         }
 
@@ -124,6 +124,19 @@ namespace PeoplehawkServices.Implementation
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", user.ProfilePhoto);
             var fileBytes = File.ReadAllBytes(filePath);
             return (fileBytes, user.ProfilePhoto);
+        }
+
+        public async Task<List<User>> GetUserByCriteria(Expression<Func<User, bool>>? filter = null,
+            Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
+            int? page = null,
+            int? pageSize = null,
+            params Expression<Func<User, object>>[]? includes)
+
+           
+        {
+            Expression<Func<User, bool>> predicate = user => user.FirstName.Contains("a") && user.LastName.Contains("g");
+            return await _userRepository.GetByCriteriaAsync(filter : predicate,page : page,pageSize : pageSize,includes : includes, orderBy : orderBy);
+
         }
     }
 }

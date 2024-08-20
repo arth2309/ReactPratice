@@ -7,7 +7,7 @@ namespace peoplehawk_api.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
 
         private readonly IUserService _userService;
@@ -50,9 +50,11 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("criteria")]
-        public async Task<List<UserDTO>> UsersList()
+        public async Task<List<User>> UsersList()
         {
-            return await _userService.UsersList(a => a.CountryId == 1);
+            return await _userService.GetUserByCriteria(filter : a=>a.CountryId == 1,page : 1, pageSize : 3, orderBy:a=> a.OrderBy(a=> a.Id),includes : x => x.Role );
         }
+
+        
     }
 }

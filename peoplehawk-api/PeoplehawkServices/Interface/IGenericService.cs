@@ -17,7 +17,7 @@ namespace PeoplehawkServices.Interface
 
         Task<T> AddAsync(T entity);
 
-        Task<List<T>> GetByCriteria(Expression<Func<T, bool>> predicate);
+       
 
     }
 }
