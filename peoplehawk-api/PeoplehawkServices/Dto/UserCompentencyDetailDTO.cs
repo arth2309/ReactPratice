@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PeoplehawkServices.Dto
+﻿namespace PeoplehawkServices.Dto;
+public class UserCompentencyDetailDTO
 {
-    public class UserCompentencyDetailDTO
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-       public string? Name { get; set; }
+   public string? Name { get; set; }
 
-        public float[]? Compentencies { get; set; }
-    }
+    public float[]? Compentencies { get; set; }
 }

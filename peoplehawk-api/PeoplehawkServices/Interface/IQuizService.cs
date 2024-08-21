@@ -2,10 +2,8 @@
 using PeoplehawkServices.Dto;
 
 
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface IQuizService  : IGenericService<Quiz>
 {
-    public interface IQuizService  : IGenericService<Quiz>
-    {
-        Task<List<QuizDTO>> GetAllQuiz();
-    }
+    Task<List<QuizDTO>> GetAllQuiz();
 }

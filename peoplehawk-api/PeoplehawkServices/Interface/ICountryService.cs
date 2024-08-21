@@ -2,10 +2,8 @@
 using PeoplehawkServices.Dto;
 
 
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface ICountryService : IGenericService<Country>
 {
-    public interface ICountryService : IGenericService<Country>
-    {
-        Task<List<CountryDTO>> GetCountryList();
-    }
+    Task<List<CountryDTO>> GetCountryList();
 }

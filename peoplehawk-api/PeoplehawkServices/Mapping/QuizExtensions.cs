@@ -2,30 +2,28 @@
 using PeoplehawkServices.Dto;
 
 
-namespace PeoplehawkServices.Mapping
+namespace PeoplehawkServices.Mapping;
+public static class QuizExtensions
 {
-    public static class QuizExtensions
+    public static QuizDTO ToDto (this Quiz quiz)
     {
-        public static QuizDTO ToDto (this Quiz quiz)
+        return new QuizDTO
         {
-            return new QuizDTO
-            {
-                Id = quiz.Id,
-                Question = quiz.Question
-            };
-        }
+            Id = quiz.Id,
+            Question = quiz.Question
+        };
+    }
 
-        public static Quiz FromDto (this QuizDTO quizDTO)
+    public static Quiz FromDto (this QuizDTO quizDTO)
+    {
+        return new Quiz
         {
-            return new Quiz
-            {
-                Question = quizDTO.Question,
-            };
-        }
+            Question = quizDTO.Question,
+        };
+    }
 
-        public static List<QuizDTO> ToDtoList (this List<Quiz> quizes)
-        {
-            return quizes.Select(quiz => quiz.ToDto()).OrderBy(a => a.Id).ToList();
-        }
+    public static List<QuizDTO> ToDtoList (this List<Quiz> quizes)
+    {
+        return quizes.Select(quiz => quiz.ToDto()).OrderBy(a => a.Id).ToList();
     }
 }

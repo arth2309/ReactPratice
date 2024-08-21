@@ -2,65 +2,59 @@
 using Newtonsoft.Json;
 
 
-namespace peoplehawk_api
+namespace peoplehawk_api;
+
+public class ExceptionHandler
 {
-    public class ExceptionHandler
+    private readonly RequestDelegate _next;
+    public ExceptionHandler(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ExceptionHandler(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        context.Response.StatusCode = (int)GetStatusCodeForException(exception);
+        context.Response.ContentType = "application/json";
+
+        var response = new
+        {
+            error = exception.Message
+        };
+        var jsonResponse = JsonConvert.SerializeObject(response);
+        return context.Response.WriteAsync(jsonResponse);
+    }
+
+    private static HttpStatusCode GetStatusCodeForException(Exception exception)
+    {
+        if (exception is UnauthorizedAccessException)
+        {
+            return HttpStatusCode.Unauthorized;
+        }
+        else if (exception is KeyNotFoundException)
+        {
+            return HttpStatusCode.NotFound;
         }
 
-        public async Task Invoke(HttpContext context)
+        else if (exception is ArgumentException)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-            }
+            return HttpStatusCode.BadRequest;
         }
-
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        else
         {
-
-            context.Response.StatusCode = (int)GetStatusCodeForException(exception);
-            context.Response.ContentType = "application/json";
-
-            var response = new
-            {
-                error = exception.Message
-            };
-
-
-            var jsonResponse = JsonConvert.SerializeObject(response);
-            return context.Response.WriteAsync(jsonResponse);
-        }
-
-        private static HttpStatusCode GetStatusCodeForException(Exception exception)
-        {
-            if (exception is UnauthorizedAccessException)
-            {
-                return HttpStatusCode.Unauthorized;
-            }
-            else if (exception is KeyNotFoundException)
-            {
-                return HttpStatusCode.NotFound;
-            }
-
-            else if (exception is ArgumentException)
-            {
-                return HttpStatusCode.BadRequest;
-            }
-
-            else
-            {
-                return HttpStatusCode.InternalServerError;
-            }
+            return HttpStatusCode.InternalServerError;
         }
     }
 }

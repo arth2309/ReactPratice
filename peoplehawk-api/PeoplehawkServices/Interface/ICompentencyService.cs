@@ -5,10 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface ICompentencyService
 {
-    public interface ICompentencyService
-    {
-        Task<List<CompetencyDTO>> GetList();
-    }
+    Task<List<CompetencyDTO>> GetList();
 }

@@ -1,9 +1,6 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface IResumeFileRepository : IGenericRepository<ResumeFile>
 {
-    public interface IResumeFileRepository : IGenericRepository<ResumeFile>
-    {
-
-    }
 }

@@ -1,8 +1,6 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface ICountryRepository : IGenericRepository<Country>
 {
-    public interface ICountryRepository : IGenericRepository<Country>
-    {
-    }
 }

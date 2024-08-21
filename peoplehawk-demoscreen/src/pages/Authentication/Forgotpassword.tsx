@@ -75,7 +75,6 @@ export const ForgotPassword = () => {
               </Form>
             )}
           </Formik>
-
           <Bottom />
         </MainContainer>
       </LeftContainer>

@@ -3,26 +3,23 @@ using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using System.Linq.Expressions;
 
-
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface IUserService : IGenericService<User>
 {
-    public interface IUserService : IGenericService<User>
-    {
-        Task<string> Login(LoginDetails loginDetails);
-        Task<UserDTO> Register(UserDTO userDTO);
+    Task<string> Login(LoginDetails loginDetails);
+    Task<UserDTO> Register(UserDTO userDTO);
 
-        string SendEmail(string email);
+    string SendEmail(string email);
 
-        Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate);
+    Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate);
 
-        Task<UserDTO> UpdateFile(IFormFile file, int UserId);
+    Task<UserDTO> UpdateFile(IFormFile file, int UserId);
 
-        Task<(byte[], string)> GetPhoto(int UserId);
+    Task<(byte[], string)> GetPhoto(int UserId);
 
-        Task<List<User>> GetUserByCriteria(Expression<Func<User, bool>>? filter = null,
-            Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
-            int? page = null,
-            int? pageSize = null,
-            params Expression<Func<User, object>>[]? includes);
-    }
+    Task<List<User>> GetUserByCriteria(Expression<Func<User, bool>>? filter = null,
+        Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
+        int? page = null,
+        int? pageSize = null,
+        params Expression<Func<User, object>>[]? includes);
 }

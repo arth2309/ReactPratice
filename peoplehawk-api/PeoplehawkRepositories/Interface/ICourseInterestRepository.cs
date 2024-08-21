@@ -1,9 +1,7 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface ICourseInterestRepository : IGenericRepository<CourseInterest>
 {
-    public interface ICourseInterestRepository : IGenericRepository<CourseInterest>
-    {
-       
-    }
+   
 }

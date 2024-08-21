@@ -2,8 +2,7 @@ import { apiClient } from "./BaseService";
 import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
 import {CountryList as List,LoginFormValues,ForgotPasswordValues} from '../interface/Interface';
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
-import {TOAST} from '../constants/toast'
-
+import {TOAST} from '../constants/toast';
 
 interface RegisterFormvalues {
     id: number;
@@ -27,18 +26,11 @@ export const Register = async (
       );
       return response.data;
     } catch (error) {
+      showToast(TOAST.EMAIL_ALREADY_EXIST.title,TOAST.EMAIL_ALREADY_EXIST.description,TOAST.EMAIL_ALREADY_EXIST.type);
       return null;
     }
   };
   
-  export const userList = async (): Promise<RegisterFormvalues[] | null> => {
-    try {
-      const response = await apiClient.get<RegisterFormvalues[]>(API_ENDPOINTS.CANDIDATES_LIST);
-      return response.data;
-    } catch (error) {
-      return null;
-    }
-  };
   
   export const CountryList = async (): Promise<List[] | null> => {
     try {

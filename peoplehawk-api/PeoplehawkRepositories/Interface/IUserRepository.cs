@@ -1,9 +1,6 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface IUserRepository : IGenericRepository<User>
 {
-    public interface IUserRepository : IGenericRepository<User>
-    {
-       
-    }
 }

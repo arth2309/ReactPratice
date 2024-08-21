@@ -31,6 +31,10 @@ const Container = styled.div({
   display: "flex",
   width: "100%",
   height: `calc(100vh - 100px)`,
+
+  "@media (max-width : 992px)": {
+    height: `calc(100vh - 293px)`,
+  },
 });
 
 const LeftContainer = styled.div({

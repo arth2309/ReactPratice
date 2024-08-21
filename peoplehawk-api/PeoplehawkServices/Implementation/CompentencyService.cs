@@ -4,21 +4,20 @@ using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
 using PeoplehawkServices.Mapping;
 
-namespace PeoplehawkServices.Implementation
+namespace PeoplehawkServices.Implementation;
+
+public class CompentencyService : GenericService<Competency>, ICompentencyService
 {
-    public class CompentencyService : GenericService<Competency>, ICompentencyService
+    private readonly ICompentencyRepository _compentencyRepository;
+
+    public CompentencyService(ICompentencyRepository compentencyRepository) : base(compentencyRepository) 
     {
-        private readonly ICompentencyRepository _compentencyRepository;
+        _compentencyRepository = compentencyRepository;
+    }
 
-        public CompentencyService(ICompentencyRepository compentencyRepository) : base(compentencyRepository) 
-        {
-            _compentencyRepository = compentencyRepository;
-        }
-
-        public async  Task<List<CompetencyDTO>> GetList()
-        {
-            List<Competency> competencies =  await GetAllAsync();
-            return competencies.ToDtoList();
-        }
+    public async  Task<List<CompetencyDTO>> GetList()
+    {
+        List<Competency> competencies =  await GetAllAsync();
+        return competencies.ToDtoList();
     }
 }

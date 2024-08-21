@@ -4,23 +4,21 @@ using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
 
-namespace PeoplehawkServices.Implementation
+namespace PeoplehawkServices.Implementation;
+public class CountryService : GenericService<Country>,ICountryService
 {
-    public class CountryService : GenericService<Country>,ICountryService
+    private readonly ICountryRepository _countryRepository;
+    private readonly IMapper _mapper;
+
+    public CountryService(ICountryRepository countryRepository,IMapper mapper) : base(countryRepository) 
     {
-        private readonly ICountryRepository _countryRepository;
-        private readonly IMapper _mapper;
+        _countryRepository = countryRepository;
+        _mapper = mapper;
+    }
 
-        public CountryService(ICountryRepository countryRepository,IMapper mapper) : base(countryRepository) 
-        {
-            _countryRepository = countryRepository;
-            _mapper = mapper;
-        }
-
-        public async Task<List<CountryDTO>> GetCountryList()
-        {
-            List<Country> country = await GetAllAsync();
-            return _mapper.Map<List<CountryDTO>>(country);
-        }
+    public async Task<List<CountryDTO>> GetCountryList()
+    {
+        List<Country> country = await GetAllAsync();
+        return _mapper.Map<List<CountryDTO>>(country);
     }
 }

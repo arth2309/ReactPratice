@@ -1,9 +1,7 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface IChartRepository : IGenericRepository<Chart>
 {
-    public interface IChartRepository : IGenericRepository<Chart>
-    {
 
-    }
 }

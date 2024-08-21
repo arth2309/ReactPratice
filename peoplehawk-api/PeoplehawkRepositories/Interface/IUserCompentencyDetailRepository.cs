@@ -1,9 +1,6 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface IUserCompentencyDetailRepository : IGenericRepository<UserCompentencyDetail>
 {
-    public interface IUserCompentencyDetailRepository : IGenericRepository<UserCompentencyDetail>
-    {
-
-    }
 }

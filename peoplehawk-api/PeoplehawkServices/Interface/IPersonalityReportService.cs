@@ -1,12 +1,10 @@
 ﻿using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface IPersonalityReportService : IGenericService<PersonalityReport>
 {
-    public interface IPersonalityReportService : IGenericService<PersonalityReport>
-    {
-        Task<List<PersonalityReportDTO>> AddQuizResult(List<PersonalityReportDTO> personalityReportDTOs);
+    Task<List<PersonalityReportDTO>> AddQuizResult(List<PersonalityReportDTO> personalityReportDTOs);
 
-        Task<QuizStatus> GetReport(int UserId);
-    }
+    Task<QuizStatus> GetReport(int UserId);
 }

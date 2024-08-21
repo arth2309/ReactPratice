@@ -15,17 +15,17 @@ import {
 import {
   Register as api,
   CountryList,
-  userList as user,
+
 } from "../../services/AuthService";
 import { CountryList as list, OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
 import {ROUTES} from '../../constants/routes';
 import {REGISTER_FORM} from "../../constants/formConstants";
+import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 
 
 export const Register = () => {
   const navigate = useNavigate();
-  // const [countryList, setCountryList] = useState<list[] | null>(null);
   const [options, setOptions] = useState<OptionTypes[] | null>(null);
 
   useEffect(() => {
@@ -42,14 +42,10 @@ export const Register = () => {
 
   const fetchCountryList = async () => {
     const response = await CountryList();
-    const users = await user();
-    // response && setCountryList(response);
     if (response) {
       const transformedoptions = convertApiToOptions(response);
       setOptions(transformedoptions);
     }
-
-    users && setUserList(users);
   };
 
   interface RegisterFormvalues {
@@ -64,7 +60,7 @@ export const Register = () => {
     roleId: number;
   }
 
-  const [userList, setUserList] = useState<RegisterFormvalues[] | null>(null);
+
 
   interface Form1Values {
     firstname: string;
@@ -110,6 +106,7 @@ export const Register = () => {
 
   return (
     <Container>
+      <ToastComponent />
       <LeftContainer>
         <img src={logo} alt="logo" className="logo" />
         <MainContainer>
@@ -405,9 +402,10 @@ export const Register = () => {
                   password: values.password,
                 }));
                 const val = { ...Registervalues, password: values.password };
-                await navigate(ROUTES.LOGIN);
+    
                 // eslint-disable-next-line
                 const response = await api(val);
+                response &&  navigate(ROUTES.LOGIN);
               }}
             >
               <Form>

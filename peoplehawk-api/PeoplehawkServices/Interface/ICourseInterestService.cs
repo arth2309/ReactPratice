@@ -2,10 +2,8 @@
 using PeoplehawkServices.Dto;
 
 
-namespace PeoplehawkServices.Interface
+namespace PeoplehawkServices.Interface;
+public interface ICourseInterestService : IGenericService<CourseInterest>
 {
-    public interface ICourseInterestService : IGenericService<CourseInterest>
-    {
-        Task<List<CourseInterestDTO>> GetCourseInterestLists();
-    }
+    Task<List<CourseInterestDTO>> GetCourseInterestLists();
 }

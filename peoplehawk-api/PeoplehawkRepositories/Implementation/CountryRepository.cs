@@ -2,15 +2,14 @@
 using PeoplehawkRepositories.Models;
 
 
-namespace PeoplehawkRepositories.Implementation
-{
-    public class CountryRepository : GenericRepository<Country>, ICountryRepository
-    {
-        private readonly ApplicationDbContext _context;
+namespace PeoplehawkRepositories.Implementation;
 
-        public CountryRepository(ApplicationDbContext context) : base(context) 
-        {
-            _context = context;
-        }
+public class CountryRepository : GenericRepository<Country>, ICountryRepository
+{
+    private readonly ApplicationDbContext _context;
+
+    public CountryRepository(ApplicationDbContext context) : base(context) 
+    {
+        _context = context;
     }
 }

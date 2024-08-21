@@ -14,7 +14,8 @@ interface ToastProps
     FILE_LIMIT : ToastComponentProps,
     UPLOAD_RESUME : ToastComponentProps,
     DELETE_RESUME : ToastComponentProps,
-    UPDATE_RESUME : ToastComponentProps
+    UPDATE_RESUME : ToastComponentProps,
+    EMAIL_ALREADY_EXIST : ToastComponentProps
 }
 
 export const TOAST : ToastProps   = {
@@ -58,4 +59,9 @@ export const TOAST : ToastProps   = {
         description : 'Resume Updated Successfully',
         type : 'success'
     },
+    EMAIL_ALREADY_EXIST : {
+        title : 'Error',
+        description : 'email already exist',
+        type : 'error'
+    }
 } 

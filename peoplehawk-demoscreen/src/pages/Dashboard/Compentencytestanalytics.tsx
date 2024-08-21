@@ -7,7 +7,6 @@ import { OptionTypes } from '../../interface/Interface';
 import chartImage from '../../assests/img/competency-test-analytics.png';
 import { Competency,UserCompetency } from '../../interface/Interface';
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -172,14 +171,14 @@ const radarOptions = {
   elements: {
     radar: {
       fill : true,
-      backgroundColor: ['transparent','transparent','transparent'], // Default background color for radar
-      borderColor: ['red','green','blue'], // Default border color for radar
-      hoverBackgroundColor:  ['red','green','blue'], // Background color on hover
-      hoverBorderColor:  ['red','green','blue'], // Border color on hover
+      backgroundColor: ['transparent','transparent','transparent'], 
+      borderColor: ['red','green','blue'],
+      hoverBackgroundColor:  ['red','green','blue'], 
+      hoverBorderColor:  ['red','green','blue'],
     },
     point: {
-      hoverBackgroundColor:  'white', // Point background color on hover
-      hoverBorderColor:  'white', // Point border color on hover
+      hoverBackgroundColor:  'white', 
+      hoverBorderColor:  'white', 
     },
   },
 
@@ -189,23 +188,12 @@ const radarOptions = {
   {    
   const
   chart = event.chart;    
-  // const
-  // ctx = chart.ctx;    
-  // const
-  // { chartArea } = chart;    
-  // Reset the background of radar chart when not hovering
+ 
       chart.data.datasets.forEach((dataset : any, i : any) =>
   {      
   if
   (chartElement.length) {        
-  // Hovering over a point
-  // const
-  // point = chartElement[0];        
-  // const
-  // datasetIndex = point.datasetIndex;        
-  // const
-  // index = point.index;        
-  // Change background color of the radar chart dynamically
+ 
           dataset.backgroundColor = dataset.backgroundColor
             ?
             ['red','green','blue']
@@ -214,25 +202,21 @@ const radarOptions = {
   ; }
   else
   {
-  // Reset the color when not hovering
+
   dataset.backgroundColor =
   ['transparent','transparent','transparent']
   ; } }); 
   chart.update();
-  // Update chart to reflect changes
+
   },
 };
 
-
-
 const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,competencies,candidates }) => {
- 
+
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [selectedoption,setSelectedOption] = useState<OptionTypes[] | null>(null);
   const [error,setError] = useState<string>('');
 
-
-  
   useEffect(() => {setFilteredData([]);setSelectedOption(null)},[isOpen])
   const radarData = {
     labels: competencies?.map(c => c.title),
@@ -266,7 +250,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
                
                 if(value.length > 3)
                 {
-                      setError('Maximum 3 option are allowed');
+                      setError('Maximum 3 options are allowed');
                       return;
                 }
                 setSelectedOption(value);

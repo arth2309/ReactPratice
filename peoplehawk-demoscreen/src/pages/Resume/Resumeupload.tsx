@@ -33,6 +33,7 @@ const BackButton = styled.div`
 display : flex;
 align-items : center;
 color : #F96332;
+cursor : pointer;
 svg{
     path {
       fill: #F96332! important;
@@ -210,7 +211,7 @@ const Resumeupload = () => {
               <div>
                 {/* eslint-disable-next-line */}
                 <a href={selectedFileUrl} target="_blank">
-                  View PDF in another Tab
+                Problem in Viewing PDF ? View in another Tab
                 </a>
                 <embed
                   src={selectedFileUrl}

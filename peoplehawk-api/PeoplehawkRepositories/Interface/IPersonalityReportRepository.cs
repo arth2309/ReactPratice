@@ -1,8 +1,6 @@
 ﻿using PeoplehawkRepositories.Models;
 
-namespace PeoplehawkRepositories.Interface
+namespace PeoplehawkRepositories.Interface;
+public interface IPersonalityReportRepository : IGenericRepository<PersonalityReport>
 {
-    public interface IPersonalityReportRepository : IGenericRepository<PersonalityReport>
-    {
-    }
 }
