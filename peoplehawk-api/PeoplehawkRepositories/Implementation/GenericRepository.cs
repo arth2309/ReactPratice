@@ -52,7 +52,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet .Where(predicate) .OrderByDescending(x => x) .FirstOrDefaultAsync();
     }
 
-
     public async Task<T> DeleteAsync(Expression<Func<T, bool>> predicate)
     {
         T entity = await _dbSet.FirstOrDefaultAsync(predicate);
@@ -68,7 +67,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         await _context.SaveChangesAsync();
         return entity;
     }
-
 
     public async Task<List<T>> GetByCriteriaAsync(
         Expression<Func<T, bool>>? filter = null,
@@ -102,7 +100,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         {
             query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
         }
-
         return await query.ToListAsync();
     }
 

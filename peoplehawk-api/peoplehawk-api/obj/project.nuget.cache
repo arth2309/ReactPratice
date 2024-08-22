@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "kf0JBTW1OkvK8EAJOhNSz39OcWcsHt0vp6Giccm9WMEVvUgpNVSLsCUoPOPf2TAt982tbCphPGrOlT3T0RHymA==",
+  "dgSpecHash": "mHeK4Pd5/gdXzSwnMxZqQIUbtdc6Fa6jPgNhXU+v+PgiWXtrEqhX1aPd1QWpbN8J+wHQo3RkVjsjzLbZ8AsNKw==",
   "success": true,
   "projectFilePath": "D:\\ReactProject\\peoplehawk-api\\peoplehawk-api\\peoplehawk-api.csproj",
   "expectedPackageFiles": [
@@ -46,6 +46,7 @@
     "C:\\Users\\pce105\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\npgsql\\7.0.7\\npgsql.7.0.7.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.18\\npgsql.entityframeworkcore.postgresql.7.0.18.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\scrutor\\4.2.2\\scrutor.4.2.2.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

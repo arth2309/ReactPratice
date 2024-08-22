@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PeoplehawkRepositories.Implementation;
 using PeoplehawkRepositories.Interface;
-using PeoplehawkServices.Implementation;
 using PeoplehawkServices.Interface;
 using System.Text;
 
@@ -12,27 +10,15 @@ public static class ConfigurationServices
 {
     public static void SystemConfigurationServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped<ICourseInterestRepository, CourseInterestRepository>();
-        services.AddScoped<IPersonalityReportRepository, PersonalityReportRepository>();
-        services.AddScoped<IChartRepository, ChartRepository>();
-        services.AddScoped<IResumeFileRepository, ResumeFileRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<ICountryRepository, CountryRepository>();
-        services.AddScoped<IQuizRepository, QuizRepository>();
-        services.AddScoped<ICompentencyRepository, CompentencyRepository>();
-        services.AddScoped<IUserCompentencyDetailRepository, UserCompentencyDetailRepository>();
-        services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-        services.AddScoped<ICourseInterestService, CourseInterestService>();
-        services.AddScoped<IChartService, ChartService>();
-        services.AddScoped<IResumeFileService, ResumeFileService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<ICountryService, CountryService>();
-        services.AddScoped<IQuizService, QuizService>();
-        services.AddScoped<IPersonalityReportService, PersonalityReportService>();
-        services.AddScoped<ICompentencyService, CompentencyService>();
-        services.AddScoped<IUserCompentencyDetailService, UserCompentencyDetailService>();
 
+        services.Scan(selector => selector
+             .FromAssemblies(
+             typeof(IGenericRepository<>).Assembly,
+             typeof(IGenericService<>).Assembly
+             )
+         .AddClasses()
+         .AsMatchingInterface()
+         .WithScopedLifetime());
     }
 
     public static void AuthConfigurationService(this IServiceCollection services, IConfiguration configuration)
@@ -68,7 +54,7 @@ public static class ConfigurationServices
             {
                 Description = "Bearer yourToken",
                 Name = "Authentication",
-                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
                 Scheme = "Bearer"
             });

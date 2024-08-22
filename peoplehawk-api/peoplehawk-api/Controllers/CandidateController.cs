@@ -47,12 +47,14 @@ public class CandidateController : BaseController
     [HttpPost("files/{UserId:int}")]
     public async Task<ResumeFileDTO> UploadFile(IFormFile file, int UserId)
     {
+        ValidateId(UserId);
         return await _resumeFileService.UploadFile(file, UserId);
     }
 
     [HttpGet("files/{UserId:int}")]
     public async Task<IActionResult> GetFile(int UserId)
     {
+        ValidateId(UserId);
         var result = await _resumeFileService.GetFile(UserId);
         return File(result.Item1, "application/pdf", result.Item2);
     }
@@ -60,13 +62,15 @@ public class CandidateController : BaseController
     [HttpDelete("files/{UserId:int}")]
     public async Task<ResumeFile> DeleteFile(int UserId)
     {
+        ValidateId(UserId);
         return await _resumeFileService.DeleteAsync(a => a.UserId == UserId);
     }
 
     [HttpPut("files/{UserId:int}")]
     public async Task<ActionResult<ResumeFileDTO>> UpdateFile(IFormFile file, int UserId)
     {
-        return file != null && UserId > 0 ? await _resumeFileService.UpdateFile(file, UserId) : BadRequest();
+        ValidateId(UserId);
+        return file != null ? await _resumeFileService.UpdateFile(file, UserId) : BadRequest();
     }
 
     [HttpGet("quiz")]
@@ -85,18 +89,21 @@ public class CandidateController : BaseController
     [HttpGet("personalityreport/{UserId:int}")]
     public async Task<QuizStatus> QuizEligible(int UserId)
     {
+        ValidateId(UserId);
         return await _personalityReportService.GetReport(UserId);
     }
 
     [HttpPut("{UserId:int}/uploadPhoto")]
     public async Task<ActionResult<UserDTO>> UploadProfilePhoto(IFormFile file, int UserId)
     {
-        return file != null && UserId > 0 ? await _userService.UpdateFile(file, UserId) : BadRequest();
+        ValidateId(UserId);
+        return file != null ? await _userService.UpdateFile(file, UserId) : BadRequest();
     }
 
     [HttpGet("{UserId:int}/candidatePhoto")]
     public async Task<IActionResult> ProfilePhoto(int UserId)
     {
+        ValidateId(UserId);
         var result = await _userService.GetPhoto(UserId);
         return  File(result.Item1, "application/pdf", result.Item2) ;
     }
@@ -104,6 +111,7 @@ public class CandidateController : BaseController
     [HttpGet("{UserId:int}/progress")]
     public async Task<ProgressDTO> Progress(int UserId)
     {
+        ValidateId(UserId);
         ProgressDTO progressDTO = new ProgressDTO();
         int x = 0;
         ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);

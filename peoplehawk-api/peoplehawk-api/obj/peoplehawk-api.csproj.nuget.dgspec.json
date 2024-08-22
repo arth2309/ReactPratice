@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[7.0.18, )"
             },
+            "Scrutor": {
+              "target": "Package",
+              "version": "[4.2.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"

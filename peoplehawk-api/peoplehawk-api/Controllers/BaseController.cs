@@ -18,4 +18,12 @@ public class BaseController : ControllerBase
             throw new BadHttpRequestException(string.Join(", ", errors));
         }
     }
+
+    protected void ValidateId(int Id)
+    {
+        if(Id < 0) 
+        {
+            throw new BadHttpRequestException("Bad Request");
+        }
+    }
 }
