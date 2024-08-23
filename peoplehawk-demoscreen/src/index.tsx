@@ -4,13 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './store/AuthContext';
+import store from './store/Redux';
+import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <AuthContextProvider>
+    <Provider store={store}>
     <App />
+    </Provider>
   </AuthContextProvider>
 );
 

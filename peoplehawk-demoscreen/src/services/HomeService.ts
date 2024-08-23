@@ -1,6 +1,7 @@
 import { CandidateProgress, FileUploadData,Competency,UserCompetency } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
+import {createAsyncThunk} from '@reduxjs/toolkit'
 
 export const uploadPhoto = async (
     UserId: number,
@@ -30,12 +31,23 @@ export const uploadPhoto = async (
       const response = await apiClient.get(API_ENDPOINTS.GET_PROFILE_PHOTO(UserId),{responseType : 'blob'});
       const url = URL.createObjectURL(response.data);
       return url;
-    } catch (error: any) {
+    } catch (error) {
       
       return null;
     }
   };
   
+  export const fetchData = createAsyncThunk<CandidateProgress, number, { rejectValue: string }>(
+    'data/fetchData',
+    async (UserId: number, thunkAPI) => {
+      try {
+        const response = await apiClient.get(API_ENDPOINTS.GET_PROGRESS(UserId));
+        return response.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue('An error occurred while fetching data');
+      }
+    }
+  );
   
   export const getProgress = async (UserId : number) : Promise<CandidateProgress | null> =>
     {
@@ -44,7 +56,7 @@ export const uploadPhoto = async (
                 return response.data;
               }
   
-              catch(error  : any)
+              catch(error)
               {
                 return null;
               }
@@ -57,7 +69,7 @@ export const uploadPhoto = async (
                   return response.data;
                 }
     
-                catch(error : any)
+                catch(error )
                 {
                  
                   return null;
@@ -71,7 +83,7 @@ export const uploadPhoto = async (
                     return response.data;
                   }
       
-                  catch(error : any)
+                  catch(error )
                   {
                     return null;
                   }

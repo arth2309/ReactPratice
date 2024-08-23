@@ -16,6 +16,10 @@ import { CandidateProgress,Competency,UserCompetency } from "../../interface/Int
 import Compentencytestanalytics from "./Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
+import { RootState,AppDispatch } from "../../store/Redux";
+import { fetchData as fet } from "../../services/HomeService";
+import { useDispatch, useSelector } from "react-redux";
+import { ClipLoader } from "react-spinners";
 
 
 interface TrophyProps {
@@ -313,6 +317,8 @@ const Images = styled.img({
 }) 
 
 const Dashboard  = () => {
+  const dispatch : AppDispatch = useDispatch();
+  const { data, loading } = useSelector((state: RootState) => state.data);
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -323,6 +329,11 @@ const Dashboard  = () => {
   
   useEffect(() => {
        fetchdata();
+       if(authctx.userData)
+       {
+        dispatch(fet(authctx.userData.Id));
+       }
+      
        // eslint-disable-next-line
   },[])
 
@@ -439,7 +450,7 @@ const Dashboard  = () => {
                     <div style={{ color: "#394456" }}>
                       <strong> Progress</strong>
                     </div>
-                    <Progress>{progress ? progress.progress : 0}%</Progress>
+                    <Progress> {loading && <ClipLoader /> } {data &&  `${data.progress}%`}</Progress>
                   </Card2SubItem>
                   <Card2SubItem>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
