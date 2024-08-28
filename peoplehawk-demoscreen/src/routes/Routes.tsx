@@ -9,6 +9,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import { ForgotPassword } from "../pages/Authentication/Forgotpassword";
 import Personalitytest from "../pages/PersonalityTest/Personalitytest";
 import {ROUTES} from '../constants/routes';
+import Memberanalytics from "../pages/MemberAnalytics/Memberanalytics";
 import { getToken } from "../utils/manageAccessToken";
 
 const Routes = () => {
@@ -26,6 +27,7 @@ const Routes = () => {
             <Route path = {ROUTES.FORGOT_PASSWORD} element = {<ForgotPassword />}></Route>
             <Route path = {ROUTES.PERSONALITY_TEST} element = {authCtx.isLoggedIn ?<Personalitytest /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
             <Route path = {ROUTES.REGISTER} element = {<Register />}></Route>
+            <Route path = {ROUTES.MEMBER_ANALYTICS} element = {<Memberanalytics />}></Route>
             <Route path = {ROUTES.OTHERS} element = {!token ?<Navigate to = {ROUTES.LOGIN} /> :  <Navigate to = {ROUTES.HOME} />}></Route>
         </Main>
         </BrowserRouter>

@@ -7,5 +7,6 @@ export const ROUTES = {
     IDEAL_COURSES : '/ideal-courses',
     RESUME : '/resume',
     PERSONALITY_TEST : '/personality-test',
+    MEMBER_ANALYTICS: '/member-analytics',
     OTHERS : '*'
 }

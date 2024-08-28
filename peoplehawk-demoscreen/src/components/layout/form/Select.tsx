@@ -31,7 +31,7 @@ const customStyles: StylesConfig<OptionTypes[]> = {
     lineHeight: 1.5,
     padding: "0rem",
     width: "100%",
-    zIndex : 4,
+    
    
 
     
@@ -62,6 +62,7 @@ const customStyles: StylesConfig<OptionTypes[]> = {
       ? "transparent"
       : "#fff",
     cursor: "pointer",
+    zIndex : 10,
     ":hover": {
       backgroundColor: "#72DBD0",
     },
