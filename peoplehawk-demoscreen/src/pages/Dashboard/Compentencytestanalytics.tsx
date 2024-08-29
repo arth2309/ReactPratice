@@ -243,6 +243,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
             <label>Find and Compare Members</label>
             <ReactSelect
               value={selectedoption}
+              showDropdownIndicator
               options={candidates?.map(candidate => ({ label: candidate.name, value: candidate.id }))}
               name="test"
               isMulti

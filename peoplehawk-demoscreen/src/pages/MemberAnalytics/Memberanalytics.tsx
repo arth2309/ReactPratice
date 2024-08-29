@@ -1,7 +1,256 @@
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Pagination from "../../components/layout/pagination/Pagination";
+
+const data =   [
+        {
+            "user_id": 63,
+            "first_name": "Nimesh1",
+            "middle_name": null,
+            "last_name": "Parmar",
+            "default_email": "acraig+nikita@mail.com",
+            "phone_number": "+27 76 729 9959",
+            "updated_at": "2024-08-21 06:43:41",
+            "completion": {
+                "basic_information": true,
+                "domain_knowledge": true,
+                "personality_quiz": true,
+                "culture_quiz": true,
+                "competency_quiz": true,
+                "elevator_pitch": true,
+                "video_interview": true,
+                "documents": true,
+                "career_preference": true,
+                "is_personal_statement": true,
+                "career_interest_quiz": true,
+                "career_value_test": true
+            },
+            "current_location": {
+                "id": 1,
+                "name": "Greater London",
+                "highlighted": true,
+                "order": 0,
+                "country_code": "GB"
+            },
+            "candidate_type": {
+                "id": 4,
+                "name": "High School/College Student",
+                "unique_key": "high-school/college-students",
+                "order": 40
+            },
+            "strengths": [
+                {
+                    "name": "Systematic"
+                },
+                {
+                    "name": "Well-rounded"
+                },
+                {
+                    "name": "Listening"
+                }
+            ],
+            "grade_point_average": 65,
+            "profile_image_thumbnail": {
+                "id": 3757,
+                "name": "hume-bust",
+                "collection_name": "profile_image",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2024-02-09 13:20:40",
+                "access_type": "public"
+            },
+            "languages": [
+                {
+                    "id": 1,
+                    "name": "English"
+                },
+                {
+                    "id": 11,
+                    "name": "Afar"
+                },
+                {
+                    "id": 13,
+                    "name": "Afrikaans"
+                },
+                {
+                    "id": 18,
+                    "name": "Akoose"
+                }
+            ],
+            "status": {
+                "id": 7,
+                "name": "Published",
+                "unique_key": "published"
+            },
+            "candidate_types": {
+                "id": 4,
+                "name": "High School/College Student"
+            },
+               "traditional_cv": {
+                "id": 3781,
+                "name": "Nimesh1_Parmar_Traditional_CV",
+                "collection_name": "traditional_cv_docx",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2024-02-16 07:03:22",
+                "access_type": "public"
+            },
+            "traditional_cv_pdf": {
+                "id": 1768,
+                "name": "Nikita_Candidate_Traditional_CV",
+                "collection_name": "traditional_cv_pdf",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2021-12-06 12:03:05",
+                "access_type": "public"
+            },
+            "my_cv": {
+                "id": 2700,
+                "name": "Clare_Thompson_Traditional_CV",
+                "collection_name": "my_cv",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2022-08-29 06:24:35",
+                "access_type": "public"
+            },
+        },
+{
+            "user_id": 18,
+            "first_name": "Dhruvinsinh",
+            "middle_name": null,
+            "last_name": "Parmar",
+            "default_email": "dj@mail.com",
+            "phone_number": "+91 7722993344",
+            "updated_at": "2024-08-21 06:43:41",
+            "completion": {
+                "basic_information": true,
+                "domain_knowledge": true,
+                "personality_quiz": true,
+                "culture_quiz": true,
+                "competency_quiz": true,
+                "elevator_pitch": true,
+                "video_interview": true,
+                "documents": true,
+                "career_preference": true,
+                "is_personal_statement": true,
+                "career_interest_quiz": true,
+                "career_value_test": true
+            },
+            "current_location": {
+                "id": 1,
+                "name": "Greater London",
+                "highlighted": true,
+                "order": 0,
+                "country_code": "GB"
+            },
+            "candidate_type": {
+                "id": 4,
+                "name": "High School/College Student",
+                "unique_key": "high-school/college-students",
+                "order": 40
+            },
+            "strengths": [
+                {
+                    "name": "Systematic"
+                },
+                {
+                    "name": "Well-rounded"
+                },
+                {
+                    "name": "Listening"
+                }
+            ],
+            "grade_point_average": 65,
+            "profile_image_thumbnail": {
+                "id": 3757,
+                "name": "hume-bust",
+                "collection_name": "profile_image",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2024-02-09 13:20:40",
+                "access_type": "public"
+            },
+            "languages": [
+                {
+                    "id": 1,
+                    "name": "English"
+                },
+                {
+                    "id": 11,
+                    "name": "Afar"
+                },
+                {
+                    "id": 13,
+                    "name": "Afrikaans"
+                },
+                {
+                    "id": 18,
+                    "name": "Akoose"
+                }
+            ],
+            "status": {
+                "id": 7,
+                "name": "Published",
+                "unique_key": "published"
+            },
+            "candidate_types": {
+                "id": 4,
+                "name": "High School/College Student"
+            },
+               "traditional_cv": {
+                "id": 3781,
+                "name": "Nimesh1_Parmar_Traditional_CV",
+                "collection_name": "traditional_cv_docx",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2024-02-16 07:03:22",
+                "access_type": "public"
+            },
+            "traditional_cv_pdf": {
+                "id": 1768,
+                "name": "Nikita_Candidate_Traditional_CV",
+                "collection_name": "traditional_cv_pdf",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2021-12-06 12:03:05",
+                "access_type": "public"
+            },
+            "my_cv": {
+                "id": 2700,
+                "name": "Clare_Thompson_Traditional_CV",
+                "collection_name": "my_cv",
+                "url": "",
+                "title": null,
+                "description": null,
+                "document_type": null,
+                "date": "2022-08-29 06:24:35",
+                "access_type": "public"
+            },
+ "owned_by": {
+                "id": 1,
+                "first_name": "Seeded",
+                "middle_name": null,
+                "last_name": "Admin",
+mail:"client@mail.com"
+           }
+        },
+    ]
 
 interface VideoProps {
     elevator : boolean,
@@ -33,7 +282,7 @@ const RightContainer = styled.div({
 });
 
 const Header = styled.div({
-  backgroundColor: "white",
+  backgroundColor: "#F7F9FC",
   width: "calc(100% - 40px)",
   padding: "20px",
   boxShadow:
@@ -178,10 +427,51 @@ const Memberanalytics = () => {
 
     const [hasPhoto,setHasPhoto] = useState<boolean>(false);
     const [videoType,setVideoType] = useState<VideoProps>({elevator : false, video : false, all : true});
-    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : true})
+    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : true});
+    const [searchString,setSearchString] = useState<string>('');
+    const [candidateType, setCandidatetype] = useState<number>(0);
+    const [filterData,setFilterData] = useState<any>(data);
+    const [page,setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(data.length);
+
+    const handlePageChange = (page: number) => {
+      setPage(page);
+    };
+
+    const searchHandler = (value : string) =>
+    {
+        setSearchString(value);
+        
+    }
+
+   const candidateTypeHandler = (value : number) =>
+   {
+     setCandidatetype(value);
+   }
+
+   const filteredData = () => {
+      
+    let filtered = data
+
+    if(searchString.trim().length > 0)
+    {
+      filtered = filtered.filter((item) => item.first_name.toLowerCase().includes(searchString.toLowerCase()));
+    }
+
+    if(candidateType !== 0)
+     {
+      filtered = filtered.filter((item) => item.candidate_type.id === candidateType);
+     }
+
+     setTotalPages(filtered.length);
+     setPage(1);
+   }
+
+   useEffect(() => {filteredData()},[searchString,candidateType,page])
+
   return (
     <Container>
-      <Sidebar />
+      <Sidebar onSearchHandler = {searchHandler} onCandidateTypeHandler = {candidateTypeHandler} />
       <RightContainer>
         <Header>
           <UpperHeader>
@@ -194,7 +484,7 @@ const Memberanalytics = () => {
           </UpperHeader>
           <LowerHeader>
             <div>
-              <GreyColor>55 member</GreyColor>
+              <GreyColor>{filterData.length} member</GreyColor>
             </div>
             <Shortlist>
               <div>
@@ -222,15 +512,18 @@ const Memberanalytics = () => {
           </ItemContainer>
         </Header>
         <MemberContainer>
+            {filterData.slice(page-1,page).map((item : any) =>  
           <MembarCard>
             <MemberLeftCard>
               <MemberImg src={profile} alt="profile" />
             </MemberLeftCard>
             <MemberRightCard>
-              <div>Member 434</div>
+              <div>{item.first_name}</div>
             </MemberRightCard>
           </MembarCard>
+          )}
         </MemberContainer>
+        <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}/>
       </RightContainer>
     </Container>
   );

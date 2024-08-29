@@ -360,6 +360,7 @@ export const Register = () => {
                         
                       
                         options={options}
+                        showDropdownIndicator
                         name="countryId"
                         onChange={(e, value) => {
                           if (value === null) {
