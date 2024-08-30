@@ -3,6 +3,8 @@ import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
+import { MemberAnalytics as List } from "../../interface/Interface";
+import { MemberAnalyticsList } from "../../services/MemberAnalyticsService";
 
 const data =   [
         {
@@ -431,11 +433,13 @@ const Memberanalytics = () => {
     const [searchString,setSearchString] = useState<string>('');
     const [candidateType, setCandidatetype] = useState<number>(0);
     const [filterData,setFilterData] = useState<any>(data);
-    const [page,setPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(data.length);
+    const [page,setPage] = useState<number>(2);
+    const [totalPages, setTotalPages] = useState<number>(2);
+    const[correctData,setCorrectData] = useState<List[] | null>(null);
 
     const handlePageChange = (page: number) => {
       setPage(page);
+      console.log(page)
     };
 
     const searchHandler = (value : string) =>
@@ -451,23 +455,39 @@ const Memberanalytics = () => {
 
    const filteredData = () => {
       
-    let filtered = data
+    let filtered = correctData
+    if(filtered)
+    {
 
     if(searchString.trim().length > 0)
     {
-      filtered = filtered.filter((item) => item.first_name.toLowerCase().includes(searchString.toLowerCase()));
+      filtered = filtered.filter((item) => item.firstName.toLowerCase().includes(searchString.toLowerCase()));
     }
 
-    if(candidateType !== 0)
-     {
-      filtered = filtered.filter((item) => item.candidate_type.id === candidateType);
-     }
-
-     setTotalPages(filtered.length);
-     setPage(1);
+    setFilterData(filtered.slice(0,6));
+    }
    }
+   // eslint-disable-next-line
+   useEffect(() => {fetchData()},[page,searchString,candidateType]);
 
-   useEffect(() => {filteredData()},[searchString,candidateType,page])
+   
+
+   const fetchData = async() => {
+      const result = await MemberAnalyticsList(page);
+      result && setCorrectData(result);
+      let filtered = result
+    if(filtered)
+    {
+
+    if(searchString.trim().length > 0)
+    {
+      filtered = filtered.filter((item) => item.firstName.toLowerCase().includes(searchString.toLowerCase()));
+    }
+     
+    setFilterData(filtered);
+    }
+      console.log(result);
+   }
 
   return (
     <Container>
@@ -512,18 +532,18 @@ const Memberanalytics = () => {
           </ItemContainer>
         </Header>
         <MemberContainer>
-            {filterData.slice(page-1,page).map((item : any) =>  
-          <MembarCard>
+            {filterData.map((item : List) =>  
+          <MembarCard key={item.userId}>
             <MemberLeftCard>
               <MemberImg src={profile} alt="profile" />
             </MemberLeftCard>
             <MemberRightCard>
-              <div>{item.first_name}</div>
+              <div>{item.firstName}</div>
             </MemberRightCard>
           </MembarCard>
           )}
         </MemberContainer>
-        <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}/>
+        <Pagination currentPage={page} totalPages={2} onPageChange={handlePageChange}/>
       </RightContainer>
     </Container>
   );

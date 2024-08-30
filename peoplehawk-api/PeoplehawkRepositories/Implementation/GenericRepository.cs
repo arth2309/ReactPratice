@@ -73,7 +73,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         Func<IQueryable<T>?, IOrderedQueryable<T>>? orderBy = null,
         int? page = null,
         int? pageSize = null,
-        params Expression<Func<T, object>>[]? includes 
+         Func<IQueryable<T>?, IQueryable<T>>? thenInclude = null,
+        params Expression<Func<T, object>>[]? includes
+       
     )
     {
         IQueryable<T> query = _dbSet;
@@ -84,6 +86,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             {
                 query = query.Include(include);
             }
+        }
+
+        if (thenInclude != null)
+        {
+            query = thenInclude(query);
         }
 
         if (filter != null)

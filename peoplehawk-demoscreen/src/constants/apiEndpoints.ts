@@ -16,4 +16,5 @@ export const API_ENDPOINTS = {
     QUIZ_RESPONSE : 'candidate/personalityreport',
     QUIZ_ELIGIBLE : (UserId : number) => `candidate/personalityreport/${UserId}`,
     CRUD_FILE : (UserId: number) => `candidate/files/${UserId}`,
+    MEMBER_ANALYTICS : (page : number) => `candidate/member-analytics?page=${page}`
 }

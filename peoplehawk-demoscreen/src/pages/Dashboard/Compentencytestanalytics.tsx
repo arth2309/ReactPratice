@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , memo} from 'react';
 import { styled } from 'styled-components';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
@@ -228,6 +228,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
     })),
 
   };
+  
 
   if(!isOpen) {return null}
 
@@ -282,4 +283,4 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
   );
 };
 
-export default Compentencytestanalytics;
+export default memo(Compentencytestanalytics);

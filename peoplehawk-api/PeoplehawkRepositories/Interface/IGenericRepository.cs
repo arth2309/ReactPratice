@@ -24,7 +24,9 @@ public interface IGenericRepository<T> where T : class
         Func<IQueryable<T>?, IOrderedQueryable<T>>? orderBy = null,
         int? page = null,
         int? pageSize = null,
+         Func<IQueryable<T>?, IQueryable<T>>? thenInclude = null,
         params Expression<Func<T, object>>[]? includes
+
     );
 
 }

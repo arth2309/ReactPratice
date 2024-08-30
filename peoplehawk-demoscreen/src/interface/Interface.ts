@@ -81,3 +81,13 @@ export interface UserCompetency {
   name : string,
   compentencies : number
 }
+
+export interface MemberAnalytics {
+    userId : number,
+    firstName : string,
+    lastName : string,
+    email : string,
+    country : CountryList,
+    isResumeUpload : boolean
+}
+

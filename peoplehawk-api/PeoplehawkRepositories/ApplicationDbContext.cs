@@ -28,4 +28,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Competency> Competencys { get; set;}
 
     public DbSet<UserCompentencyDetail> UserCompentencyDetails { get; set; }
+
+    public DbSet<MemberAnalytics> MemberAnalytics { get; set; }
 }

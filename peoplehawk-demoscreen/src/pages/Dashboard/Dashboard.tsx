@@ -1,5 +1,5 @@
 import Header from "../../components/layout/header/Header";
-import { Fragment, useContext, useState, useEffect } from "react";
+import { Fragment, useContext, useState, useEffect, useCallback } from "react";
 import { styled } from "styled-components";
 import "../../stylesheets/obviously-font.css";
 import profile from "../../assests/img/profile_placeholder-3x.png";
@@ -11,8 +11,8 @@ import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {fetchPhoto,uploadPhoto,getProgress,getCompentencies,getUserCompentencies} from "../../services/HomeService";
-import { CandidateProgress,Competency,UserCompetency } from "../../interface/Interface";
+import {fetchPhoto,uploadPhoto,getCompentencies,getUserCompentencies} from "../../services/HomeService";
+import { Competency,UserCompetency } from "../../interface/Interface";
 import Compentencytestanalytics from "./Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
@@ -316,6 +316,7 @@ const Images = styled.img({
   }
 }) 
 
+
 const Dashboard  = () => {
   const dispatch : AppDispatch = useDispatch();
   const { data, loading } = useSelector((state: RootState) => state.data);
@@ -323,17 +324,12 @@ const Dashboard  = () => {
   const navigate = useNavigate();
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [progress, setProgress] = useState<CandidateProgress | null>(null);
   const[competencies,setCompetencies] = useState<Competency[] | null>(null);
   const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
   
+
   useEffect(() => {
        fetchdata();
-       if(authctx.userData)
-       {
-        dispatch(fet(authctx.userData.Id));
-       }
-      
        // eslint-disable-next-line
   },[])
 
@@ -343,11 +339,11 @@ const Dashboard  = () => {
       const result = await fetchPhoto(authctx.userData.Id);
          result && setImageSrc(result);
 
-        const prog = await getProgress(authctx.userData.Id);
-        prog && setProgress(prog);
-
+  
         const comp = await getCompentencies();
         comp && setCompetencies(comp);
+           
+           dispatch(fet(authctx.userData.Id));
 
         const cand = await getUserCompentencies();
         cand && setCandidates(cand);
@@ -374,7 +370,7 @@ const Dashboard  = () => {
 
       const [isModalOpen, setModalOpen] = useState(false);
       const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast(TOAST.MOBILE_VIEW_NOT_SUPPORTED.title,TOAST.MOBILE_VIEW_NOT_SUPPORTED.description,TOAST.MOBILE_VIEW_NOT_SUPPORTED.type)};
-      const closeModal = () => setModalOpen(false);
+      const closeModal = useCallback(() => {setModalOpen(false)},[]);
 
   return (
     <Fragment> 
@@ -488,7 +484,7 @@ const Dashboard  = () => {
               </Card3>
               <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
@@ -501,7 +497,7 @@ const Dashboard  = () => {
               <MobileButtonDiv>
               <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{progress? progress.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
               </MobileButtonDiv>
         </RightContainer>

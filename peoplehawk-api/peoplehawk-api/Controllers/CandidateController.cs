@@ -19,8 +19,9 @@ public class CandidateController : BaseController
     private readonly IPersonalityReportService _personalityReportService;
     private readonly ICompentencyService _compentencyService;
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
+    private readonly IMemberAnalyticsService _memberAnalyticsService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -30,6 +31,7 @@ public class CandidateController : BaseController
         _personalityReportService = personalityReportService;
         _compentencyService = compentencyService;
         _userCompentencyDetailService = userCompentencyDetailService;
+        _memberAnalyticsService = memberAnalyticsService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -142,5 +144,12 @@ public class CandidateController : BaseController
     public async Task<ActionResult<List<UserCompentencyDetailDTO>>> UserCompentencies()
     {
         return await _userCompentencyDetailService.GetList();
+    }
+
+    [HttpGet("member-analytics")]
+
+    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1)
+    {
+        return await _memberAnalyticsService.GetList(page);
     }
 }
