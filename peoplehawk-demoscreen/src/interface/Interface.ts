@@ -82,12 +82,30 @@ export interface UserCompetency {
   compentencies : number
 }
 
+export interface Owner {
+  firstName : string,
+  middleName : string,
+  lastName : string,
+  mail : string
+}
+
+export interface Completion {
+  isPersonalityQuizGiven : boolean,
+  isGames : boolean,
+  isVideoInterview : boolean,
+  isCVOptimized : boolean,
+  isCompentencyQuizGiven : boolean,
+  isDocumentGiven : boolean
+}
+
 export interface MemberAnalytics {
     userId : number,
     firstName : string,
     lastName : string,
     email : string,
     country : CountryList,
+    ownedBy : Owner | null,
+    completion : Completion
     isResumeUpload : boolean
 }
 

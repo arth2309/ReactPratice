@@ -11,7 +11,16 @@ public class MemberAnalytics
     [ForeignKey("User")]
     public int UserId { get; set; }
 
+    [ForeignKey("Completion")]
+    public int? CompletionId { get; set; }
+
+    [ForeignKey("Owner")]
+    public int? OwnerId { get; set; }
+
     public User user { get; set; }
 
+    public Owner OwnedBy { get; set; }
+
+    public Completion completion { get; set; }
 
 }

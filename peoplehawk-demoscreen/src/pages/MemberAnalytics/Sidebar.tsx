@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { ReactSelect } from "../../components/layout/form/Select";
-import { OptionTypes } from "../../interface/Interface";
-import { useState } from "react";
+import { OptionTypes,CountryList } from "../../interface/Interface";
+import { useEffect, useState } from "react";
 import Input from "../../components/layout/form/Input";
+import { CountryList as CountryData } from "../../services/AuthService";
 
 interface DivProps {
   selected: number;
@@ -61,7 +62,6 @@ const MainContainer = styled.div({
   flexDirection: "column",
   gap: "20px",
   padding: "20px",
-  overflowY: "auto",
 });
 
 const PreferredPosition = styled.div({
@@ -97,15 +97,30 @@ const FreeLancer = styled.div<DivProps>(({ selected }) => ({
 }));
 
 const Sidebar = (props : any) => {
-  const options: OptionTypes[] = [
-    { label: "strawberry", value: 1 },
-    { label: "mango", value: 2 },
-  ];
+  
 
   const [selectedIndex, setSelectedIndex] = useState<number>(1);
+  const [countryOptions,setCountryOptions] = useState<OptionTypes[] | null>(null);
  
   const handleDivClick = (index: number) => {
     setSelectedIndex(index);
+  };
+
+  const convertApiToOptions = (apiData: CountryList[]): OptionTypes[] => {
+    return apiData.map((item) => ({
+      value: item.id,
+      label: item.countryName,
+    }));
+  };
+
+  useEffect(() => {fetchCountryList()},[])
+
+  const fetchCountryList = async () => {
+    const response = await CountryData();
+    if (response) {
+      const transformedoptions = convertApiToOptions(response);
+      setCountryOptions(transformedoptions);
+    }
   };
 
   return (
@@ -125,29 +140,9 @@ const Sidebar = (props : any) => {
             <GreenSearch>Search</GreenSearch>
           </SearchDiv>
         </div>
-        <div>
-          <SearchLabel>Shortlists</SearchLabel>
-
-          <ReactSelect
-            options={options}
-            placeholder=""
-            isClearable
-            name="countryId"
-            showDropdownIndicator
-          />
-        </div>
-        <div>
-          <SearchLabel>Career Preferences</SearchLabel>
-
-          <ReactSelect
-            options={options}
-            placeholder=""
-            isClearable
-            name="countryId"
-            showDropdownIndicator
-          />
-        </div>
-        <div>
+       
+        
+        <div > 
           <SearchLabel>Member Type</SearchLabel>
 
           <ReactSelect
@@ -156,21 +151,10 @@ const Sidebar = (props : any) => {
             isClearable
             name="countryId"
             showDropdownIndicator
-            onChange={(e,value) => {props.onCandidateTypeHandler(value!=null?value.value : 0)}}
+            onChange={(e,value) => {props.onCandidateTypeHandler(value!=null?value.label : undefined)}}
           />
         </div>
-        <div>
-          <SearchLabel>Course Category</SearchLabel>
-
-          <ReactSelect
-            options={options}
-            placeholder=""
-            isClearable
-            name="countryId"
-            showDropdownIndicator
-          />
-        </div>
-        <div>
+        {/* <div>
           <SearchLabel>Preferred Position</SearchLabel>
           <PreferredPosition>
             <Employee
@@ -189,28 +173,17 @@ const Sidebar = (props : any) => {
               Freelancer
             </FreeLancer>
           </PreferredPosition>
-        </div>
+        </div> */}
         <div>
-          <SearchLabel>Current Status</SearchLabel>
-
-          <ReactSelect
-            options={options}
+          <SearchLabel>Base Country</SearchLabel>
+         { countryOptions && <ReactSelect
+            options={countryOptions}
             placeholder=""
             isClearable
-            name="countryId"
+            name="country"
             showDropdownIndicator
-          />
-        </div>
-        <div>
-          <SearchLabel>Willing to work From</SearchLabel>
-
-          <ReactSelect
-            options={options}
-            placeholder=""
-            isClearable
-            name="countryId"
-            showDropdownIndicator
-          />
+            onChange={(e,value) => {props.onCountryTypeHandler(value!=null?value.value : 0)}}
+          /> }
         </div>
       </MainContainer>
     </Container>

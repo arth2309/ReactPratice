@@ -12,7 +12,13 @@ namespace PeoplehawkServices.Dto;
 
     public string? Email { get; set; }
 
+    public string? MemberType { get; set; }
+
     public Country country { get; set; }
+
+    public Owner? OwnedBy { get; set; }
+
+    public Completion Completion { get; set; }
 
     public bool? IsResumeUpload { get; set; }
 }

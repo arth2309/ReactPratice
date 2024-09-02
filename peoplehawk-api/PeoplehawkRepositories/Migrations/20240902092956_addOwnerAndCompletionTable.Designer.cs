@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeoplehawkRepositories;
@@ -11,9 +12,11 @@ using PeoplehawkRepositories;
 namespace PeoplehawkRepositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240902092956_addOwnerAndCompletionTable")]
+    partial class addOwnerAndCompletionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,37 +87,6 @@ namespace PeoplehawkRepositories.Migrations
                     b.ToTable("Competencys");
                 });
 
-            modelBuilder.Entity("PeoplehawkRepositories.Models.Completion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsCVOptimized")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsCompentencyQuizGiven")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDocumentGiven")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsGames")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsPersonalityQuizGiven")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsVideoInterview")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Completions");
-                });
-
             modelBuilder.Entity("PeoplehawkRepositories.Models.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -176,49 +148,14 @@ namespace PeoplehawkRepositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CompletionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompletionId");
-
-                    b.HasIndex("OwnerId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("MemberAnalytics");
-                });
-
-            modelBuilder.Entity("PeoplehawkRepositories.Models.Owner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Mail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Owners");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.PersonalityReport", b =>
@@ -388,23 +325,11 @@ namespace PeoplehawkRepositories.Migrations
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.MemberAnalytics", b =>
                 {
-                    b.HasOne("PeoplehawkRepositories.Models.Completion", "completion")
-                        .WithMany()
-                        .HasForeignKey("CompletionId");
-
-                    b.HasOne("PeoplehawkRepositories.Models.Owner", "OwnedBy")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-
                     b.HasOne("PeoplehawkRepositories.Models.User", "user")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("OwnedBy");
-
-                    b.Navigation("completion");
 
                     b.Navigation("user");
                 });

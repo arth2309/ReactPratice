@@ -30,4 +30,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserCompentencyDetail> UserCompentencyDetails { get; set; }
 
     public DbSet<MemberAnalytics> MemberAnalytics { get; set; }
+
+    public DbSet<Completion> Completions { get; set; }
+
+    public DbSet<Owner> Owners { get; set; }
 }

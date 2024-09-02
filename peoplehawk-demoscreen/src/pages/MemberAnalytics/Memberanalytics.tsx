@@ -3,8 +3,10 @@ import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
-import { MemberAnalytics as List } from "../../interface/Interface";
+import { MemberAnalytics as List, OptionTypes } from "../../interface/Interface";
 import { MemberAnalyticsList } from "../../services/MemberAnalyticsService";
+import { ReactSelect } from "../../components/layout/form/Select";
+
 
 const data =   [
         {
@@ -254,6 +256,20 @@ mail:"client@mail.com"
         },
     ]
 
+    const SortTypes : OptionTypes[] = [
+      {value : 1, label : 'Last Updated'},
+      {value : 2, label : 'Alphabetical'},
+    ]
+
+interface SwitchContainerProps {
+      isOn: boolean;
+    }
+    
+interface SwitchHandleProps {
+      isOn: boolean;
+    }
+    
+    
 interface VideoProps {
     elevator : boolean,
     video : boolean,
@@ -271,6 +287,11 @@ interface ColorProps {
     color : string
 }
 
+interface TransistionProps {
+  isVisible : boolean,
+  delay: number
+}
+
 const Container = styled.div({
   display: "flex",
   gap: "20px",
@@ -285,11 +306,19 @@ const RightContainer = styled.div({
 
 const Header = styled.div({
   backgroundColor: "#F7F9FC",
+  display : 'flex',
   width: "calc(100% - 40px)",
   padding: "20px",
   boxShadow:
     "0 .125rem .25rem rgba(0, 0, 0, .075), 0 .25rem .5rem rgba(0, 0, 0, .05)",
   borderRadius: "0px 0px 0px 12px",
+});
+
+const HeaderContainer = styled.div({
+  display : 'block',
+  width : 'calc(100% - 130px)',
+  marginRight : '20px'
+
 });
 
 const UpperHeader = styled.div({
@@ -307,6 +336,7 @@ const Member = styled.div({
   color: "#4D5767",
   fontSize: "20px",
   fontWeight: 600,
+  paddingTop : '10px'
 });
 
 const Shortlist = styled.div({
@@ -366,6 +396,52 @@ const Dsc = styled.div({
   cursor : 'pointer'
 });
 
+const SortedByDiv = styled.div({
+   display : 'block',
+   position : 'relative',
+   width : '200px'
+})
+
+const SwitchWrapper = styled.div`
+  display: flex;
+  flex-direction : column;
+  align-items: center;
+  gap: 10px; 
+  width : 150px;
+  padding-top : 10px;
+`;
+
+const SwitchContainer = styled.div<SwitchContainerProps>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: ${props => (props.isOn ? '#0097a2' : '#ccc')};
+  border-radius: 30px; /* Adjusted to match handle size */
+  width: 80px; /* Increased width */
+  height: 40px; /* Increased height */
+  position: relative;
+  transition: background-color 0.3s;
+`;
+
+const SwitchHandle = styled.div<SwitchHandleProps>`
+  width: 50px; /* Increased size */
+  height: 50px; /* Increased size */
+  background-color: #172C4C;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: ${props => (props.isOn ? '50px' : '-5px')}; /* Adjusted positions */
+  transform: translateY(-50%);
+  transition: left 0.3s;
+`;
+
+
+const Label = styled.span`
+font-size: 16px;
+color: #333;
+`;
+
+
 const BorderBottom = styled.div({
   borderBottom: "1px solid #B4B4B4",
   marginTop: "10px",
@@ -375,7 +451,6 @@ const ItemContainer = styled.div({
   display: "flex",
   justifyContent: "end",
   gap: "10px",
-  marginTop: "10px",
 });
 
 const BorderStraight = styled.div({
@@ -387,15 +462,32 @@ const MemberContainer = styled.div({
   flexWrap: "wrap",
   gap: "20px",
   padding: "20px",
+  overflowX : 'hidden'
 });
 
-const MembarCard = styled.div({
+
+const MembarCard = styled.div<TransistionProps>(({isVisible,delay}) => ({
   backgroundColor: "white",
   borderRadius: "20px",
   display: "flex",
+  flexDirection : 'column',
   width: "300px",
+  gap : '15px',
   height: "300px",
   padding: "20px",
+  transform : `translateX(${isVisible ? '0' : '100vw'})`,
+  transition : 'transform 0.5s ease-in-out',
+  transitionDelay : `${delay}ms`,
+}));
+
+const MemberMainCard = styled.div({
+   display : 'flex',
+   gap : '10px'
+});
+
+const UpdatedDate = styled .div ({
+  display : 'flex',
+  justifyContent : 'end'
 });
 
 const MemberImg = styled.img({
@@ -431,27 +523,44 @@ const Memberanalytics = () => {
     const [videoType,setVideoType] = useState<VideoProps>({elevator : false, video : false, all : true});
     const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : true});
     const [searchString,setSearchString] = useState<string>('');
-    const [candidateType, setCandidatetype] = useState<number>(0);
+    const [candidateType, setCandidatetype] = useState<string | undefined>(undefined);
+    const [country, setCountry] = useState<number>(0);
     const [filterData,setFilterData] = useState<any>(data);
-    const [page,setPage] = useState<number>(2);
+    const [page,setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(2);
     const[correctData,setCorrectData] = useState<List[] | null>(null);
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [isOn, setIsOn] = useState<boolean>(false);
+    const [sortBy,setSortedBy] = useState<string>('Last updated');
+
+  const handleSwitchToggle = () => {
+    setIsOn(prevState => !prevState);
+  };
+
+
+  useEffect(() => {
+    setTimeout(() => {setIsVisible(true)},200);
+  },[page]);
 
     const handlePageChange = (page: number) => {
       setPage(page);
-      console.log(page)
+      setIsVisible(false);
     };
 
     const searchHandler = (value : string) =>
     {
         setSearchString(value);
-        
     }
 
-   const candidateTypeHandler = (value : number) =>
+   const candidateTypeHandler = (value : string | undefined) =>
    {
      setCandidatetype(value);
    }
+
+   const countryTypeHandler = (value : number) =>
+    {
+      setCountry(value);
+    }
 
    const filteredData = () => {
       
@@ -468,78 +577,79 @@ const Memberanalytics = () => {
     }
    }
    // eslint-disable-next-line
-   useEffect(() => {fetchData()},[page,searchString,candidateType]);
-
-   
+   useEffect(() => {fetchData()},[page,searchString,country,candidateType]);
 
    const fetchData = async() => {
-      const result = await MemberAnalyticsList(page);
+      const result = await MemberAnalyticsList(page,searchString,country,candidateType);
       result && setCorrectData(result);
-      let filtered = result
-    if(filtered)
-    {
-
-    if(searchString.trim().length > 0)
-    {
-      filtered = filtered.filter((item) => item.firstName.toLowerCase().includes(searchString.toLowerCase()));
-    }
-     
-    setFilterData(filtered);
-    }
-      console.log(result);
+   
+    setFilterData(result);
    }
 
   return (
     <Container>
-      <Sidebar onSearchHandler = {searchHandler} onCandidateTypeHandler = {candidateTypeHandler} />
+      <Sidebar onSearchHandler = {searchHandler} onCandidateTypeHandler = {candidateTypeHandler} onCountryTypeHandler = {countryTypeHandler} />
       <RightContainer>
         <Header>
+          <HeaderContainer>
           <UpperHeader>
             <Member>Members</Member>
-            <Shortlist>
-              <AllShortlist>Shortlist All Results</AllShortlist>
-              <DyamicShortlist>Create Dynamic Shortlist</DyamicShortlist>
-              <MemberAnalytics>Member Analytics</MemberAnalytics>
-            </Shortlist>
-          </UpperHeader>
-          <LowerHeader>
-            <div>
-              <GreyColor>{filterData.length} member</GreyColor>
-            </div>
-            <Shortlist>
-              <div>
-                <GreyColor>Sort By</GreyColor>
-                <GreenColor> Last Updated</GreenColor>
-              </div>
-              <OrderBy>
-                <Asc>ASC</Asc>
-                <Dsc>DESC</Dsc>
-              </OrderBy>
-            </Shortlist>
-          </LowerHeader>
-          <BorderBottom />
-          <ItemContainer>
+            <ItemContainer>
             <ItemCard color = {hasPhoto ? '#172C4C' : '#0097a2'} onClick={() => {setHasPhoto(!hasPhoto)}}>Profile Photo</ItemCard>
-            <BorderStraight />
-            <ItemCard color = {videoType.elevator ? '#172C4C' : '#0097a2'} onClick={() => {setVideoType({elevator : true,video : false, all : false})}}>Elevator Pitches</ItemCard>
-            <ItemCard color = {videoType.video ? '#172C4C' : '#0097a2'} onClick={() => {setVideoType({elevator : false,video : true, all : false})}}>Video Interviews</ItemCard>
-            <ItemCard color = {videoType.all ? '#172C4C' : '#0097a2'}onClick={() => {setVideoType({elevator : false,video : false, all : true})}}>Any Video</ItemCard>
             <BorderStraight />
             <ItemCard color = {resumeType.infographic ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : true,peoplehawk : false,member : false,any : false})}}>Infographic Resume</ItemCard>
             <ItemCard color = {resumeType.peoplehawk ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : true,member : false,any : false})}}>PeopleHawk CV</ItemCard>
             <ItemCard color = {resumeType.member ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : true,any : false})}}>Member CV</ItemCard>
             <ItemCard color = {resumeType.any ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : false,any : true})}}>Any CV/ Resume</ItemCard>
           </ItemContainer>
+          </UpperHeader>
+          <LowerHeader>
+            <div>
+              <GreyColor> member</GreyColor>
+            </div>
+            <Shortlist>
+              <SortedByDiv>
+                <div style={{position : 'absolute'}}>
+                <GreyColor>Sort By </GreyColor>
+                <GreenColor>
+                   {sortBy}
+                   </GreenColor>
+                   </div>
+                   
+                   <ReactSelect
+            options={SortTypes}
+            placeholder=""
+            hideInput
+            name="countryId"
+            onChange={(e,value) => {setSortedBy(value.label)}}
+          />
+              </SortedByDiv>
+              <OrderBy>
+                <Asc>ASC</Asc>
+                <Dsc>DESC</Dsc>
+              </OrderBy>
+            </Shortlist>
+          </LowerHeader>
+          </HeaderContainer>
+          <SwitchWrapper>
+      <SwitchContainer onClick={handleSwitchToggle} isOn={isOn}>
+        <SwitchHandle isOn={isOn} />
+      </SwitchContainer>
+      <label>Names/Anonymous</label>
+    </SwitchWrapper>
         </Header>
         <MemberContainer>
-            {filterData.map((item : List) =>  
-          <MembarCard key={item.userId}>
+            { filterData && filterData.map((item : List,index : number) =>  
+          <MembarCard isVisible = {isVisible} delay={index*120} key={item.userId}>
+            <UpdatedDate>Updated : 28 August 2024</UpdatedDate>
+            <MemberMainCard>
             <MemberLeftCard>
               <MemberImg src={profile} alt="profile" />
             </MemberLeftCard>
             <MemberRightCard>
-              <div>{item.firstName}</div>
+              <div>{isOn ? `Member ${item.userId}` : item.firstName}</div>
             </MemberRightCard>
+            </MemberMainCard>
           </MembarCard>
           )}
         </MemberContainer>
@@ -548,5 +658,4 @@ const Memberanalytics = () => {
     </Container>
   );
 };
-
 export default Memberanalytics;

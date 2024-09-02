@@ -16,5 +16,22 @@ export const API_ENDPOINTS = {
     QUIZ_RESPONSE : 'candidate/personalityreport',
     QUIZ_ELIGIBLE : (UserId : number) => `candidate/personalityreport/${UserId}`,
     CRUD_FILE : (UserId: number) => `candidate/files/${UserId}`,
-    MEMBER_ANALYTICS : (page : number) => `candidate/member-analytics?page=${page}`
+  MEMBER_ANALYTICS : (page: number, searchTerm?: string, countryId? :  number,memberType? : string) => {
+        // Base URL
+        let url = `candidate/member-analytics?page=${page}`;
+    
+        // Add optional query parameters if provided
+        if (searchTerm) {
+            url += `&searchTerm=${searchTerm}`;
+        }
+        if (countryId) {
+            url += `&countryId=${countryId}`;
+        }
+
+        if (memberType) {
+            url += `&memberType=${memberType}`;
+        }
+    
+        return url;
+    }
 }

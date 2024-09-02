@@ -14,7 +14,9 @@ interface SelectProps {
   options?: OptionTypes[];
   placeholder?: string;
   onChange?: (field: string, value: any) => void;
-  showDropdownIndicator?: boolean; // New prop
+  showDropdownIndicator?: boolean;
+  hideInput? : boolean;
+
 }
 
 const baseStyles: StylesConfig<OptionTypes[], boolean> = {
@@ -63,11 +65,18 @@ export const ReactSelect: React.FC<SelectProps> = (props) => {
 
   const styles: StylesConfig<OptionTypes[], boolean> = {
     ...baseStyles,
+    control : !props.hideInput ? baseStyles.control : (provided) => ({
+        ...provided,
+        visibility : 'hidden',
+        cursor : 'pointer',
+      
+    }),
+ 
     dropdownIndicator: props.showDropdownIndicator
       ? baseStyles.dropdownIndicator
       : (provided) => ({
           ...provided,
-          display: "none", // Hide the dropdown indicator when not needed
+          display: "none", 
         }),
   };
 
@@ -75,7 +84,7 @@ export const ReactSelect: React.FC<SelectProps> = (props) => {
     <div>
       <Select
         options={props.options}
-        styles={styles} // Apply conditional styles
+        styles={styles} 
         isClearable={props.isClearable}
         isMulti={props.isMulti}
         isLoading={props.isLoading}
@@ -85,6 +94,7 @@ export const ReactSelect: React.FC<SelectProps> = (props) => {
         className={props.className}
         value={props.value}
         isSearchable={props.isSearchable}
+    
       />
     </div>
   );

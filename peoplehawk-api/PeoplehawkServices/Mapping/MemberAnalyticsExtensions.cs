@@ -13,6 +13,9 @@ public static class MemberAnalyticsExtensions
             LastName = memberAnalytics.user.LastName,
             Email = memberAnalytics.user.Email,
             country = memberAnalytics.user.Country,
+            MemberType = memberAnalytics.user.MemberType,
+            OwnedBy = memberAnalytics.OwnedBy,
+            Completion = memberAnalytics.completion,
             IsResumeUpload = false,
         };
     }

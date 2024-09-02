@@ -148,8 +148,8 @@ public class CandidateController : BaseController
 
     [HttpGet("member-analytics")]
 
-    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1)
+    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
     {
-        return await _memberAnalyticsService.GetList(page);
+        return await _memberAnalyticsService.GetList(page,searchTerm,countryId,memberType);
     }
 }
