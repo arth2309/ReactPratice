@@ -1,4 +1,5 @@
-﻿using PeoplehawkRepositories.Interface;
+﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
@@ -16,15 +17,89 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         _memberAnalyticsRepository = memberAnalyticsRepository;
     }
 
-    public async Task<List<MemberAnalyticsDTO>> GetList(int page,string? searchTerm = null,int? countryId = 0,string? memberType = null)
+    public async Task<List<MemberAnalyticsDTO>> GetList(
+        int page,
+        bool isInfographicResume = false,
+        bool isMemberResume = false, bool isPeopleHawkResume = false,
+        bool isAll = false, string sortOrder = "asc", int orderedBy = 0,
+        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
-        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user,x => x.user.Country,x=> x.OwnedBy,x => x.completion};
-        Expression<Func<MemberAnalytics,bool>> filter = a => 
+        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
+        Expression<Func<MemberAnalytics, bool>> filter = a =>
         (countryId == 0 || a.user.CountryId == countryId) &&
-        (searchTerm == null || a.user.FirstName.Contains(searchTerm)) &&
-        (memberType == null || a.user.MemberType == memberType);
-        
-        List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter : filter,page : page, includes : includes, pageSize : 6);
+        (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
+        (memberType == null || a.user.MemberType == memberType) &&
+        (!isProfilePhoto || a.user.ProfilePhoto != null) &&
+        (!isInfographicResume || a.completion.InfographicCV) &&
+        (!isMemberResume || a.completion.MemberCV) &&
+        (!isPeopleHawkResume || a.completion.PeopleHawkCV) &&
+        (!isAll || a.completion.SimpleCV);
+
+        Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
+
+        if (orderedBy == 2)
+        {
+            orderBy = sortOrder.ToLower() switch
+            {
+                "asc" => q => q.OrderBy(u => u.user.FirstName),
+                "desc" => q => q.OrderByDescending(u => u.user.FirstName),
+                _ => q => q.OrderBy(u => u.Id)
+            };
+        }
+
+        else
+        {
+            orderBy = sortOrder.ToLower() switch
+            {
+                "asc" => q => q.OrderBy(u => u.Id),
+                "desc" => q => q.OrderByDescending(u => u.user.Id),
+                _ => q => q.OrderBy(u => u.Id)
+            };
+        }
+
+        List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
         return memberAnalytics.ToDtoList();
+    }
+    public async Task<int> GetCount(
+        bool isInfographicResume = false,
+        bool isMemberResume = false, bool isPeopleHawkResume = false,
+        bool isAll = false, string sortOrder = "asc", int orderedBy = 0,
+        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+    {
+        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
+        Expression<Func<MemberAnalytics, bool>> filter = a =>
+        (countryId == 0 || a.user.CountryId == countryId) &&
+        (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
+        (memberType == null || a.user.MemberType == memberType) &&
+        (!isProfilePhoto || a.user.ProfilePhoto != null) &&
+        (!isInfographicResume || a.completion.InfographicCV) &&
+        (!isMemberResume || a.completion.MemberCV) &&
+        (!isPeopleHawkResume || a.completion.PeopleHawkCV) &&
+        (!isAll || a.completion.SimpleCV);
+
+        Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
+
+        if (orderedBy == 2)
+        {
+            orderBy = sortOrder.ToLower() switch
+            {
+                "asc" => q => q.OrderBy(u => u.user.FirstName),
+                "desc" => q => q.OrderByDescending(u => u.user.FirstName),
+                _ => q => q.OrderBy(u => u.Id)
+            };
+        }
+
+        else
+        {
+            orderBy = sortOrder.ToLower() switch
+            {
+                "asc" => q => q.OrderBy(u => u.Id),
+                "desc" => q => q.OrderByDescending(u => u.user.Id),
+                _ => q => q.OrderBy(u => u.Id)
+            };
+        }
+
+        List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter: filter, includes: includes, pageSize: 6, orderBy: orderBy);
+        return memberAnalytics.ToDtoList().Count();
     }
 }

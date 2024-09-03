@@ -16,11 +16,27 @@ export const API_ENDPOINTS = {
     QUIZ_RESPONSE : 'candidate/personalityreport',
     QUIZ_ELIGIBLE : (UserId : number) => `candidate/personalityreport/${UserId}`,
     CRUD_FILE : (UserId: number) => `candidate/files/${UserId}`,
-  MEMBER_ANALYTICS : (page: number, searchTerm?: string, countryId? :  number,memberType? : string) => {
-        // Base URL
-        let url = `candidate/member-analytics?page=${page}`;
+  MEMBER_ANALYTICS : (page: number,isInfographicResume : boolean,isMemberResume : boolean, isPeopleHawkResume  : boolean, isAll :boolean,sortOrder : string,orderedBy : number, isProfilePhoto : boolean, searchTerm?: string, countryId? :  number,memberType? : string) => {
     
-        // Add optional query parameters if provided
+        let url = `candidate/member-analytics?page=${page}&isInfographicResume=${isInfographicResume}&isMemberResume=${isMemberResume}&isPeopleHawkResume=${isPeopleHawkResume}&isAll=${isAll}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
+
+        if (searchTerm) {
+            url += `&searchTerm=${searchTerm}`;
+        }
+        if (countryId) {
+            url += `&countryId=${countryId}`;
+        }
+
+        if (memberType) {
+            url += `&memberType=${memberType}`;
+        }
+    
+        return url;
+    },
+    MEMBER_ANALYTICS_COUNT : (isInfographicResume : boolean,isMemberResume : boolean, isPeopleHawkResume  : boolean, isAll :boolean,sortOrder : string,orderedBy : number, isProfilePhoto : boolean, searchTerm?: string, countryId? :  number,memberType? : string) => {
+    
+        let url = `candidate/member-analytics-count?isInfographicResume=${isInfographicResume}&isMemberResume=${isMemberResume}&isPeopleHawkResume=${isPeopleHawkResume}&isAll=${isAll}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
+
         if (searchTerm) {
             url += `&searchTerm=${searchTerm}`;
         }
@@ -35,3 +51,6 @@ export const API_ENDPOINTS = {
         return url;
     }
 }
+
+
+

@@ -12,6 +12,7 @@ public static class MemberAnalyticsExtensions
             FirstName = memberAnalytics.user.FirstName,
             LastName = memberAnalytics.user.LastName,
             Email = memberAnalytics.user.Email,
+            IsProfilePhoto = memberAnalytics.user.ProfilePhoto == null ? false : true,
             country = memberAnalytics.user.Country,
             MemberType = memberAnalytics.user.MemberType,
             OwnedBy = memberAnalytics.OwnedBy,
@@ -22,6 +23,6 @@ public static class MemberAnalyticsExtensions
 
     public static List<MemberAnalyticsDTO> ToDtoList(this List<MemberAnalytics> MemberAnalytics)
     {
-        return MemberAnalytics.Select(quiz => quiz.ToDto()).OrderBy(a => a.UserId).ToList();
+        return MemberAnalytics.Select(quiz => quiz.ToDto()).ToList();
     }
 }

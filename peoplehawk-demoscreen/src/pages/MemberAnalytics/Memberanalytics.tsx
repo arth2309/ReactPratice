@@ -4,257 +4,24 @@ import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
 import { MemberAnalytics as List, OptionTypes } from "../../interface/Interface";
-import { MemberAnalyticsList } from "../../services/MemberAnalyticsService";
+import { MemberAnalyticsList,MemberAnalyticsCount } from "../../services/MemberAnalyticsService";
 import { ReactSelect } from "../../components/layout/form/Select";
+import  personalityQuizCompleted from '../../assests/img/personality_quiz-completed.svg'
+import personalityQuizEmpty from '../../assests/img/personality_quiz-empty.svg'
+import gamesEmpty from '../../assests/img/games_icon-empty.svg'
+import gamesCompleted from '../../assests/img/games_icon-completed.svg'
+import videoCompleted from '../../assests/img/video-completed.svg'
+import videoEmpty from '../../assests/img/video-empty.svg'
+import cvOptimizedCompleted from '../../assests/img/cv_optimiser-completed.svg'
+import cvOptimizedEmpty from '../../assests/img/cv_optimiser-empty.svg'
+import cvGeneratedEmpty from '../../assests/img/cv_genrated-empty.svg'
+import cvGeneratedCompleted from '../../assests/img/cv_genrated-completed.svg'
+import documentCompleted from '../../assests/img/document-completed.svg'
+import documentEmpty from '../../assests/img/document-empty.svg'
+import DoneIcon from '@mui/icons-material/Done';
 
 
-const data =   [
-        {
-            "user_id": 63,
-            "first_name": "Nimesh1",
-            "middle_name": null,
-            "last_name": "Parmar",
-            "default_email": "acraig+nikita@mail.com",
-            "phone_number": "+27 76 729 9959",
-            "updated_at": "2024-08-21 06:43:41",
-            "completion": {
-                "basic_information": true,
-                "domain_knowledge": true,
-                "personality_quiz": true,
-                "culture_quiz": true,
-                "competency_quiz": true,
-                "elevator_pitch": true,
-                "video_interview": true,
-                "documents": true,
-                "career_preference": true,
-                "is_personal_statement": true,
-                "career_interest_quiz": true,
-                "career_value_test": true
-            },
-            "current_location": {
-                "id": 1,
-                "name": "Greater London",
-                "highlighted": true,
-                "order": 0,
-                "country_code": "GB"
-            },
-            "candidate_type": {
-                "id": 4,
-                "name": "High School/College Student",
-                "unique_key": "high-school/college-students",
-                "order": 40
-            },
-            "strengths": [
-                {
-                    "name": "Systematic"
-                },
-                {
-                    "name": "Well-rounded"
-                },
-                {
-                    "name": "Listening"
-                }
-            ],
-            "grade_point_average": 65,
-            "profile_image_thumbnail": {
-                "id": 3757,
-                "name": "hume-bust",
-                "collection_name": "profile_image",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2024-02-09 13:20:40",
-                "access_type": "public"
-            },
-            "languages": [
-                {
-                    "id": 1,
-                    "name": "English"
-                },
-                {
-                    "id": 11,
-                    "name": "Afar"
-                },
-                {
-                    "id": 13,
-                    "name": "Afrikaans"
-                },
-                {
-                    "id": 18,
-                    "name": "Akoose"
-                }
-            ],
-            "status": {
-                "id": 7,
-                "name": "Published",
-                "unique_key": "published"
-            },
-            "candidate_types": {
-                "id": 4,
-                "name": "High School/College Student"
-            },
-               "traditional_cv": {
-                "id": 3781,
-                "name": "Nimesh1_Parmar_Traditional_CV",
-                "collection_name": "traditional_cv_docx",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2024-02-16 07:03:22",
-                "access_type": "public"
-            },
-            "traditional_cv_pdf": {
-                "id": 1768,
-                "name": "Nikita_Candidate_Traditional_CV",
-                "collection_name": "traditional_cv_pdf",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2021-12-06 12:03:05",
-                "access_type": "public"
-            },
-            "my_cv": {
-                "id": 2700,
-                "name": "Clare_Thompson_Traditional_CV",
-                "collection_name": "my_cv",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2022-08-29 06:24:35",
-                "access_type": "public"
-            },
-        },
-{
-            "user_id": 18,
-            "first_name": "Dhruvinsinh",
-            "middle_name": null,
-            "last_name": "Parmar",
-            "default_email": "dj@mail.com",
-            "phone_number": "+91 7722993344",
-            "updated_at": "2024-08-21 06:43:41",
-            "completion": {
-                "basic_information": true,
-                "domain_knowledge": true,
-                "personality_quiz": true,
-                "culture_quiz": true,
-                "competency_quiz": true,
-                "elevator_pitch": true,
-                "video_interview": true,
-                "documents": true,
-                "career_preference": true,
-                "is_personal_statement": true,
-                "career_interest_quiz": true,
-                "career_value_test": true
-            },
-            "current_location": {
-                "id": 1,
-                "name": "Greater London",
-                "highlighted": true,
-                "order": 0,
-                "country_code": "GB"
-            },
-            "candidate_type": {
-                "id": 4,
-                "name": "High School/College Student",
-                "unique_key": "high-school/college-students",
-                "order": 40
-            },
-            "strengths": [
-                {
-                    "name": "Systematic"
-                },
-                {
-                    "name": "Well-rounded"
-                },
-                {
-                    "name": "Listening"
-                }
-            ],
-            "grade_point_average": 65,
-            "profile_image_thumbnail": {
-                "id": 3757,
-                "name": "hume-bust",
-                "collection_name": "profile_image",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2024-02-09 13:20:40",
-                "access_type": "public"
-            },
-            "languages": [
-                {
-                    "id": 1,
-                    "name": "English"
-                },
-                {
-                    "id": 11,
-                    "name": "Afar"
-                },
-                {
-                    "id": 13,
-                    "name": "Afrikaans"
-                },
-                {
-                    "id": 18,
-                    "name": "Akoose"
-                }
-            ],
-            "status": {
-                "id": 7,
-                "name": "Published",
-                "unique_key": "published"
-            },
-            "candidate_types": {
-                "id": 4,
-                "name": "High School/College Student"
-            },
-               "traditional_cv": {
-                "id": 3781,
-                "name": "Nimesh1_Parmar_Traditional_CV",
-                "collection_name": "traditional_cv_docx",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2024-02-16 07:03:22",
-                "access_type": "public"
-            },
-            "traditional_cv_pdf": {
-                "id": 1768,
-                "name": "Nikita_Candidate_Traditional_CV",
-                "collection_name": "traditional_cv_pdf",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2021-12-06 12:03:05",
-                "access_type": "public"
-            },
-            "my_cv": {
-                "id": 2700,
-                "name": "Clare_Thompson_Traditional_CV",
-                "collection_name": "my_cv",
-                "url": "",
-                "title": null,
-                "description": null,
-                "document_type": null,
-                "date": "2022-08-29 06:24:35",
-                "access_type": "public"
-            },
- "owned_by": {
-                "id": 1,
-                "first_name": "Seeded",
-                "middle_name": null,
-                "last_name": "Admin",
-mail:"client@mail.com"
-           }
-        },
-    ]
+
 
     const SortTypes : OptionTypes[] = [
       {value : 1, label : 'Last Updated'},
@@ -329,7 +96,7 @@ const UpperHeader = styled.div({
 const LowerHeader = styled.div({
     display: "flex",
     justifyContent: "space-between",
-    marginTop : '10px'
+    marginTop : '15px'
   });
 
 const Member = styled.div({
@@ -378,6 +145,8 @@ const OrderBy = styled.div({
 
 const Asc = styled.div({
   borderRadius: "20px 0px 0px 20px",
+  display : 'flex',
+  alignItems : 'center',
   width: "70px",
   padding: "5px 0px",
   paddingLeft: "10px",
@@ -388,6 +157,8 @@ const Asc = styled.div({
 
 const Dsc = styled.div({
   borderRadius: "0px 20px 20px 0px",
+  display : 'flex',
+  alignItems : 'center',
   width: "70px",
   padding: "5px 0px",
   paddingLeft: "10px",
@@ -400,6 +171,10 @@ const SortedByDiv = styled.div({
    display : 'block',
    position : 'relative',
    width : '200px'
+});
+
+const CompletionImg = styled.img({
+  height : '24px'
 })
 
 const SwitchWrapper = styled.div`
@@ -408,7 +183,7 @@ const SwitchWrapper = styled.div`
   align-items: center;
   gap: 10px; 
   width : 150px;
-  padding-top : 10px;
+  padding-top : 15px;
 `;
 
 const SwitchContainer = styled.div<SwitchContainerProps>`
@@ -417,15 +192,15 @@ const SwitchContainer = styled.div<SwitchContainerProps>`
   cursor: pointer;
   background-color: ${props => (props.isOn ? '#0097a2' : '#ccc')};
   border-radius: 30px; /* Adjusted to match handle size */
-  width: 80px; /* Increased width */
-  height: 40px; /* Increased height */
+  width: 72px; /* Increased width */
+  height: 30px; /* Increased height */
   position: relative;
   transition: background-color 0.3s;
 `;
 
 const SwitchHandle = styled.div<SwitchHandleProps>`
-  width: 50px; /* Increased size */
-  height: 50px; /* Increased size */
+  width: 36px; 
+  height: 36px; 
   background-color: #172C4C;
   border-radius: 50%;
   position: absolute;
@@ -436,21 +211,30 @@ const SwitchHandle = styled.div<SwitchHandleProps>`
 `;
 
 
-const Label = styled.span`
-font-size: 16px;
-color: #333;
-`;
-
-
 const BorderBottom = styled.div({
   borderBottom: "1px solid #B4B4B4",
   marginTop: "10px",
+  width : '250px'
 });
+
+const MemberCardTitle = styled.div({
+  color: "#4D5767",
+  fontSize: "18px",
+  fontWeight: 600,
+  
+});
+
+const MemberCardSubTitle = styled.div({
+  color: "#4D5767",
+  fontSize: "14px",
+  fontWeight: 600,
+})
 
 const ItemContainer = styled.div({
   display: "flex",
   justifyContent: "end",
   gap: "10px",
+  
 });
 
 const BorderStraight = styled.div({
@@ -471,18 +255,20 @@ const MembarCard = styled.div<TransistionProps>(({isVisible,delay}) => ({
   borderRadius: "20px",
   display: "flex",
   flexDirection : 'column',
-  width: "300px",
+  width: "400px",
   gap : '15px',
   height: "300px",
   padding: "20px",
   transform : `translateX(${isVisible ? '0' : '100vw'})`,
   transition : 'transform 0.5s ease-in-out',
   transitionDelay : `${delay}ms`,
+  boxShadow:
+  "0 .125rem .25rem rgba(0, 0, 0, .075), 0 .25rem .5rem rgba(0, 0, 0, .05)",
 }));
 
 const MemberMainCard = styled.div({
    display : 'flex',
-   gap : '10px'
+   gap : '40px'
 });
 
 const UpdatedDate = styled .div ({
@@ -491,13 +277,27 @@ const UpdatedDate = styled .div ({
 });
 
 const MemberImg = styled.img({
-  height: "140px",
+  height: "110px",
 });
 
 const MemberLeftCard = styled.div({
   display: "flex",
   flexDirection: "column",
+  gap : '10px',
+  alignItems : 'center'
 });
+
+const CompletionCont = styled.div({
+   display : 'flex',
+   flexDirection : 'column',
+   gap : '10px'
+});
+
+const CompletionCard = styled.div({
+  display : 'flex',
+  gap : '5px'
+});
+
 
 const MemberRightCard = styled.div({
   display: "flex",
@@ -520,18 +320,20 @@ const ItemCard = styled.div<ColorProps>`
 const Memberanalytics = () => {
 
     const [hasPhoto,setHasPhoto] = useState<boolean>(false);
-    const [videoType,setVideoType] = useState<VideoProps>({elevator : false, video : false, all : true});
-    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : true});
+    // const [videoType,setVideoType] = useState<VideoProps>({elevator : false, video : false, all : true});
+    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : false});
     const [searchString,setSearchString] = useState<string>('');
     const [candidateType, setCandidatetype] = useState<string | undefined>(undefined);
     const [country, setCountry] = useState<number>(0);
-    const [filterData,setFilterData] = useState<any>(data);
+    const [filterData,setFilterData] = useState<List[]>([]);
     const [page,setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(2);
-    const[correctData,setCorrectData] = useState<List[] | null>(null);
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [isOn, setIsOn] = useState<boolean>(false);
+    const [sortOrder,setSortOrder] = useState<string>('asc');
     const [sortBy,setSortedBy] = useState<string>('Last updated');
+    const [orderedBy,setOrderedBy] = useState<number>(0);
+    const[count,setCount] = useState<number>(0);
 
   const handleSwitchToggle = () => {
     setIsOn(prevState => !prevState);
@@ -542,48 +344,47 @@ const Memberanalytics = () => {
     setTimeout(() => {setIsVisible(true)},200);
   },[page]);
 
-    const handlePageChange = (page: number) => {
-      setPage(page);
-      setIsVisible(false);
+    const handlePageChange = (page1: number) => {
+      setPage(page1);
+      if(page !== page1)
+      {
+        setIsVisible(false);
+      }
+
     };
 
     const searchHandler = (value : string) =>
     {
-        setSearchString(value);
+        setSearchString(value.trim());
+        setPage(1);
     }
 
    const candidateTypeHandler = (value : string | undefined) =>
    {
      setCandidatetype(value);
+     setPage(1);
    }
 
    const countryTypeHandler = (value : number) =>
     {
       setCountry(value);
+      setPage(1);
     }
 
-   const filteredData = () => {
-      
-    let filtered = correctData
-    if(filtered)
-    {
-
-    if(searchString.trim().length > 0)
-    {
-      filtered = filtered.filter((item) => item.firstName.toLowerCase().includes(searchString.toLowerCase()));
-    }
-
-    setFilterData(filtered.slice(0,6));
-    }
-   }
    // eslint-disable-next-line
-   useEffect(() => {fetchData()},[page,searchString,country,candidateType]);
+   useEffect(() => {fetchData()},[page,sortOrder,orderedBy,searchString,country,candidateType,hasPhoto,resumeType]);
 
    const fetchData = async() => {
-      const result = await MemberAnalyticsList(page,searchString,country,candidateType);
-      result && setCorrectData(result);
-   
-    setFilterData(result);
+      const result = await MemberAnalyticsList(page,resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
+      result && setFilterData(result);;
+      const result1 = await MemberAnalyticsCount(resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
+      if(result1 == 0)
+      {
+        setCount(0);
+        setTotalPages(0);
+      }
+       result1 && setCount(result1);
+       result1 && setTotalPages(Math.ceil(result1/6));
    }
 
   return (
@@ -595,17 +396,17 @@ const Memberanalytics = () => {
           <UpperHeader>
             <Member>Members</Member>
             <ItemContainer>
-            <ItemCard color = {hasPhoto ? '#172C4C' : '#0097a2'} onClick={() => {setHasPhoto(!hasPhoto)}}>Profile Photo</ItemCard>
+            <ItemCard color = {hasPhoto ? '#172C4C' : '#0097a2'} onClick={() => {setHasPhoto(!hasPhoto); setPage(1);}}>Profile Photo </ItemCard>
             <BorderStraight />
-            <ItemCard color = {resumeType.infographic ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : true,peoplehawk : false,member : false,any : false})}}>Infographic Resume</ItemCard>
-            <ItemCard color = {resumeType.peoplehawk ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : true,member : false,any : false})}}>PeopleHawk CV</ItemCard>
-            <ItemCard color = {resumeType.member ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : true,any : false})}}>Member CV</ItemCard>
-            <ItemCard color = {resumeType.any ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : false,any : true})}}>Any CV/ Resume</ItemCard>
+            <ItemCard color = {resumeType.infographic ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : !resumeType.infographic,peoplehawk : false,member : false,any : false});  setPage(1);}}>Infographic Resume</ItemCard>
+            <ItemCard color = {resumeType.peoplehawk ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : !resumeType.peoplehawk,member : false,any : false});  setPage(1);}}>PeopleHawk CV</ItemCard>
+            <ItemCard color = {resumeType.member ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : !resumeType.member,any : false});  setPage(1);}}>Member CV</ItemCard>
+            <ItemCard color = {resumeType.any ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : false,any : !resumeType.any});  setPage(1);}}>Any CV/ Resume</ItemCard>
           </ItemContainer>
           </UpperHeader>
           <LowerHeader>
             <div>
-              <GreyColor> member</GreyColor>
+              <GreyColor>{count} member</GreyColor>
             </div>
             <Shortlist>
               <SortedByDiv>
@@ -621,12 +422,12 @@ const Memberanalytics = () => {
             placeholder=""
             hideInput
             name="countryId"
-            onChange={(e,value) => {setSortedBy(value.label)}}
+            onChange={(e,value) => {setSortedBy(value.label);setOrderedBy(value.value)}}
           />
               </SortedByDiv>
               <OrderBy>
-                <Asc>ASC</Asc>
-                <Dsc>DESC</Dsc>
+                <Asc onClick={() => {setSortOrder('asc')}}>ASC {sortOrder == 'asc' && <DoneIcon />}</Asc>
+                <Dsc onClick={() => {setSortOrder('desc')}}>DESC {sortOrder == 'desc' && <DoneIcon />}</Dsc>
               </OrderBy>
             </Shortlist>
           </LowerHeader>
@@ -645,15 +446,42 @@ const Memberanalytics = () => {
             <MemberMainCard>
             <MemberLeftCard>
               <MemberImg src={profile} alt="profile" />
+              <CompletionCont>
+                <CompletionCard>
+                  <CompletionImg src={item.completion.isPersonalityQuizGiven? personalityQuizCompleted : personalityQuizEmpty} alt="personality-quiz" />
+                  <CompletionImg src={item.completion.isGames? gamesCompleted : gamesEmpty} alt="games" />
+                  <CompletionImg src={item.completion.isVideoInterview? videoCompleted : videoEmpty} alt="video" />
+                </CompletionCard>
+                <CompletionCard>
+                  <CompletionImg src={item.completion.isCVOptimized? cvOptimizedCompleted : cvOptimizedEmpty} alt="cv-optimizer" />
+                  <CompletionImg src={item.completion.isCompentencyQuizGiven? cvGeneratedCompleted : cvGeneratedEmpty} alt="cv-generated" />
+                  <CompletionImg src={item.completion.isDocumentGiven? documentCompleted : documentEmpty} alt="video" />
+                </CompletionCard>
+              </CompletionCont>
             </MemberLeftCard>
             <MemberRightCard>
-              <div>{isOn ? `Member ${item.userId}` : item.firstName}</div>
+              <MemberCardTitle>{isOn ? `Member ${item.userId}` : item.firstName}</MemberCardTitle>
+              <BorderBottom />
+              <CompletionCont>
+                <CompletionCard>
+                  <MemberCardSubTitle>Member Type:</MemberCardSubTitle>
+                  <div>{item.memberType}</div>
+                </CompletionCard>
+                <CompletionCard>
+                  <MemberCardSubTitle>Country:</MemberCardSubTitle>
+                  <div>{item.country &&  item.country.countryName}</div>
+                </CompletionCard>
+                { item.ownedBy && <CompletionCard>
+                  <MemberCardSubTitle>ownedBy:</MemberCardSubTitle>
+                  <div>{item.ownedBy.firstName}</div>
+                </CompletionCard>}
+              </CompletionCont>
             </MemberRightCard>
             </MemberMainCard>
           </MembarCard>
           )}
         </MemberContainer>
-        <Pagination currentPage={page} totalPages={2} onPageChange={handlePageChange}/>
+       {count > 0 && <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}/>}
       </RightContainer>
     </Container>
   );

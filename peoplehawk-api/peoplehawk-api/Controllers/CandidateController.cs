@@ -147,9 +147,16 @@ public class CandidateController : BaseController
     }
 
     [HttpGet("member-analytics")]
-
-    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
+    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isInfographicResume = false,
+          bool isMemberResume = false, bool isPeopleHawkResume = false,
+          bool isAll = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
     {
-        return await _memberAnalyticsService.GetList(page,searchTerm,countryId,memberType);
+        return await _memberAnalyticsService.GetList(page,isInfographicResume,isMemberResume,isPeopleHawkResume,isAll, sortOrder,orderedBy, isProfilePhoto, searchTerm,countryId,memberType);
+    }
+
+    [HttpGet("member-analytics-count")]
+    public async Task<ActionResult<int>> MemberAnalyticsCount(bool isInfographicResume = false, bool isMemberResume = false, bool isPeopleHawkResume = false, bool isAll = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+    {
+        return await _memberAnalyticsService.GetCount(isInfographicResume, isMemberResume, isPeopleHawkResume, isAll, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
     }
 }

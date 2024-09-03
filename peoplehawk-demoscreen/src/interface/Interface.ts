@@ -101,11 +101,13 @@ export interface Completion {
 export interface MemberAnalytics {
     userId : number,
     firstName : string,
+    memberType : string,
     lastName : string,
     email : string,
     country : CountryList,
     ownedBy : Owner | null,
     completion : Completion
-    isResumeUpload : boolean
+    isResumeUpload : boolean,
+    isProfilePhoto : boolean
 }
 

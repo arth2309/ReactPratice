@@ -18,7 +18,7 @@ const CandidateTypes : OptionTypes[] = [
 
 const Container = styled.div({
   backgroundColor: "#F7F9FC",
-  width: "400px",
+  width: "500px",
   minHeight: "100vh",
 });
 
