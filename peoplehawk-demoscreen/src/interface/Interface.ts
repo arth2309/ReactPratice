@@ -108,6 +108,33 @@ export interface MemberAnalytics {
     ownedBy : Owner | null,
     completion : Completion
     isResumeUpload : boolean,
-    isProfilePhoto : boolean
+    isProfilePhoto : boolean,
+    photoContent : string | null
 }
+
+export interface OrderBy {
+  field: string
+  direction: string
+}
+
+export interface IdType {
+  id: string
+  name: string
+}
+
+export type StateValue =
+  | string
+  | string[]
+  | number
+  | OrderBy
+  | undefined
+  | null
+  | boolean
+  | number[]
+  | IdType[]
+
+export interface KeyValue {
+  [key: string]: StateValue
+}
+
 

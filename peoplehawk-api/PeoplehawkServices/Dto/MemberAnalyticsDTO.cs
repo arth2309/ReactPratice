@@ -16,6 +16,8 @@ namespace PeoplehawkServices.Dto;
 
     public string? MemberType { get; set; }
 
+    public string? PhotoContent { get; set; }
+
     public Country country { get; set; }
 
     public Owner? OwnedBy { get; set; }

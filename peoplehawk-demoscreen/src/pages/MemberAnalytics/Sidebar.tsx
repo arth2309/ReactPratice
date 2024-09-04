@@ -4,10 +4,9 @@ import { OptionTypes,CountryList } from "../../interface/Interface";
 import { useEffect, useState } from "react";
 import Input from "../../components/layout/form/Input";
 import { CountryList as CountryData } from "../../services/AuthService";
-
-interface DivProps {
-  selected: number;
-}
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { useNavigate } from "react-router-dom";
+import {ROUTES} from '../../constants/routes'
 
 const CandidateTypes : OptionTypes[] = [
   {value : 1, label : 'High School/College Student'},
@@ -30,8 +29,8 @@ const Title = styled.div({
   color: "#4D5767",
   backgroundColor: "#F7F9FC",
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+  alignItems : 'center',
+  justifyContent: 'space-between',
   height: "70px",
   fontSize: "18px",
   padding: "0px 20px",
@@ -64,48 +63,8 @@ const MainContainer = styled.div({
   padding: "20px",
 });
 
-const PreferredPosition = styled.div({
-  display: "flex",
-});
-
-const Employee = styled.div<DivProps>(({ selected }) => ({
-  backgroundColor: selected === 0 ? "#172C4C" : `#D4D6D9`,
-  color: selected === 0 ? "white" : "#394456",
-  cursor: "pointer",
-  width: "fit-content",
-  padding: "10px",
-  borderRadius: "20px 0px 0px 20px",
-}));
-
-const NA = styled.div<DivProps>(({ selected }) => ({
-  backgroundColor: selected === 1 ? "#172C4C" : `#D4D6D9`,
-  color: selected === 1 ? "white" : "#394456",
-  cursor: "pointer",
-  width: "fit-content",
-  padding: "10px",
-  borderLeft: "1px solid #515A6A",
-  borderRight: "1px solid #515A6A",
-}));
-
-const FreeLancer = styled.div<DivProps>(({ selected }) => ({
-  backgroundColor: selected === 2 ? "#172C4C" : `#D4D6D9`,
-  color: selected === 2 ? "white" : "#394456",
-  cursor: "pointer",
-  width: "fit-content",
-  padding: "10px",
-  borderRadius: "0px 20px 20px 0px",
-}));
-
 const Sidebar = (props : any) => {
-  
-
-  const [selectedIndex, setSelectedIndex] = useState<number>(1);
   const [countryOptions,setCountryOptions] = useState<OptionTypes[] | null>(null);
- 
-  const handleDivClick = (index: number) => {
-    setSelectedIndex(index);
-  };
-
   const convertApiToOptions = (apiData: CountryList[]): OptionTypes[] => {
     return apiData.map((item) => ({
       value: item.id,
@@ -113,6 +72,7 @@ const Sidebar = (props : any) => {
     }));
   };
 
+  // eslint-disable-next-line
   useEffect(() => {fetchCountryList()},[])
 
   const fetchCountryList = async () => {
@@ -123,9 +83,16 @@ const Sidebar = (props : any) => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <Container>
-      <Title>Search All Members</Title>
+      <Title>Search All Members
+        <div style={{cursor : 'pointer'}} onClick={() => navigate(ROUTES.HOME)}> 
+      <DashboardIcon />
+      </div>
+      </Title>
+      
       <MainContainer>
         <div>
           <SearchLabel>Keyword</SearchLabel>
@@ -154,26 +121,6 @@ const Sidebar = (props : any) => {
             onChange={(e,value) => {props.onCandidateTypeHandler(value!=null?value.label : undefined)}}
           />
         </div>
-        {/* <div>
-          <SearchLabel>Preferred Position</SearchLabel>
-          <PreferredPosition>
-            <Employee
-              selected={selectedIndex}
-              onClick={() => handleDivClick(0)}
-            >
-              Employee
-            </Employee>
-            <NA selected={selectedIndex} onClick={() => handleDivClick(1)}>
-              N/A
-            </NA>
-            <FreeLancer
-              selected={selectedIndex}
-              onClick={() => handleDivClick(2)}
-            >
-              Freelancer
-            </FreeLancer>
-          </PreferredPosition>
-        </div> */}
         <div>
           <SearchLabel>Base Country</SearchLabel>
          { countryOptions && <ReactSelect

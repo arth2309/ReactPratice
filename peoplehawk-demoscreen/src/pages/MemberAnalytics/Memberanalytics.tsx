@@ -3,7 +3,7 @@ import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
-import { MemberAnalytics as List, OptionTypes } from "../../interface/Interface";
+import { MemberAnalytics as List, OptionTypes , KeyValue, StateValue} from "../../interface/Interface";
 import { MemberAnalyticsList,MemberAnalyticsCount } from "../../services/MemberAnalyticsService";
 import { ReactSelect } from "../../components/layout/form/Select";
 import  personalityQuizCompleted from '../../assests/img/personality_quiz-completed.svg'
@@ -19,9 +19,13 @@ import cvGeneratedCompleted from '../../assests/img/cv_genrated-completed.svg'
 import documentCompleted from '../../assests/img/document-completed.svg'
 import documentEmpty from '../../assests/img/document-empty.svg'
 import DoneIcon from '@mui/icons-material/Done';
+import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
 
-
-
+const defaults: KeyValue = {
+  searchTerm: '',
+  page: 1,
+  filters: []
+};
 
     const SortTypes : OptionTypes[] = [
       {value : 1, label : 'Last Updated'},
@@ -37,11 +41,6 @@ interface SwitchHandleProps {
     }
     
     
-interface VideoProps {
-    elevator : boolean,
-    video : boolean,
-    all : boolean
-}
 
 interface ResumeProps {
     infographic : boolean,
@@ -109,26 +108,6 @@ const Member = styled.div({
 const Shortlist = styled.div({
   display: "flex",
   gap: "40px",
-});
-const AllShortlist = styled.div({
-  color: "#0097A2",
-  fontSize: "20px",
-  fontWeight: 500,
-  paddingTop: "2px",
-});
-
-const DyamicShortlist = styled.div({
-  color: "#CED0D7",
-  fontSize: "20px",
-  fontWeight: 500,
-  paddingTop: "4px",
-});
-
-const MemberAnalytics = styled.div({
-  color: "#0097A2",
-  fontSize: "20px",
-  fontWeight: 500,
-  paddingTop: "6px",
 });
 
 const GreyColor = styled.span({
@@ -271,7 +250,7 @@ const MemberMainCard = styled.div({
    gap : '40px'
 });
 
-const UpdatedDate = styled .div ({
+const UpdatedDate = styled.div ({
   display : 'flex',
   justifyContent : 'end'
 });
@@ -320,7 +299,6 @@ const ItemCard = styled.div<ColorProps>`
 const Memberanalytics = () => {
 
     const [hasPhoto,setHasPhoto] = useState<boolean>(false);
-    // const [videoType,setVideoType] = useState<VideoProps>({elevator : false, video : false, all : true});
     const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : false});
     const [searchString,setSearchString] = useState<string>('');
     const [candidateType, setCandidatetype] = useState<string | undefined>(undefined);
@@ -334,6 +312,10 @@ const Memberanalytics = () => {
     const [sortBy,setSortedBy] = useState<string>('Last updated');
     const [orderedBy,setOrderedBy] = useState<number>(0);
     const[count,setCount] = useState<number>(0);
+
+   
+
+  const[state,setState] = useUrlSearchState(defaults);
 
   const handleSwitchToggle = () => {
     setIsOn(prevState => !prevState);
@@ -355,12 +337,18 @@ const Memberanalytics = () => {
 
     const searchHandler = (value : string) =>
     {
+    
+      setState({ searchTerm: 'React', page: 2});
+      console.log(state);
         setSearchString(value.trim());
         setPage(1);
+        
     }
 
    const candidateTypeHandler = (value : string | undefined) =>
    {
+    setState({ searchTerm: 'React', page: 3 });
+    console.log(state);
      setCandidatetype(value);
      setPage(1);
    }
@@ -372,13 +360,13 @@ const Memberanalytics = () => {
     }
 
    // eslint-disable-next-line
-   useEffect(() => {fetchData()},[page,sortOrder,orderedBy,searchString,country,candidateType,hasPhoto,resumeType]);
+   useEffect(() => {fetchData(); },[page,sortOrder,orderedBy,searchString,country,candidateType,hasPhoto,resumeType]);
 
    const fetchData = async() => {
       const result = await MemberAnalyticsList(page,resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
       result && setFilterData(result);;
       const result1 = await MemberAnalyticsCount(resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
-      if(result1 == 0)
+      if(result1 === 0)
       {
         setCount(0);
         setTotalPages(0);
@@ -426,8 +414,8 @@ const Memberanalytics = () => {
           />
               </SortedByDiv>
               <OrderBy>
-                <Asc onClick={() => {setSortOrder('asc')}}>ASC {sortOrder == 'asc' && <DoneIcon />}</Asc>
-                <Dsc onClick={() => {setSortOrder('desc')}}>DESC {sortOrder == 'desc' && <DoneIcon />}</Dsc>
+                <Asc onClick={() => {setSortOrder('asc')}}>ASC {sortOrder === 'asc' && <DoneIcon />}</Asc>
+                <Dsc onClick={() => {setSortOrder('desc')}}>DESC {sortOrder === 'desc' && <DoneIcon />}</Dsc>
               </OrderBy>
             </Shortlist>
           </LowerHeader>
@@ -445,7 +433,7 @@ const Memberanalytics = () => {
             <UpdatedDate>Updated : 28 August 2024</UpdatedDate>
             <MemberMainCard>
             <MemberLeftCard>
-              <MemberImg src={profile} alt="profile" />
+              <MemberImg src={item.photoContent? `data:image/jpeg;base64,${item.photoContent}`:profile} alt="profile" />
               <CompletionCont>
                 <CompletionCard>
                   <CompletionImg src={item.completion.isPersonalityQuizGiven? personalityQuizCompleted : personalityQuizEmpty} alt="personality-quiz" />
