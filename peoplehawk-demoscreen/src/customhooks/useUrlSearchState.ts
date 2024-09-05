@@ -135,18 +135,14 @@ export const useUrlSearchState = <T extends KeyValue>(
     () => parseSearchStringToState<T>(search, defaults) ,
     [search, defaults]
   )
-console.log(parseSearchStringToState<T>(search, defaults) );
+
   const setState = useCallback(
-    (overrides: T) =>{
-        // navigate(
-        //     `${pathname}?${queryString.stringify(
-        //       overrideAndEncodeState<T>(overrides, state, defaults)
-        //     )}`,
-        //     { replace: true } 
-        //   ); 
-          console.log(`${pathname}?${queryString.stringify(
+    (overrides: T) =>
+        navigate(
+            `${pathname}?${queryString.stringify(
               overrideAndEncodeState<T>(overrides, state, defaults)
-            )}`)},
+            )}`
+          ),
     [pathname, state, defaults]
   )
 

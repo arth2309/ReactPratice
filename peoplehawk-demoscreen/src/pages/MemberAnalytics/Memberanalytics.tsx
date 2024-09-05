@@ -20,11 +20,18 @@ import documentCompleted from '../../assests/img/document-completed.svg'
 import documentEmpty from '../../assests/img/document-empty.svg'
 import DoneIcon from '@mui/icons-material/Done';
 import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
+import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
+import { useNavigate } from "react-router-dom";
 
-const defaults: KeyValue = {
-  searchTerm: '',
+const defaults = {
   page: 1,
-  filters: []
+  isInfographicResume: false,
+  isMemberResume: false,
+  isPeopleHawkResume: false,
+  isAll: false,
+  sortOrder: 'asc',
+  orderedBy: 1,
+  isProfilePhoto: false,
 };
 
     const SortTypes : OptionTypes[] = [
@@ -243,6 +250,11 @@ const MembarCard = styled.div<TransistionProps>(({isVisible,delay}) => ({
   transitionDelay : `${delay}ms`,
   boxShadow:
   "0 .125rem .25rem rgba(0, 0, 0, .075), 0 .25rem .5rem rgba(0, 0, 0, .05)",
+  '&:hover': {
+    transform: `translateX(${isVisible ? '0' : '100vw'}) scale(1.05)`,
+    boxShadow: "0 .25rem .5rem rgba(0, 0, 0, .15), 0 .5rem .75rem rgba(0, 0, 0, .1)",
+    cursor: 'pointer', // Optional: change cursor to pointer for better UX
+  },
 }));
 
 const MemberMainCard = styled.div({
@@ -298,24 +310,28 @@ const ItemCard = styled.div<ColorProps>`
 
 const Memberanalytics = () => {
 
-    const [hasPhoto,setHasPhoto] = useState<boolean>(false);
-    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : false, peoplehawk : false, member : false, any : false});
-    const [searchString,setSearchString] = useState<string>('');
-    const [candidateType, setCandidatetype] = useState<string | undefined>(undefined);
-    const [country, setCountry] = useState<number>(0);
+  const {state} = useMemberAnalytics();
+    const [hasPhoto,setHasPhoto] = useState<boolean>(state.isProfilePhoto);
+    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : state.isInfographicResume, peoplehawk : state.isPeopleHawkResume, member : state.isAll, any : state.isAll});
+    const [searchString,setSearchString] = useState<string>(state.searchTerm ? state.searchTerm :'');
+    const [candidateType, setCandidatetype] = useState<string | undefined>(state.memberType);
+    const [country, setCountry] = useState<number>(state.countryId ? state.countryId : 0);
     const [filterData,setFilterData] = useState<List[]>([]);
     const [page,setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(2);
     const [isVisible, setIsVisible] = useState<boolean>(false);
-    const [isOn, setIsOn] = useState<boolean>(false);
-    const [sortOrder,setSortOrder] = useState<string>('asc');
-    const [sortBy,setSortedBy] = useState<string>('Last updated');
-    const [orderedBy,setOrderedBy] = useState<number>(0);
+    const [isOn, setIsOn] = useState<boolean>(state.isOn);
+    const [sortOrder,setSortOrder] = useState<string>(state.sortOrder);
+    const [sortBy,setSortedBy] = useState<string>(state.sortBy);
+    const [orderedBy,setOrderedBy] = useState<number>(state.orderedBy);
     const[count,setCount] = useState<number>(0);
-
    
+   const navigate = useNavigate();
 
-  const[state,setState] = useUrlSearchState(defaults);
+  const[urlState,seturlState] = useUrlSearchState(defaults);
+  
+
+  console.log(state);
 
   const handleSwitchToggle = () => {
     setIsOn(prevState => !prevState);
@@ -335,11 +351,29 @@ const Memberanalytics = () => {
 
     };
 
+   const NavigationHandler = () => {
+         state.isInfographicResume = resumeType.infographic;
+         state.isMemberResume = resumeType.member;
+         state.isPeopleHawkResume = resumeType.peoplehawk;
+         state.isAll = resumeType.any;
+         state.isProfilePhoto = hasPhoto;
+         state.orderedBy = orderedBy;
+         state.searchTerm = searchString;
+         state.countryId = country;
+         state.memberType = candidateType;
+         state.sortOrder = sortOrder;
+         state.orderedBy = orderedBy;
+         state.sortBy = sortBy;
+         state.isOn = isOn;
+         navigate('/home');
+   } 
+
+
     const searchHandler = (value : string) =>
     {
     
-      setState({ searchTerm: 'React', page: 2});
-      console.log(state);
+       seturlState(defaults);
+      //  state.searchTerm = value;
         setSearchString(value.trim());
         setPage(1);
         
@@ -347,15 +381,18 @@ const Memberanalytics = () => {
 
    const candidateTypeHandler = (value : string | undefined) =>
    {
-    setState({ searchTerm: 'React', page: 3 });
+   
     console.log(state);
      setCandidatetype(value);
+    //  state.memberType = value;
      setPage(1);
    }
 
    const countryTypeHandler = (value : number) =>
     {
+     
       setCountry(value);
+      // state.countryId = value
       setPage(1);
     }
 
@@ -377,7 +414,7 @@ const Memberanalytics = () => {
 
   return (
     <Container>
-      <Sidebar onSearchHandler = {searchHandler} onCandidateTypeHandler = {candidateTypeHandler} onCountryTypeHandler = {countryTypeHandler} />
+      <Sidebar onSearchHandler = {searchHandler} onCandidateTypeHandler = {candidateTypeHandler} onCountryTypeHandler = {countryTypeHandler} onNavigation = {NavigationHandler} searchString = {state.searchTerm} memberType = {state.memberType} countryId = {state.countryId}/>
       <RightContainer>
         <Header>
           <HeaderContainer>

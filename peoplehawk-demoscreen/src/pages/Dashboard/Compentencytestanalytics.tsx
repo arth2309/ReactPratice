@@ -1,5 +1,5 @@
 import React, { useState, useEffect , memo} from 'react';
-import { styled } from 'styled-components';
+import { css, keyframes, styled } from 'styled-components';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
 import { ReactSelect } from '../../components/layout/form/Select';
@@ -21,27 +21,55 @@ interface ModalProps {
     candidates : UserCompetency[] | null;
   }
 
-const ModalOverlay = styled.div`
+  const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(-50px);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const ModalOverlay = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: ${props => (props.isOpen ? '1' : '0')};
+  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  transition: opacity 0.3s ease-in-out;
+  animation: ${props => (props.isOpen ? css`${fadeIn} 0.3s ease-in-out` : 'none')};
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<{ isOpen: boolean }>`
   background: #eef2f6;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 800px;
   padding: 20px 10px;
   position: relative;
+  transform: ${props => (props.isOpen ? 'translateY(0)' : 'translateY(-50px)')};
+  opacity: ${props => (props.isOpen ? '1' : '0')};
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  animation: ${props => (props.isOpen ? css`${slideIn} 0.3s ease-in-out` : 'none')};
 `;
+
+
 
 const ModalHeader = styled.div`
   display: flex;
@@ -233,8 +261,8 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
   if(!isOpen) {return null}
 
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay isOpen = {isOpen} onClick={onClose}>
+      <ModalContent isOpen = {isOpen} onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <Title>Competency Test Analytics</Title>
           <ModalClose onClick={onClose}>X</ModalClose>

@@ -88,7 +88,7 @@ const Sidebar = (props : any) => {
   return (
     <Container>
       <Title>Search All Members
-        <div style={{cursor : 'pointer'}} onClick={() => navigate(ROUTES.HOME)}> 
+        <div style={{cursor : 'pointer'}} onClick={() => {props.onNavigation()}}> 
       <DashboardIcon />
       </div>
       </Title>
@@ -101,14 +101,13 @@ const Sidebar = (props : any) => {
             <SearchKeyword>
               <Input 
                placeholder="i.e: Member's Name" 
+              defaultValue={props.searchString}
                onChange={(e) => {props.onSearchHandler(e.target.value)}}
                  />
             </SearchKeyword>
             <GreenSearch>Search</GreenSearch>
           </SearchDiv>
         </div>
-       
-        
         <div > 
           <SearchLabel>Member Type</SearchLabel>
 
@@ -116,6 +115,7 @@ const Sidebar = (props : any) => {
             options={CandidateTypes}
             placeholder=""
             isClearable
+            defaultValue={CandidateTypes.find((item) => item.label === props.memberType)}
             name="countryId"
             showDropdownIndicator
             onChange={(e,value) => {props.onCandidateTypeHandler(value!=null?value.label : undefined)}}
@@ -128,6 +128,7 @@ const Sidebar = (props : any) => {
             placeholder=""
             isClearable
             name="country"
+            defaultValue={countryOptions.find((item) => item.value === props.countryId)}
             showDropdownIndicator
             onChange={(e,value) => {props.onCountryTypeHandler(value!=null?value.value : 0)}}
           /> }

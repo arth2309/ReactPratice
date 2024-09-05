@@ -20,6 +20,7 @@ import { RootState,AppDispatch } from "../../store/Redux";
 import { fetchData as fet } from "../../services/HomeService";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
+import Addeducation from "./Addeducation";
 
 
 interface TrophyProps {
@@ -369,6 +370,9 @@ const Dashboard  = () => {
       }
 
       const [isModalOpen, setModalOpen] = useState(false);
+      const [isProfileOpen,setProfileOpen] = useState<boolean>(false);
+      const openProfile = () => {setProfileOpen(true)};
+      const closeProfile = useCallback(() => {setProfileOpen(false)},[]);
       const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast(TOAST.MOBILE_VIEW_NOT_SUPPORTED.title,TOAST.MOBILE_VIEW_NOT_SUPPORTED.description,TOAST.MOBILE_VIEW_NOT_SUPPORTED.type)};
       const closeModal = useCallback(() => {setModalOpen(false)},[]);
 
@@ -377,6 +381,7 @@ const Dashboard  = () => {
 
       
       <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} competencies = {competencies} candidates = {candidates} />
+      <Addeducation isOpen = {isProfileOpen} onClose={closeProfile}  />
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
@@ -482,10 +487,11 @@ const Dashboard  = () => {
                 </Card3Item>
                 
               </Card3>
-              <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
+              <PrimaryButton onClick={() => {navigate(ROUTES.MEMBER_ANALYTICS)}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
               <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
+              <PrimaryButton onClick={openProfile}>Add Education</PrimaryButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />

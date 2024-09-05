@@ -1,13 +1,18 @@
+import { CSSProperties } from 'react';
 import styled from 'styled-components';
+
+
 
 interface InputProps {
     label?: string;
     type?: string;
-    name?: string; 
+    name?: string;
+    defaultValue? : string | number | readonly string[]  
     required?: boolean;
     error?: boolean;
     className? : string;
     placeholder? : string;
+    style? : CSSProperties;
     onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 
@@ -39,7 +44,7 @@ const CustomLabel = styled.label`
 `;
 
 const Input: React.FC<InputProps> = (props) => {
-    const { label, type = 'text', required = false, onClick, onChange, name,className,placeholder} = props;
+    const { label, type = 'text', required = false, onClick, onChange, name,className,placeholder,defaultValue,style} = props;
   
     
 
@@ -52,7 +57,9 @@ const Input: React.FC<InputProps> = (props) => {
                 onClick={onClick}
                 onChange={onChange}
                 className= {className}
+                defaultValue={defaultValue}
                 name={name}
+                style={style}
                 placeholder={placeholder}
                 
             />
