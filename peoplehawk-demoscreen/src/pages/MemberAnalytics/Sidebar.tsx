@@ -6,7 +6,7 @@ import Input from "../../components/layout/form/Input";
 import { CountryList as CountryData } from "../../services/AuthService";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useNavigate } from "react-router-dom";
-import {ROUTES} from '../../constants/routes'
+import  BounceLoader  from "react-spinners/BounceLoader";
 
 const CandidateTypes : OptionTypes[] = [
   {value : 1, label : 'High School/College Student'},
@@ -24,6 +24,14 @@ const Container = styled.div({
 const SearchKeyword = styled.div({
   width: "215px",
 });
+
+const LoaderDiv = styled.div({
+  height : '100%',
+  display : 'flex',
+  flexDirection : 'column',
+  alignItems : 'center',
+  justifyContent : 'center'
+})
 
 const Title = styled.div({
   color: "#4D5767",
@@ -73,9 +81,10 @@ const Sidebar = (props : any) => {
   };
 
   // eslint-disable-next-line
-  useEffect(() => {fetchCountryList()},[])
+  useEffect(() => { setTimeout(() => {fetchCountryList()},2000)},[])
 
   const fetchCountryList = async () => {
+  
     const response = await CountryData();
     if (response) {
       const transformedoptions = convertApiToOptions(response);
@@ -86,13 +95,15 @@ const Sidebar = (props : any) => {
   const navigate = useNavigate();
 
   return (
+    <div>
+     
     <Container>
       <Title>Search All Members
         <div style={{cursor : 'pointer'}} onClick={() => {props.onNavigation()}}> 
       <DashboardIcon />
       </div>
       </Title>
-      
+      {countryOptions ? 
       <MainContainer>
         <div>
           <SearchLabel>Keyword</SearchLabel>
@@ -134,7 +145,10 @@ const Sidebar = (props : any) => {
           /> }
         </div>
       </MainContainer>
+      : <LoaderDiv><BounceLoader /></LoaderDiv>}
     </Container>
+    
+    </div>
   );
 };
 

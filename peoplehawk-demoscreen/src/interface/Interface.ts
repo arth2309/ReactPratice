@@ -137,4 +137,22 @@ export interface KeyValue {
   [key: string]: StateValue
 }
 
+export interface Subject {
+  subject : string,
+  grade : number,
+  rewardedDate : Date | null
+}
 
+export interface FormValues {
+comments : string,
+subjects : Subject[],
+school : string 
+}
+
+export interface EducationData {
+  school : string,
+  subject : string,
+  grade : number,
+  rewardedDate : Date | null
+  comments : string 
+}
