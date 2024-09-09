@@ -51,7 +51,11 @@ export const API_ENDPOINTS = {
         }
     
         return url;
-    }
+    },
+
+    EDUCATION_DETAIL_USER_ID : (userId : number) => `candidate/education-detail?UserId=${userId}`,
+
+    EDUCATION_DETAIL :  `candidate/education-detail`
 }
 
 

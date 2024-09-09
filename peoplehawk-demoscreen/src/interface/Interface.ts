@@ -137,10 +137,26 @@ export interface KeyValue {
   [key: string]: StateValue
 }
 
+export interface MemberAnalyticsFilter  {   
+  page: number;
+  isInfographicResume: boolean;
+  isMemberResume: boolean; 
+  isPeopleHawkResume: boolean; 
+  isAll: boolean;
+  sortOrder: string;
+  orderedBy: number; 
+  isProfilePhoto: boolean; 
+  searchTerm: string; 
+  countryId: number;
+  memberType: string;
+  sortBy : string;
+  isOn : boolean;
+}
+
 export interface Subject {
   subject : string,
-  grade : number,
-  rewardedDate : Date | null
+  grade : string,
+  rewardedDate : Date 
 }
 
 export interface FormValues {
@@ -153,6 +169,17 @@ export interface EducationData {
   school : string,
   subject : string,
   grade : number,
-  rewardedDate : Date | null
+  rewardedDate : Date 
   comments : string 
+}
+
+export interface EducationDetail
+{
+  id: number,
+  userId: number,
+  school: string,
+  subject: string,
+  grade: string,
+  rewardedDate: Date ,
+  comments: string
 }

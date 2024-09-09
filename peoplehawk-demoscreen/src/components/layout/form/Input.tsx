@@ -9,23 +9,21 @@ interface InputProps {
     name?: string;
     defaultValue? : string | number | readonly string[]  
     required?: boolean;
-    error?: boolean;
+    error?: boolean ;
     className? : string;
     placeholder? : string;
     style? : CSSProperties;
     onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 
-   
-    
 }
 
-const CustomInput = styled.input`
+const CustomInput = styled.input<InputProps>`
     width: 100%;
     padding: 0.25rem;
     font-size: 1rem;
     line-height: 1.5;
-    border: 1px solid #ced4da;
+    border: 1px solid ${(props) => !props.error ?'#ced4da' : 'red'};
     border-radius: 0.25rem;
     background-color: #F9F9F9;
     box-sizing: border-box;
@@ -44,7 +42,7 @@ const CustomLabel = styled.label`
 `;
 
 const Input: React.FC<InputProps> = (props) => {
-    const { label, type = 'text', required = false, onClick, onChange, name,className,placeholder,defaultValue,style} = props;
+    const { label, type = 'text', required = false, onClick, onChange, name,className,placeholder,defaultValue,style,error = false} = props;
   
     
 
@@ -60,10 +58,10 @@ const Input: React.FC<InputProps> = (props) => {
                 defaultValue={defaultValue}
                 name={name}
                 style={style}
+                error = {error}
                 placeholder={placeholder}
                 
             />
-            
         </div>
     );
 }

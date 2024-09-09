@@ -12,7 +12,7 @@ import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {fetchPhoto,uploadPhoto,getCompentencies,getUserCompentencies} from "../../services/HomeService";
-import { Competency,UserCompetency } from "../../interface/Interface";
+import { Competency,EducationDetail,UserCompetency } from "../../interface/Interface";
 import Compentencytestanalytics from "./Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
@@ -25,6 +25,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { EducationData } from "../../interface/Interface";
 import Updateeducation from "./Updateeducation";
+import queryString from "query-string";
+import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
+import { GetList,DeleteData } from "../../services/EducationDetailService";
 
 
 
@@ -375,9 +378,10 @@ const Dashboard  = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const[competencies,setCompetencies] = useState<Competency[] | null>(null);
   const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
-  const [dataList, setDataList] = useState<EducationData[]>([]);
+  const [dataList, setDataList] = useState<EducationDetail[]>([]);
+  const {state} = useMemberAnalytics();
 
-  const handleAddData = (data: EducationData[]) => {
+  const handleAddData = (data: EducationDetail[]) => {
     setDataList((prevState) => [...prevState,...data]);
     console.log(dataList);
     setProfileOpen(false);
@@ -399,6 +403,8 @@ const Dashboard  = () => {
         dispatch(fet(authctx.userData.Id));
         const cand = await getUserCompentencies();
         cand && setCandidates(cand);
+        const list = await GetList(authctx.userData.Id);
+        list && setDataList(list);
     }
   }
 
@@ -424,10 +430,12 @@ const Dashboard  = () => {
       const [isProfileOpen,setProfileOpen] = useState<boolean>(false);
       const [isUpdateProfileOpen,setUpdateProfileOpen] = useState<boolean>(false);
       const [index,setIndex] = useState<number>(0);
-      const [updateValues,setUpdateValues] = useState<EducationData>({
+      const [updateValues,setUpdateValues] = useState<EducationDetail>({
+        id : 0,
+        userId : 0,
         school : '',
-        grade : 0,
-        rewardedDate : null,
+        grade : '',
+        rewardedDate : new Date,
         subject : '',
         comments : ''
      });
@@ -438,9 +446,9 @@ const Dashboard  = () => {
       const closeModal = useCallback(() => {setModalOpen(false)},[]);
       
 
-      const HandleDelete = (id : number) => {
-      
-        const updatedItems = dataList.filter((_, i) => i !== id);
+      const HandleDelete = async(index : number,id : number) => {
+      await DeleteData(id);
+      const updatedItems = dataList.filter((_, i) => i !== index);
        setDataList(updatedItems);
     }
 
@@ -454,7 +462,7 @@ const Dashboard  = () => {
       }
   }
 
-  const EditData = (values : EducationData) =>
+  const EditData = (values : EducationDetail) =>
   {
     const updatedItems = dataList.map((item, i) =>
       i === index ? values : item
@@ -574,7 +582,7 @@ const Dashboard  = () => {
                 </Card3Item>
                 
               </Card3>
-              <PrimaryButton onClick={() => {navigate(ROUTES.MEMBER_ANALYTICS)}}>Take Your Personality Test</PrimaryButton>
+              <PrimaryButton onClick={() => {navigate(`/member-analytics?${queryString.stringify(state)}`)}}>Take Your Personality Test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
               <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
@@ -614,7 +622,7 @@ const Dashboard  = () => {
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>
-                <div onClick={() => HandleDelete(index)}><DeleteIcon /></div>
+                <div onClick={() => HandleDelete(index,data.id)}><DeleteIcon /></div>
                 <div onClick={() => OpenEditModal(index)}><EditIcon /> </div>
               </IconCard>
             </EducationMainSubCard>

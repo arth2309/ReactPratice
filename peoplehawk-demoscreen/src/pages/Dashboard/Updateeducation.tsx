@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import { EducationData } from "../../interface/Interface";
+import { EducationDetail } from "../../interface/Interface";
 import { CSSProperties } from "react";
 import Yup from 'yup'
 import { Form, Formik } from "formik";
@@ -19,8 +19,8 @@ const FlexCss : CSSProperties = {
 interface ModalProps {
     isOpen : boolean,
     onClose : () => void,
-    defaultValues : EducationData,
-    onEditHandler : (values : EducationData) => void
+    defaultValues : EducationDetail,
+    onEditHandler : (values : EducationDetail) => void
    
 }
 
@@ -116,7 +116,7 @@ const Updateeducation : React.FC<ModalProps> = ({isOpen, onClose,defaultValues,o
             <ModalBody>
             <Formik
               initialValues={defaultValues}
-              onSubmit={(values : EducationData) => {
+              onSubmit={(values : EducationDetail) => {
                  onEditHandler(values);
               }}
             >

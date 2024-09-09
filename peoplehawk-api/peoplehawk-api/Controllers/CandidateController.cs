@@ -20,8 +20,9 @@ public class CandidateController : BaseController
     private readonly ICompentencyService _compentencyService;
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
     private readonly IMemberAnalyticsService _memberAnalyticsService;
+    private readonly IEducationDetailService _educationDetailService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -32,6 +33,7 @@ public class CandidateController : BaseController
         _compentencyService = compentencyService;
         _userCompentencyDetailService = userCompentencyDetailService;
         _memberAnalyticsService = memberAnalyticsService;
+        _educationDetailService = educationDetailService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -158,5 +160,31 @@ public class CandidateController : BaseController
     public async Task<ActionResult<int>> MemberAnalyticsCount(bool isInfographicResume = false, bool isMemberResume = false, bool isPeopleHawkResume = false, bool isAll = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
         return await _memberAnalyticsService.GetCount(isInfographicResume, isMemberResume, isPeopleHawkResume, isAll, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
+    }
+
+    [HttpPost("education-detail")]
+    public async Task<ActionResult<List<EducationDetailDto>>>  AddEducationDetail([FromBody] List<EducationDetailDto> educationDetailDtos)
+    {
+        ValidateModel();
+        return await _educationDetailService.AddData(educationDetailDtos);
+    }
+
+    [HttpGet("education-detail")]
+    public async Task<ActionResult<List<EducationDetailDto>>> EducationDetailList(int UserId)
+    {
+        return await _educationDetailService.GetList(UserId);
+    }
+
+    [HttpDelete("education-detail")]
+    public async Task<ActionResult<EducationDetailDto>> DeleteEducationDetail(int UserId)
+    {
+        return await _educationDetailService.DeleteData(UserId);
+    }
+
+    [HttpPut("education-detail")]
+    public async Task<ActionResult<EducationDetailDto>> UpdateEducationDetail([FromBody]EducationDetailDto educationDetailDto)
+    {
+        ValidateModel();
+        return await _educationDetailService.UpdateData(educationDetailDto);
     }
 }

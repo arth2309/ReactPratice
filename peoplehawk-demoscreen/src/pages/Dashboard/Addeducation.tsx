@@ -1,16 +1,24 @@
-import { Formik, Form, FieldArray } from 'formik';
+import { Formik, Form, FieldArray, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Input from '../../components/layout/form/Input';
 import styled, { css, keyframes } from "styled-components";
 import { CSSProperties } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
-import { FormValues ,EducationData} from '../../interface/Interface';
+import { FormValues ,EducationDetail} from '../../interface/Interface';
+import DatePicker from 'react-datepicker';
+import { useContext } from 'react';
+import AuthContext from '../../store/AuthContext';
+import {format, setDate} from 'date-fns';
+import "react-datepicker/dist/react-datepicker.css";
+import { AddData } from '../../services/EducationDetailService';
 
 const OverrideCss : CSSProperties = {
     backgroundColor : 'white',
     height : '45px', 
 }
+
+
 
 const FlexCss : CSSProperties = {
     display : 'flex',
@@ -20,7 +28,7 @@ const FlexCss : CSSProperties = {
 interface ModalProps {
     isOpen : boolean,
     onClose : () => void;
-    onAddData: (data: EducationData[]) => void; // Add this prop
+    onAddData: (data: EducationDetail[]) => void; // Add this prop
 }
 
 
@@ -29,13 +37,14 @@ interface ModalProps {
 
 
 const validationSchema = Yup.object({
+    school : Yup.string().required('Please Enter School/Organisation name'),
     subjects: Yup.array().of(
       Yup.object({
         subject: Yup.string().required('Required'),
         grade: Yup.string().required('Required'),
         rewardedDate: Yup.date().required('Required').nullable(),
       })
-    ).required('At least one subject is required'),
+    )
 });
 
 const fadeIn = keyframes`
@@ -116,8 +125,13 @@ const ModalBody = styled.div`
 
 const FieldDiv = styled.div({
     display : 'flex',
-    gap : '5px'
+    gap : '12px',
+    margin : '24px 0px'
 });
+
+const SchoolDiv = styled.div({
+    margin : '8px 0px'
+})
 
 const LabelDiv = styled.div({
     display : 'flex',
@@ -127,8 +141,14 @@ const LabelDiv = styled.div({
 const AddButton = styled.button({
     background : 'transparent',
     color : 'green',
-    padding: '0px 0px 4px 6px' 
+    padding: '0px 0px 4px 6px', 
+    marginBottom : '30px'
 });
+
+const Comments = styled.textarea({
+    width : '99%',
+    height : '65px'
+})
 
 const ClearButton = styled.button({
     background : 'transparent',
@@ -137,23 +157,48 @@ const ClearButton = styled.button({
     fontSize: '30px'
 });
 
+const wrapperStyle = {
+    border: '2px solid #007bff',
+    borderRadius: '4px',
+    padding: '8px',
+    fontSize: '16px',
+  };
+
 const intialValues : FormValues = {
     comments : '',
-    subjects : [{subject : '',grade : 0,rewardedDate : null}],
+    subjects : [{subject : '',grade : '',rewardedDate : new Date}],
     school : ''
 }
 
 const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
 
-    const DataConversion = (data : FormValues) : EducationData[] => {
-        const TramformB : EducationData[] = data.subjects.map((item) => ({school : data.school,subject : item.subject,grade : item.grade,rewardedDate : item.rewardedDate,comments : data.comments }))
+    const DataConversion = (data : FormValues) : EducationDetail[] => {
+        const TramformB : EducationDetail[] = data.subjects.map((item) => ({school : data.school,subject : item.subject,grade : item.grade,rewardedDate : item.rewardedDate,comments : data.comments ,id : 0, userId : authctx.userData ? authctx.userData.Id : 0}))
+        console.log( data.subjects[0].rewardedDate.toLocaleDateString());
           return TramformB;
     }
+
+    const authctx = useContext(AuthContext);
 
     if(!isOpen) {return null}
 
     return(
+
+       
+
+
         <ModalOverlay isOpen={isOpen} onClick={onClose}>
+             <style>
+                {`
+                .datepicker
+                {
+                  height : 40px;
+                  border : 1px solid #ced4da;
+                  border-radius : 0.25rem; 
+                  font-size : 1rem;
+                }
+            `}
+            </style>
           <ModalContent isOpen={isOpen} onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
             <Title>Add</Title>
@@ -163,16 +208,22 @@ const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
             <Formik
               initialValues={intialValues}
               validationSchema={validationSchema}
-              onSubmit={(values : FormValues) => {
+              onSubmit={async(values : FormValues) => {
+                await AddData(DataConversion(values));
                 onAddData(DataConversion(values));
               }}
             >
-              {({ values, setFieldValue }) => (
+              {({ values, setFieldValue,touched,errors}) => (
                 <Form>
-                    <div>
-                     <label>School/Organisation *</label>
-                     <Input style={OverrideCss} required name='school' onChange={(e) => setFieldValue('school', e.target.value)} />
-                     </div>
+                    <SchoolDiv>
+                     <label>School / Organisation *</label>
+                     <Input style={OverrideCss} required name='school' error={Boolean(errors.school && touched.school)} onChange={(e) => setFieldValue('school', e.target.value)} />
+                     <ErrorMessage
+    
+                      name='school'
+                      component="div"
+                    />
+                     </SchoolDiv>
                   <FieldArray name="subjects">
                     {({ remove, push }) => (
                       <div>
@@ -183,12 +234,18 @@ const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
                           </LabelDiv>
                           <div style={FlexCss}>
                           <div>
-                      {values.subjects.length > 0 &&
-                        values.subjects.map((subject, index) => (
+                      {
+                        values.subjects.map((_,index) => (
                           <FieldDiv key={index}>
-                          <Input style={OverrideCss} name={`subjects.${index}.subject`} placeholder="Subject" onChange={(e) => setFieldValue(`subjects.${index}.subject`, e.target.value)} />
+                            <div>
+                          <Input style={OverrideCss} name={`subjects.${index}.subject`} error = {Boolean(errors.subjects &&  errors.subjects[index] &&  touched.subjects?.[index]?.subject)} placeholder="Enter Level and Subject name" onChange={(e) => setFieldValue(`subjects.${index}.subject`, e.target.value)} />
+                          <ErrorMessage
+                      name={`subjects.${index}.subject`}
+                      component="div"
+                    />
+                           </div>
                             <Input style={OverrideCss} name={`subjects.${index}.grade`} placeholder="Grade" type='number' onChange={(e) => setFieldValue(`subjects.${index}.grade`, e.target.value)} />
-                            <Input style={OverrideCss} name={`subjects.${index}.rewardedDate`} type="date" placeholder="Rewarded Date" onChange={(e) => setFieldValue(`subjects.${index}.rewardedDate`, e.target.value)}  />
+                            <DatePicker className='datepicker' name={`subjects.${index}.rewardedDate`} showFullMonthYearPicker selected={values.subjects[index].rewardedDate} placeholderText='Pick a Date' onChange={(date) => setFieldValue(`subjects.${index}.rewardedDate`,date)}  />
 
                             <ClearButton
                               disabled={values.subjects.length <= 1}
@@ -201,6 +258,7 @@ const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
                         ))}
                         </div>
                         <AddButton
+                        
                         type="button"
                         onClick={() => push({ subject: '', grade: '', rewardedDate: '' })}
                       >
@@ -208,7 +266,7 @@ const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
                       </AddButton>
                       </div>
                       <label>Comments</label>
-                          <textarea style={{width : '99%'}} name='comments' onChange={(e) => setFieldValue('comments', e.target.value)}  />
+                          <Comments  name='comments' onChange={(e) => setFieldValue('comments', e.target.value)}  />
                     </div>
                     )}
                   </FieldArray>

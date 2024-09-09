@@ -1,26 +1,13 @@
 import React, { createContext, ReactNode, useState, useContext} from 'react';
+import { MemberAnalyticsFilter } from '../interface/Interface';
 
 type MemberAnalyticsProviderProps = {
   children: ReactNode;
 };
 
-interface MemberAnalytics {   
-  page: number;
-  isInfographicResume: boolean;
-  isMemberResume: boolean; 
-  isPeopleHawkResume: boolean; 
-  isAll: boolean;
-  sortOrder: string;
-  orderedBy: number; 
-  isProfilePhoto: boolean; 
-  searchTerm?: string; 
-  countryId?: number;
-  memberType?: string;
-  sortBy : string;
-  isOn : boolean;
-}
 
-const defaultState: MemberAnalytics = {
+
+const defaultState: MemberAnalyticsFilter = {
   page: 1,
   isInfographicResume: false,
   isMemberResume: false,
@@ -30,16 +17,19 @@ const defaultState: MemberAnalytics = {
   orderedBy: 1,
   isProfilePhoto: false,
   sortBy : 'Last Updated',
-  isOn : false
+  isOn : false,
+  searchTerm : '',
+  countryId : 0,
+  memberType: '',
 };
 
 const MemberAnalyticsContext = createContext<{
-  state: MemberAnalytics;
+  state: MemberAnalyticsFilter;
 
 } | undefined>(undefined);
 
 export const MemberAnalyticsProvider: React.FC<MemberAnalyticsProviderProps> = ({ children }) => {
-  const [state] = useState<MemberAnalytics>(defaultState);
+  const [state] = useState<MemberAnalyticsFilter>(defaultState);
 
   return (
     <MemberAnalyticsContext.Provider value={{ state }}>

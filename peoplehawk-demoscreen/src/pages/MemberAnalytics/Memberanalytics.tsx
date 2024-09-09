@@ -3,7 +3,7 @@ import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
-import { MemberAnalytics as List, OptionTypes , KeyValue, StateValue} from "../../interface/Interface";
+import { MemberAnalytics as List, OptionTypes , MemberAnalyticsFilter} from "../../interface/Interface";
 import { MemberAnalyticsList,MemberAnalyticsCount } from "../../services/MemberAnalyticsService";
 import { ReactSelect } from "../../components/layout/form/Select";
 import  personalityQuizCompleted from '../../assests/img/personality_quiz-completed.svg'
@@ -32,6 +32,11 @@ const defaults = {
   sortOrder: 'asc',
   orderedBy: 1,
   isProfilePhoto: false,
+  sortBy : 'Last Updated',
+  isOn : false,
+  searchTerm : '',
+  countryId : 0,
+  memberType: '',
 };
 
     const SortTypes : OptionTypes[] = [
@@ -310,41 +315,29 @@ const ItemCard = styled.div<ColorProps>`
 
 const Memberanalytics = () => {
 
-  const {state} = useMemberAnalytics();
-    const [hasPhoto,setHasPhoto] = useState<boolean>(state.isProfilePhoto);
-    const [resumeType,setResumeType] = useState<ResumeProps>({infographic : state.isInfographicResume, peoplehawk : state.isPeopleHawkResume, member : state.isAll, any : state.isAll});
-    const [searchString,setSearchString] = useState<string>(state.searchTerm ? state.searchTerm :'');
-    const [candidateType, setCandidatetype] = useState<string | undefined>(state.memberType);
-    const [country, setCountry] = useState<number>(state.countryId ? state.countryId : 0);
-    const [filterData,setFilterData] = useState<List[]>([]);
-    const [page,setPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(2);
-    const [isVisible, setIsVisible] = useState<boolean>(false);
-    const [isOn, setIsOn] = useState<boolean>(state.isOn);
-    const [sortOrder,setSortOrder] = useState<string>(state.sortOrder);
-    const [sortBy,setSortedBy] = useState<string>(state.sortBy);
-    const [orderedBy,setOrderedBy] = useState<number>(state.orderedBy);
-    const[count,setCount] = useState<number>(0);
-   
+   const {state} = useMemberAnalytics();
+   const[urlState,seturlState] = useUrlSearchState(defaults);
+   const [filterData,setFilterData] = useState<List[]>([]);
+   const [totalPages, setTotalPages] = useState<number>(2);
+   const [isVisible, setIsVisible] = useState<boolean>(false);
+   const[count,setCount] = useState<number>(0);
    const navigate = useNavigate();
 
-  const[urlState,seturlState] = useUrlSearchState(defaults);
-  
-
-  console.log(state);
-
+   
+ 
   const handleSwitchToggle = () => {
-    setIsOn(prevState => !prevState);
+    // setIsOn(prevState => !prevState);
+    seturlState({...urlState,isOn : !urlState.isOn})
   };
 
 
   useEffect(() => {
-    setTimeout(() => {setIsVisible(true)},200);
-  },[page]);
+    setTimeout(() => {setIsVisible(true); },200);
+  },[urlState.page]);
 
     const handlePageChange = (page1: number) => {
-      setPage(page1);
-      if(page !== page1)
+      
+      if(urlState.page !== page1)
       {
         setIsVisible(false);
       }
@@ -352,19 +345,20 @@ const Memberanalytics = () => {
     };
 
    const NavigationHandler = () => {
-         state.isInfographicResume = resumeType.infographic;
-         state.isMemberResume = resumeType.member;
-         state.isPeopleHawkResume = resumeType.peoplehawk;
-         state.isAll = resumeType.any;
-         state.isProfilePhoto = hasPhoto;
-         state.orderedBy = orderedBy;
-         state.searchTerm = searchString;
-         state.countryId = country;
-         state.memberType = candidateType;
-         state.sortOrder = sortOrder;
-         state.orderedBy = orderedBy;
-         state.sortBy = sortBy;
-         state.isOn = isOn;
+         state.isInfographicResume = urlState.isInfographicResume;
+         state.isMemberResume = urlState.isMemberResume;
+         state.isPeopleHawkResume = urlState.isPeopleHawkResume;
+         state.isAll = urlState.isAll;
+         state.isProfilePhoto = urlState.isProfilePhoto;
+         state.orderedBy = urlState.orderedBy;
+         state.searchTerm = urlState.searchTerm;
+         state.countryId = urlState.countryId;
+         state.memberType = urlState.memberType;
+         state.sortOrder = urlState.sortOrder;
+         state.orderedBy = urlState.orderedBy;
+         state.sortBy = urlState.sortBy;
+         state.isOn = urlState.isOn;
+         state.page = urlState.page;
          navigate('/home');
    } 
 
@@ -372,37 +366,43 @@ const Memberanalytics = () => {
     const searchHandler = (value : string) =>
     {
     
-       seturlState(defaults);
-      //  state.searchTerm = value;
-        setSearchString(value.trim());
-        setPage(1);
+       seturlState({...urlState,searchTerm : value,page : 1});
+       state.searchTerm = value;
+       state.page = 1;
+      
         
     }
 
    const candidateTypeHandler = (value : string | undefined) =>
    {
-   
-    console.log(state);
-     setCandidatetype(value);
-    //  state.memberType = value;
-     setPage(1);
+    seturlState({...urlState,memberType : value != undefined ? value : '',page : 1});
+     state.memberType = value != undefined ? value : '';
+      state.page = 1
    }
 
    const countryTypeHandler = (value : number) =>
     {
      
-      setCountry(value);
-      // state.countryId = value
-      setPage(1);
+      // setCountry(value);
+      seturlState({...urlState,countryId : value, page : 1});
+      // setPage(1);
+
     }
 
+   
+
    // eslint-disable-next-line
-   useEffect(() => {fetchData(); },[page,sortOrder,orderedBy,searchString,country,candidateType,hasPhoto,resumeType]);
+   
+   useEffect(() => { 
+    
+    fetchData(); 
+  },[urlState]);
+ 
 
    const fetchData = async() => {
-      const result = await MemberAnalyticsList(page,resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
+      const result = await MemberAnalyticsList(urlState.page,urlState.isInfographicResume,urlState.isMemberResume,urlState.isPeopleHawkResume,urlState.isAll,urlState.sortOrder,urlState.isProfilePhoto,urlState.orderedBy,urlState.searchTerm,urlState.countryId,urlState.memberType);
       result && setFilterData(result);;
-      const result1 = await MemberAnalyticsCount(resumeType.infographic,resumeType.member,resumeType.peoplehawk,resumeType.any,sortOrder,hasPhoto,orderedBy,searchString,country,candidateType);
+      const result1 = await MemberAnalyticsCount(urlState.isInfographicResume,urlState.isMemberResume,urlState.isPeopleHawkResume,urlState.isAll,urlState.sortOrder,urlState.isProfilePhoto,urlState.orderedBy,urlState.searchTerm,urlState.countryId,urlState.memberType);
       if(result1 === 0)
       {
         setCount(0);
@@ -421,12 +421,12 @@ const Memberanalytics = () => {
           <UpperHeader>
             <Member>Members</Member>
             <ItemContainer>
-            <ItemCard color = {hasPhoto ? '#172C4C' : '#0097a2'} onClick={() => {setHasPhoto(!hasPhoto); setPage(1);}}>Profile Photo </ItemCard>
+            <ItemCard color = {urlState.isProfilePhoto ? '#172C4C' : '#0097a2'} onClick={() => {seturlState({...urlState,isProfilePhoto : !urlState.isProfilePhoto})}}>Profile Photo </ItemCard>
             <BorderStraight />
-            <ItemCard color = {resumeType.infographic ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : !resumeType.infographic,peoplehawk : false,member : false,any : false});  setPage(1);}}>Infographic Resume</ItemCard>
-            <ItemCard color = {resumeType.peoplehawk ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : !resumeType.peoplehawk,member : false,any : false});  setPage(1);}}>PeopleHawk CV</ItemCard>
-            <ItemCard color = {resumeType.member ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : !resumeType.member,any : false});  setPage(1);}}>Member CV</ItemCard>
-            <ItemCard color = {resumeType.any ? '#172C4C' : '#0097a2'} onClick={() => {setResumeType({infographic : false,peoplehawk : false,member : false,any : !resumeType.any});  setPage(1);}}>Any CV/ Resume</ItemCard>
+            <ItemCard color = {urlState.isInfographicResume ? '#172C4C' : '#0097a2'} onClick={() => {seturlState({...urlState,isInfographicResume : !urlState.isInfographicResume,isMemberResume : false,isPeopleHawkResume :false,isAll : false,page : 1});}}>Infographic Resume</ItemCard>
+            <ItemCard color = {urlState.isPeopleHawkResume ? '#172C4C' : '#0097a2'} onClick={() => { seturlState({...urlState,isInfographicResume : false,isMemberResume : false,isPeopleHawkResume : !urlState.isPeopleHawkResume,isAll : false,page : 1});}}>PeopleHawk CV</ItemCard>
+            <ItemCard color = {urlState.isMemberResume ? '#172C4C' : '#0097a2'} onClick={() => { seturlState({...urlState,isInfographicResume : false,isMemberResume : !urlState.isMemberResume,isPeopleHawkResume :false,isAll : false, page : 1});}}>Member CV</ItemCard>
+            <ItemCard color = {urlState.isAll ? '#172C4C' : '#0097a2'} onClick={() => {  seturlState({...urlState,isInfographicResume : false,isMemberResume : false,isPeopleHawkResume :false,isAll : !urlState.isAll, page : 1});}}>Any CV/ Resume</ItemCard>
           </ItemContainer>
           </UpperHeader>
           <LowerHeader>
@@ -438,7 +438,7 @@ const Memberanalytics = () => {
                 <div style={{position : 'absolute'}}>
                 <GreyColor>Sort By </GreyColor>
                 <GreenColor>
-                   {sortBy}
+                   {urlState.sortBy}
                    </GreenColor>
                    </div>
                    
@@ -447,19 +447,19 @@ const Memberanalytics = () => {
             placeholder=""
             hideInput
             name="countryId"
-            onChange={(e,value) => {setSortedBy(value.label);setOrderedBy(value.value)}}
+            onChange={(e,value) => {seturlState({...urlState,sortBy : value.label,orderedBy : value.value})}}
           />
               </SortedByDiv>
               <OrderBy>
-                <Asc onClick={() => {setSortOrder('asc')}}>ASC {sortOrder === 'asc' && <DoneIcon />}</Asc>
-                <Dsc onClick={() => {setSortOrder('desc')}}>DESC {sortOrder === 'desc' && <DoneIcon />}</Dsc>
+                <Asc onClick={() => {seturlState({...urlState,sortOrder : 'asc'})}}>ASC {urlState.sortOrder === 'asc' && <DoneIcon />}</Asc>
+                <Dsc onClick={() => {seturlState({...urlState,sortOrder : 'desc'})}}>DESC {urlState.sortOrder === 'desc' && <DoneIcon />}</Dsc>
               </OrderBy>
             </Shortlist>
           </LowerHeader>
           </HeaderContainer>
           <SwitchWrapper>
-      <SwitchContainer onClick={handleSwitchToggle} isOn={isOn}>
-        <SwitchHandle isOn={isOn} />
+      <SwitchContainer onClick={handleSwitchToggle} isOn={urlState.isOn}>
+        <SwitchHandle isOn={urlState.isOn} />
       </SwitchContainer>
       <label>Names/Anonymous</label>
     </SwitchWrapper>
@@ -485,7 +485,7 @@ const Memberanalytics = () => {
               </CompletionCont>
             </MemberLeftCard>
             <MemberRightCard>
-              <MemberCardTitle>{isOn ? `Member ${item.userId}` : item.firstName}</MemberCardTitle>
+              <MemberCardTitle>{urlState.isOn ? `Member ${item.userId}` : item.firstName}</MemberCardTitle>
               <BorderBottom />
               <CompletionCont>
                 <CompletionCard>
@@ -506,7 +506,7 @@ const Memberanalytics = () => {
           </MembarCard>
           )}
         </MemberContainer>
-       {count > 0 && <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}/>}
+       {count > 0 && <Pagination currentPage={urlState.page} totalPages={totalPages} onPageChange={handlePageChange}/>}
       </RightContainer>
     </Container>
   );

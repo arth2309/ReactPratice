@@ -34,4 +34,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Completion> Completions { get; set; }
 
     public DbSet<Owner> Owners { get; set; }
+
+    public DbSet<EducationDetail> EducationDetails { get; set; }
 }
