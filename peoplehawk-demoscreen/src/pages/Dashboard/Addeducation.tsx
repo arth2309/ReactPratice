@@ -9,7 +9,6 @@ import { FormValues ,EducationDetail} from '../../interface/Interface';
 import DatePicker from 'react-datepicker';
 import { useContext } from 'react';
 import AuthContext from '../../store/AuthContext';
-import {format, setDate} from 'date-fns';
 import "react-datepicker/dist/react-datepicker.css";
 import { AddData } from '../../services/EducationDetailService';
 
@@ -32,7 +31,11 @@ interface ModalProps {
 }
 
 
-
+const formatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
 
 
 
@@ -166,7 +169,7 @@ const wrapperStyle = {
 
 const intialValues : FormValues = {
     comments : '',
-    subjects : [{subject : '',grade : '',rewardedDate : new Date}],
+    subjects : [{subject : '',grade : '',rewardedDate : null}],
     school : ''
 }
 
@@ -174,7 +177,7 @@ const Addeducation : React.FC<ModalProps> = ({isOpen, onClose, onAddData}) => {
 
     const DataConversion = (data : FormValues) : EducationDetail[] => {
         const TramformB : EducationDetail[] = data.subjects.map((item) => ({school : data.school,subject : item.subject,grade : item.grade,rewardedDate : item.rewardedDate,comments : data.comments ,id : 0, userId : authctx.userData ? authctx.userData.Id : 0}))
-        console.log( data.subjects[0].rewardedDate.toLocaleDateString());
+        
           return TramformB;
     }
 

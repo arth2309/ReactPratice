@@ -21,8 +21,10 @@ public class CandidateController : BaseController
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
     private readonly IMemberAnalyticsService _memberAnalyticsService;
     private readonly IEducationDetailService _educationDetailService;
+    private readonly IWorkExperienceService _workExperienceService;
+    private readonly IAssignmentService _assignmentService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -34,6 +36,8 @@ public class CandidateController : BaseController
         _userCompentencyDetailService = userCompentencyDetailService;
         _memberAnalyticsService = memberAnalyticsService;
         _educationDetailService = educationDetailService;
+        _assignmentService = assignmentService;
+        _workExperienceService = workExperienceService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -186,5 +190,55 @@ public class CandidateController : BaseController
     {
         ValidateModel();
         return await _educationDetailService.UpdateData(educationDetailDto);
+    }
+    [HttpPost("assignment")]
+    public async Task<ActionResult<AssignmentDTO>> AddAssignment([FromBody] AssignmentDTO assignmentDTO)
+    {
+        ValidateModel();
+        return await _assignmentService.AddData(assignmentDTO);
+    }
+
+    [HttpGet("assignment")]
+    public async Task<ActionResult<List<AssignmentDTO>>> AssignmentList(int UserId)
+    {
+        return await _assignmentService.GetList(UserId);
+    }
+
+    [HttpDelete("assignment")]
+    public async Task<ActionResult<AssignmentDTO>> DeleteAssignment(int UserId)
+    {
+        return await _assignmentService.DeleteData(UserId);
+    }
+
+    [HttpPut("assignment")]
+    public async Task<ActionResult<AssignmentDTO>> UpdateAssignment([FromBody] AssignmentDTO assignmentDTO)
+    {
+        ValidateModel();
+        return await _assignmentService.UpdateData(assignmentDTO);
+    }
+    [HttpPost("work-experience")]
+    public async Task<ActionResult<WorkExperienceDTO>> AddWorkExperience([FromBody] WorkExperienceDTO workExperienceDTO)
+    {
+        ValidateModel();
+        return await _workExperienceService.AddData(workExperienceDTO);
+    }
+
+    [HttpGet("work-experience")]
+    public async Task<ActionResult<List<WorkExperienceDTO>>> WorkExperienceList(int UserId)
+    {
+        return await _workExperienceService.GetList(UserId);
+    }
+
+    [HttpDelete("work-experience")]
+    public async Task<ActionResult<WorkExperienceDTO>> DeleteWorkExperience(int UserId)
+    {
+        return await _workExperienceService.DeleteData(UserId);
+    }
+
+    [HttpPut("work-experience")]
+    public async Task<ActionResult<WorkExperienceDTO>> UpdateWorkExperience([FromBody] WorkExperienceDTO workExperienceDTO)
+    {
+        ValidateModel();
+        return await _workExperienceService.UpdateData(workExperienceDTO);
     }
 }

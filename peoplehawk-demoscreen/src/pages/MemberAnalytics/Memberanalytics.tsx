@@ -318,6 +318,7 @@ const Memberanalytics = () => {
    const {state} = useMemberAnalytics();
    const[urlState,seturlState] = useUrlSearchState(defaults);
    const [filterData,setFilterData] = useState<List[]>([]);
+   const[page,setPage] = useState<number>(1);
    const [totalPages, setTotalPages] = useState<number>(2);
    const [isVisible, setIsVisible] = useState<boolean>(false);
    const[count,setCount] = useState<number>(0);
@@ -337,11 +338,13 @@ const Memberanalytics = () => {
 
     const handlePageChange = (page1: number) => {
       
-      if(urlState.page !== page1)
+      if(page !== page1)
       {
         setIsVisible(false);
+       
       }
-
+      seturlState({...urlState,page : page1});
+      setPage(page1)
     };
 
    const NavigationHandler = () => {
@@ -506,7 +509,7 @@ const Memberanalytics = () => {
           </MembarCard>
           )}
         </MemberContainer>
-       {count > 0 && <Pagination currentPage={urlState.page} totalPages={totalPages} onPageChange={handlePageChange}/>}
+       {count > 0 && <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}/>}
       </RightContainer>
     </Container>
   );

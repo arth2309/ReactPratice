@@ -156,7 +156,7 @@ export interface MemberAnalyticsFilter  {
 export interface Subject {
   subject : string,
   grade : string,
-  rewardedDate : Date 
+  rewardedDate : Date | null
 }
 
 export interface FormValues {
@@ -169,7 +169,7 @@ export interface EducationData {
   school : string,
   subject : string,
   grade : number,
-  rewardedDate : Date 
+  rewardedDate : Date
   comments : string 
 }
 
@@ -180,6 +180,31 @@ export interface EducationDetail
   school: string,
   subject: string,
   grade: string,
-  rewardedDate: Date ,
+  rewardedDate: Date | null,
   comments: string
+}
+
+export interface Assignment
+{
+  id: number,
+  userId: number,
+  organisation: string,
+  title: string,
+  description: string,
+  infohraphicResumeDescription: string,
+  startDate: Date | null,
+  endDate : Date | null,
+  isOngoing: boolean
+}
+
+export interface WorkExperience
+{
+  id: number,
+  userId: number,
+  organisation: string,
+  role: string,
+  roleDescription: string,
+  startDate: Date | null,
+  endDate : Date | null,
+  isOngoing: boolean
 }

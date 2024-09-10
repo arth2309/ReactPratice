@@ -109,7 +109,7 @@ const addIfChanged = <T>(
   return { ...acc, [key]: encodedValue }
 }
 
-const overrideAndEncodeState = <T extends KeyValue>(
+export const overrideAndEncodeState = <T extends KeyValue>(
   overrides: T,
   state: T,
   defaults: T

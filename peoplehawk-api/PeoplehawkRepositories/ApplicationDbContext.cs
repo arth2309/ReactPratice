@@ -36,4 +36,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Owner> Owners { get; set; }
 
     public DbSet<EducationDetail> EducationDetails { get; set; }
+
+    public DbSet<Assignment> AssignmentDetails { get; set; }
+
+    public DbSet<WorkExperience> WorkExperienceDetails { get; set;}
 }

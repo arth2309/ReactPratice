@@ -22,6 +22,45 @@ namespace PeoplehawkRepositories.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PeoplehawkRepositories.Models.Assignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InfohraphicResumeDescription")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsOngoing")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("organisation")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AssignmentDetails");
+                });
+
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
                 {
                     b.Property<int>("Id")
@@ -424,6 +463,53 @@ namespace PeoplehawkRepositories.Migrations
                     b.ToTable("UserCompentencyDetails");
                 });
 
+            modelBuilder.Entity("PeoplehawkRepositories.Models.WorkExperience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsOngoing")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleDescription")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("organisation")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WorkExperienceDetails");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.Assignment", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
                 {
                     b.HasOne("PeoplehawkRepositories.Models.User", "User")
@@ -527,6 +613,17 @@ namespace PeoplehawkRepositories.Migrations
                         .IsRequired();
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.WorkExperience", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

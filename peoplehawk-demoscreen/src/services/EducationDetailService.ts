@@ -38,10 +38,10 @@ export const DeleteData = async(userId : number) : Promise<EducationDetail | nul
     }
 }
 
-export const UpdateData = async() : Promise<EducationDetail | null> =>  {
+export const UpdateData = async(data : EducationDetail) : Promise<EducationDetail | null> =>  {
     try
     {
-        const response = await apiClient.put(API_ENDPOINTS.EDUCATION_DETAIL);
+        const response = await apiClient.put(API_ENDPOINTS.EDUCATION_DETAIL,data);
         return response.data;
     }
     catch (error)

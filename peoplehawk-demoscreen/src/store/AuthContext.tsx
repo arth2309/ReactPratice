@@ -9,7 +9,8 @@ type AuthProvider = {
 interface Candidate {
   Id : number,
   FirstName : string,
-  LastName : string
+  LastName : string,
+  MemberType : string
 }
 
 interface Auth {

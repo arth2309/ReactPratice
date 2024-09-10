@@ -32,7 +32,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       onPageChange(page);
     }
   };
-
+console.log(totalPages)
   return (
     <PaginationContainer>
       <PageButton

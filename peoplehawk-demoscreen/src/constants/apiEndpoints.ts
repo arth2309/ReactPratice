@@ -54,8 +54,11 @@ export const API_ENDPOINTS = {
     },
 
     EDUCATION_DETAIL_USER_ID : (userId : number) => `candidate/education-detail?UserId=${userId}`,
-
-    EDUCATION_DETAIL :  `candidate/education-detail`
+    EDUCATION_DETAIL :  `candidate/education-detail`,
+    ASSIGNMENT_USER_ID : (userId : number) => `candidate/assignment?UserId=${userId}`,
+    ASSIGNMENT :  `candidate/assignment`,
+    WORK_EXPERIENCE_USER_ID : (userId : number) => `candidate/work-experience?UserId=${userId}`,
+    WORK_EXPERIENCE :  `candidate/work-experience`
 }
 
 

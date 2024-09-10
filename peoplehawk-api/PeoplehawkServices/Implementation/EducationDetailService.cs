@@ -20,7 +20,7 @@ public class EducationDetailService : GenericService<EducationDetail>, IEducatio
     {
         foreach (var educationDetailDto in educationDetailDtos)
         {
-            educationDetailDto.RewardedDate = DateTime.Now;
+           educationDetailDto.RewardedDate = DateTime.Parse(educationDetailDto.RewardedDate.ToString());
             await AddAsync(educationDetailDto.FromDto());
         }
          return educationDetailDtos;
