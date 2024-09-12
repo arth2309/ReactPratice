@@ -5,8 +5,18 @@ import { useEffect, useState } from "react";
 import Input from "../../components/layout/form/Input";
 import { CountryList as CountryData } from "../../services/AuthService";
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import { useNavigate } from "react-router-dom";
 import  BounceLoader  from "react-spinners/BounceLoader";
+
+interface SideBarProps {
+  onSearchHandler : (value : string) => void,
+  onCandidateTypeHandler : (value : string) => void,
+  onCountryTypeHandler : (value : number) => void,
+  onNavigation : () => void,
+  searchString : string,
+  memberType : string,
+  countryId : number
+
+}
 
 const CandidateTypes : OptionTypes[] = [
   {value : 1, label : 'High School/College Student'},
@@ -71,7 +81,7 @@ const MainContainer = styled.div({
   padding: "20px",
 });
 
-const Sidebar = (props : any) => {
+const Sidebar : React.FC<SideBarProps> = (props) => {
   const [countryOptions,setCountryOptions] = useState<OptionTypes[] | null>(null);
   const convertApiToOptions = (apiData: CountryList[]): OptionTypes[] => {
     return apiData.map((item) => ({
@@ -92,7 +102,7 @@ const Sidebar = (props : any) => {
     }
   };
 
-  const navigate = useNavigate();
+
 
   return (
     <div>
@@ -113,7 +123,7 @@ const Sidebar = (props : any) => {
               <Input 
                placeholder="i.e: Member's Name" 
               defaultValue={props.searchString}
-               onChange={(e) => {props.onSearchHandler(e.target.value)}}
+               onChange={(e) => {(e.target.value.trim().length > 2 || e.target.value.trim().length < 1) && props.onSearchHandler(e.target.value.trim())}}
                  />
             </SearchKeyword>
             <GreenSearch>Search</GreenSearch>

@@ -137,14 +137,13 @@ export const useUrlSearchState = <T extends KeyValue>(
   )
 
   const setState = useCallback(
-    (overrides: T) =>{
+    (overrides: T) =>
         navigate(
             `${pathname}?${queryString.stringify(
               overrideAndEncodeState<T>(overrides, state, defaults)
             )}`
-          ); console.log( `${pathname}?${queryString.stringify(
-            overrideAndEncodeState<T>(overrides, state, defaults)
-          )}`)},
+          ) ,
+          // eslint-disable-next-line 
     [pathname, state, defaults]
   )
 

@@ -16,6 +16,7 @@ interface SelectProps {
   onChange?: (field: string, value: any) => void;
   showDropdownIndicator?: boolean;
   hideInput? : boolean;
+  effect? : boolean
 
 }
 
@@ -65,12 +66,14 @@ export const ReactSelect: React.FC<SelectProps> = (props) => {
 
   const styles: StylesConfig<OptionTypes[], boolean> = {
     ...baseStyles,
-    control : !props.hideInput ? baseStyles.control : (provided) => ({
+    control  : (provided) => ({
         ...provided,
-        visibility : 'hidden',
-        cursor : 'pointer',
-      
+        visibility : props.hideInput ? 'hidden' : '-moz-initial',
+        cursor : props.hideInput ? 'pointer' : 'default',
+        zIndex : props.effect ? 4 : 0
     }),
+
+    
  
     dropdownIndicator: props.showDropdownIndicator
       ? baseStyles.dropdownIndicator

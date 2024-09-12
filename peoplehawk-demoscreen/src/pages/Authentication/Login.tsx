@@ -2,7 +2,7 @@ import { Formik, Form, ErrorMessage } from "formik";
 import { Login as api } from "../../services/AuthService";
 import AuthContext from "../../store/AuthContext";
 import { useContext,useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import "../../stylesheets/obviously-font.css";
 import "./Login.css";
 import logo from "../../assests/img/logo@2x.png";
@@ -36,7 +36,7 @@ export const Login = () => {
   const loginHandler = async (values: LoginFormValues) => {
     const result = await api(values);
     result && authCtx.login(result);
-    result && navigate(ROUTES.HOME);
+    result && navigate(generatePath(ROUTES.HOME, { userId: authCtx.userData ? authCtx.userData.Id.toString() : '' }));
   };
 
   const passwordHandler = () => {

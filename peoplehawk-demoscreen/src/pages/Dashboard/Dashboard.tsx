@@ -11,27 +11,27 @@ import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {fetchPhoto,uploadPhoto,getCompentencies,getUserCompentencies} from "../../services/HomeService";
-import { Assignment, Competency,EducationDetail,UserCompetency, WorkExperience } from "../../interface/Interface";
-import Compentencytestanalytics from "./Compentencytestanalytics";
+import {uploadPhoto,fetchUserDetail} from "../../services/HomeService";
+import { Assignment, CandidateDetail, Competency,EducationDetail,UserCompetency, WorkExperience } from "../../interface/Interface";
+import Compentencytestanalytics from "../../modals/Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
 import { RootState,AppDispatch } from "../../store/Redux";
-import { fetchData as fet } from "../../services/HomeService";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
-import Addeducation from "./Addeducation";
-import Updateeducation from "./Updateeducation";
-import Addassignment from "./Addassignment";
+import Addeducation from "../../modals/Addeducation";
+import Updateeducation from "../../modals/Updateeducation";
+import Addassignment from "../../modals/Addassignment";
 import queryString from "query-string";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
-import { GetList,DeleteData,UpdateData} from "../../services/EducationDetailService";
+import { DeleteData,UpdateData} from "../../services/EducationDetailService";
 import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
-import Addworkexperience from "./Addworkexperience";
+import Addworkexperience from "../../modals/Addworkexperience";
 import { EducationList } from "../../components/layout/List/EducationList";
-import { GetList as GetAssignmentList, DeleteData as DeleteAssigment,UpdateData as UpdateAssignmentData} from "../../services/AssignmentService";
-import { GetList as GetWorkExperienceList, DeleteData as DeleteWorkExperience, UpdateData as UpdateWorkExperienceData} from "../../services/WorkExperience";
+import { DeleteData as DeleteAssigment,UpdateData as UpdateAssignmentData} from "../../services/AssignmentService";
+import { DeleteData as DeleteWorkExperience, UpdateData as UpdateWorkExperienceData} from "../../services/WorkExperience";
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
+import { useParams } from "react-router-dom";
 
 
 
@@ -77,7 +77,7 @@ const LeftContainer = styled.div({
   backgroundColor: "#B8DFF5",
   height: "100%",
   padding : "21px",
-  minHeight : '900px',
+  minHeight : '950px',
  
 
   "@media (max-width : 992px)": {
@@ -353,9 +353,8 @@ const Dashboard  = () => {
   const { data, loading } = useSelector((state: RootState) => state.data);
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
+  const [candidateDetail,setCandidateDetail] = useState<CandidateDetail | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const[competencies,setCompetencies] = useState<Competency[] | null>(null);
-  const[candidates,setCandidates] = useState<UserCompetency[] | null>(null);
   const [dataList, setDataList] = useState<EducationDetail[]>([]);
   const [assignmentList,setAssignmentList] = useState<Assignment[]>([]);
   const [workExperienceList,setWorkExperienceList] = useState<WorkExperience[]>([]);
@@ -363,33 +362,29 @@ const Dashboard  = () => {
 
   const handleAddData = (data: EducationDetail[]) => {
     setDataList((prevState) => [...prevState,...data]);
-    console.log(dataList);
     setProfileOpen(false);
+    setTimeout(() => {showToast(TOAST.ADD_EDUCATION_DETAIL.title,TOAST.ADD_EDUCATION_DETAIL.description,TOAST.ADD_EDUCATION_DETAIL.type)},100);
   }
   
 
   useEffect(() => {
        fetchdata();
-       console.log(authctx.userData);
        // eslint-disable-next-line
   },[])
 
   const fetchdata = async() => {
     if(authctx.userData)
     {
-      const result = await fetchPhoto(authctx.userData.Id);
-        result && setImageSrc(result);
-        const comp = await getCompentencies();
-        comp && setCompetencies(comp);
-        dispatch(fet(authctx.userData.Id));
-        const cand = await getUserCompentencies();
-        cand && setCandidates(cand);
-        const list = await GetList(authctx.userData.Id);
-        list && setDataList(list);
-        const assig = await GetAssignmentList(authctx.userData.Id);
-        assig && setAssignmentList(assig);
-        const work = await GetWorkExperienceList(authctx.userData.Id);
-        work && setWorkExperienceList(work);
+
+      const response = await fetchUserDetail(authctx.userData.Id);
+      if(response)
+      {
+        response && setCandidateDetail(response);
+        response.profilePhoto && setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`)
+        response.assignments && setAssignmentList(response.assignments);
+        response.workExperiences && setWorkExperienceList(response.workExperiences);
+        response.educations && setDataList(response.educations);
+      }
     }
   }
 
@@ -450,7 +445,7 @@ const Dashboard  = () => {
         userId : 0,
         school : '',
         grade : '',
-        rewardedDate : new Date,
+        rewardedDate : null,
         subject : '',
         comments : ''
      });
@@ -464,34 +459,39 @@ const Dashboard  = () => {
       const openWorkExperience = () => {setWorkExperiencedValues(intialWorkExperienceValues);setWorkExperienceOpen(true)};
       const closeWorkExperience = useCallback(() => {setWorkExperienceOpen(false)},[]);
       
-      
-
+      const {userId} = useParams<{userId : string}>();
+       console.log(userId);
       const HandleDelete = async(index : number,id : number) => {
       await DeleteData(id);
       const updatedItems = dataList.filter((_, i) => i !== index);
+      setTimeout(() => {showToast(TOAST.DELETE_EDUCATION_DETAIL.title,TOAST.DELETE_EDUCATION_DETAIL.description,TOAST.DELETE_EDUCATION_DETAIL.type)},100);
        setDataList(updatedItems);
     }
 
     const handleAddAssignmentData = (data: Assignment) => {
       setAssignmentList((prevState) => [...prevState,data]);
       setAssignmentOpen(false);
+      setTimeout(() => {showToast(TOAST.ADD_ASSIGNMENT.title,TOAST.ADD_ASSIGNMENT.description,TOAST.ADD_ASSIGNMENT.type)},100);
     }
 
     const handleAddWorkExperienceData = (data: WorkExperience) => {
       setWorkExperienceList((prevState) => [...prevState,data]);
       setWorkExperienceOpen(false);
+      setTimeout(() => {showToast(TOAST.ADD_WORK_EXPERIENCE.title,TOAST.ADD_WORK_EXPERIENCE.description,TOAST.ADD_WORK_EXPERIENCE.type)},100);
     }
 
     const handleAssignmentDelete = async(index : number,id : number) => {
       await DeleteAssigment(id);
       const updatedItems = assignmentList.filter((_, i) => i !== index);
        setAssignmentList(updatedItems);
+       setTimeout(() => {showToast(TOAST.DELETE_ASSIGNMENT.title,TOAST.DELETE_ASSIGNMENT.description,TOAST.DELETE_ASSIGNMENT.type)},100);
     }
 
     const handleWorkExperienceDelete = async(index : number,id : number) => {
       await DeleteWorkExperience(id);
       const updatedItems = workExperienceList.filter((_, i) => i !== index);
        setWorkExperienceList(updatedItems);
+       setTimeout(() => {showToast(TOAST.DELETE_WORK_EXPERIENCE.title,TOAST.DELETE_WORK_EXPERIENCE.description,TOAST.DELETE_WORK_EXPERIENCE.type)},100);
     }
 
     const OpenEditModal = (id : number) => {
@@ -535,41 +535,44 @@ const OpenWorkExperienceEditModal = (id : number) => {
     );
     setDataList(updatedItems);
      closeUpdateProfile();
+     setTimeout(() => {showToast(TOAST.UPDATE_EDUCATION_DETAIL.title,TOAST.UPDATE_EDUCATION_DETAIL.description,TOAST.UPDATE_EDUCATION_DETAIL.type)},100);
   }
 
   const EditAssignmentData = async(values : Assignment) =>
     {
-      await UpdateAssignmentData(values);
+     
       const updatedItems = assignmentList.map((item, i) =>
         i === assignmentIndex ? values : item
       );
       setAssignmentList(updatedItems);
        closeAssignment();
+       setTimeout(() => {showToast(TOAST.UPDATE_ASSIGNMENT.title,TOAST.UPDATE_ASSIGNMENT.description,TOAST.UPDATE_ASSIGNMENT.type)},100);
     }
     const EditWorkExperienceData = async(values : WorkExperience) =>
       {
-        await UpdateWorkExperienceData(values);
+       
         const updatedItems = workExperienceList.map((item, i) =>
           i === workExperienceIndex ? values : item
         );
         setWorkExperienceList(updatedItems);
          closeWorkExperience();
+         setTimeout(() => {showToast(TOAST.UPDATE_WORK_EXPERIENCE.title,TOAST.UPDATE_WORK_EXPERIENCE.description,TOAST.UPDATE_WORK_EXPERIENCE.type)},100);
       }
 
   return (
     <Fragment> 
-      <Compentencytestanalytics isOpen = {isModalOpen} onClose={closeModal} competencies = {competencies} candidates = {candidates} />
-      <Addeducation isOpen = {isProfileOpen} onClose={closeProfile} onAddData={handleAddData} />
-      <Addassignment isOpen = {isAssignmentOpen} onClose={closeAssignment} intialValues={assignmentValues} onAddHandler={handleAddAssignmentData} onUpdateHandler={EditAssignmentData} />
-      <Addworkexperience isOpen = {isWorkExperienceOpen} onClose={closeWorkExperience} intialValues={workExperiencedValues} onAddHandler={handleAddWorkExperienceData} onUpdateHandler={EditWorkExperienceData} />
-      <Updateeducation isOpen = {isUpdateProfileOpen} onClose={closeUpdateProfile} defaultValues ={updateValues} onEditHandler={EditData}/>
+     {candidateDetail && isModalOpen && <Compentencytestanalytics  onClose={closeModal} competencies = {candidateDetail.competencies} candidates = {candidateDetail.userCompentencyDetails} /> }
+     {isProfileOpen && <Addeducation  onClose={closeProfile} onAddData={handleAddData} />  }
+     {isAssignmentOpen && <Addassignment  onClose={closeAssignment} intialValues={assignmentValues} onAddHandler={handleAddAssignmentData} onUpdateHandler={EditAssignmentData} /> }
+     {isWorkExperienceOpen && <Addworkexperience  onClose={closeWorkExperience} intialValues={workExperiencedValues} onAddHandler={handleAddWorkExperienceData} onUpdateHandler={EditWorkExperienceData} />}
+     {isUpdateProfileOpen && <Updateeducation onClose={closeUpdateProfile} defaultValues ={updateValues} onEditHandler={EditData}/> }
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
         <MobileCard1>
         <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
                 <img
-                   src={imageSrc || profile} alt="profile" 
+                   src={ imageSrc || profile || profile} alt="profile" 
                    style={{height : '120px',width : '120px', borderRadius : '50%'}}
                   
                 />
@@ -614,7 +617,7 @@ const OpenWorkExperienceEditModal = (id : number) => {
                   </h2>
                   <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
                 <img
-                   src={imageSrc || profile} alt="profile" 
+                    src={ imageSrc || profile} alt="profile" 
                    style={{height : '140px',width : '140px', borderRadius : '50%'}}
                   
                 />
@@ -632,7 +635,7 @@ const OpenWorkExperienceEditModal = (id : number) => {
                     <div style={{ color: "#394456" }}>
                       <strong> Progress</strong>
                     </div>
-                    <Progress> {loading && <ClipLoader /> } {data &&  `${data.progress}%`}</Progress>
+                    <Progress> {loading && <ClipLoader /> } {candidateDetail &&  `${candidateDetail.userProgress.progress}%`}</Progress>
                   </Card2SubItem>
                   <Card2SubItem>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
@@ -668,14 +671,15 @@ const OpenWorkExperienceEditModal = (id : number) => {
                 </Card3Item>
                 
               </Card3>
-              <PrimaryButton onClick={() => {navigate(`/member-analytics?${queryString.stringify(
-              overrideAndEncodeState(state, state, defaults)
-            )}`)}}>Take Your Personality Test</PrimaryButton>
+             
+              <PrimaryButton  onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality test</PrimaryButton>
               <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
+              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{(candidateDetail && candidateDetail.userProgress.isResumeUpload) ? 'View ' : 'Upload '} Your Resume</OutlineButton>
               <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
-              <PrimaryButton onClick={openAssignment}>Add Assignment</PrimaryButton>
-              <PrimaryButton onClick={openWorkExperience}>Add Work Experience</PrimaryButton>
+              <OutlineButton onClick={() => {navigate(`/member-analytics?${queryString.stringify(
+              overrideAndEncodeState(state, state, defaults)
+            )}`)}}>Member Analytics</OutlineButton>
+             
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />

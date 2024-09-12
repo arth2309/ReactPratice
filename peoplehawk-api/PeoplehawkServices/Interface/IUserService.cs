@@ -17,6 +17,8 @@ public interface IUserService : IGenericService<User>
 
     Task<(byte[], string)> GetPhoto(int UserId);
 
+    Task<UserDetailDTO> GetDetail(int UserId);
+
     Task<List<User>> GetUserByCriteria(Expression<Func<User, bool>>? filter = null,
         Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
         int? page = null,

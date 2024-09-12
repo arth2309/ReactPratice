@@ -1,4 +1,4 @@
-import { CandidateProgress, FileUploadData,Competency,UserCompetency } from "../interface/Interface";
+import { CandidateProgress, FileUploadData,Competency,UserCompetency, CandidateDetail } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import {createAsyncThunk} from '@reduxjs/toolkit'
@@ -36,6 +36,16 @@ export const uploadPhoto = async (
       return null;
     }
   };
+
+  export const fetchUserDetail = async(UserId : number) : Promise<CandidateDetail | null> =>{
+    try{
+      const response = await apiClient.get(API_ENDPOINTS.USER_DETAIL(UserId));
+      return response.data
+    }
+    catch (error) {
+      return null;
+    }
+  }
   
   export const fetchData = createAsyncThunk<CandidateProgress, number, { rejectValue: string }>(
     'data/fetchData',

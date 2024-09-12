@@ -1,11 +1,12 @@
-import {Fragment} from 'react';
+import {Fragment,useContext} from 'react';
 import Carrerbanner from '../../assests/img/CareerBanner.png'
 import './Banner.css'
 import "../../stylesheets/obviously-font.css";
 import {styled} from 'styled-components';
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
+
 
 const BackButtonContainer = styled.div({
     display: "flex",
@@ -74,7 +75,7 @@ const BackButtonContainer = styled.div({
 const  Banner = () => {
 
     const navigate = useNavigate();
-    
+    const {userId} = useParams<{userId : string}>();
     return (
         <Fragment>
         <div className='background-black'>
@@ -85,7 +86,7 @@ const  Banner = () => {
         </BannerContent>
         </div>
         <BackButtonContainer>
-        <BackButton onClick={() => {navigate(ROUTES.HOME)}}>
+        <BackButton onClick={() =>{navigate(generatePath(ROUTES.HOME, { userId: userId}))}}>
           <ArrowBackIosIcon />
           Back
         </BackButton>

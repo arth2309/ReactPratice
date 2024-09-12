@@ -1,7 +1,6 @@
 import { Chart } from "chart.js/auto";
 import { CategoryScale } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-
 import "./Memberinterestanalysis.css";
 import { CourseInterest as Course } from "../../interface/Interface";
 Chart.register(CategoryScale);
@@ -22,17 +21,31 @@ const Memberinterestanalysischart = (props: any) => {
 
   const data1 = selecteditems.map((item) => chartData[item]);
 
-  const options = {
+  const options : any= {
     responsive: true,
     maintainAspectRatio: false,
-
     indexAxis: "y" as const,
-
+    animation: {
+      duration: 5000, 
+//       easing :' easeOutBounce'
+// ,
+//       onProgress : (animation : any) => {
+//        animation : {
+       
+//        }
+//       },
+//       onComplete : (animation : any) => {
+//         const progress = animation.currentStep / animation.numSteps;
+//         console.log('comp');
+//       }
+           
+     
+    },
     scales: {
       y: {
         ticks: {
           align: "center",
-          color: courseInterest.map((item: Course) => item.color1),
+          color: courseInterest && courseInterest.map((item: Course) => item.color1),
         } as const,
       },
     },
@@ -40,6 +53,7 @@ const Memberinterestanalysischart = (props: any) => {
       legend: {
         display: false,
       },
+      
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
@@ -51,14 +65,14 @@ const Memberinterestanalysischart = (props: any) => {
   };
 
   const data = {
-    labels: courseInterest.map((item: Course) => item.name),
+    labels: courseInterest && courseInterest.map((item: Course) => item.name),
 
     datasets: [
       {
-        backgroundColor: courseInterest.map((item: Course) => item.color1),
-        hoverBackgroundColor: courseInterest.map((item: Course) => item.color2),
+        backgroundColor:courseInterest &&  courseInterest.map((item: Course) => item.color1),
+        hoverBackgroundColor:courseInterest &&  courseInterest.map((item: Course) => item.color2),
         hoverBorderColor: "rgba(255,99,132,1)",
-        data: data1,
+        data: [10,23,34,23,78,66],
       },
     ],
   };

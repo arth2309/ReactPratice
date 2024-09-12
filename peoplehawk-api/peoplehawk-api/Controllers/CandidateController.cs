@@ -116,6 +116,13 @@ public class CandidateController : BaseController
         return  File(result.Item1, "application/pdf", result.Item2) ;
     }
 
+    [HttpGet("{UserId:int}/candidateDetail")]
+     public async Task<UserDetailDTO> UserDetail(int UserId)
+    {
+        ValidateId(UserId);
+        return await _userService.GetDetail(UserId);
+    }
+
     [HttpGet("{UserId:int}/progress")]
     public async Task<ProgressDTO> Progress(int UserId)
     {

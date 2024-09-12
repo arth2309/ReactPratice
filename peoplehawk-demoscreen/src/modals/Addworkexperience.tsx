@@ -1,26 +1,17 @@
 import styled, { css, keyframes } from "styled-components";
-import { Assignment } from "../../interface/Interface";
-import { CSSProperties } from "react";
-import Yup from 'yup'
+import { WorkExperience } from "../interface/Interface";
 import { Field, Form, Formik } from "formik";
-import Input from "../../components/layout/form/Input";
+import Input from "../components/layout/form/Input";
 import DatePicker from 'react-datepicker';
-import { AddData, UpdateData} from "../../services/AssignmentService";
-
-
-
-const OverrideCss : CSSProperties = {
-    backgroundColor : 'white',
-    height : '45px', 
-}
+import { AddData, UpdateData } from "../services/WorkExperience";
 
 
 interface ModalProps {
-    isOpen : boolean,
     onClose : () => void,
-    intialValues : Assignment
-    onAddHandler : (values : Assignment) => void
-    onUpdateHandler : (values : Assignment) => void
+    intialValues : WorkExperience
+    onAddHandler : (values : WorkExperience) => void
+    onUpdateHandler : (values : WorkExperience) => void
+   
 }
 
 const fadeIn = keyframes`
@@ -41,7 +32,7 @@ const slideIn = keyframes`
   }
 `;
 
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
+const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -52,23 +43,20 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   align-items: center;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.5);
-  opacity: ${props => (props.isOpen ? '1' : '0')};
-  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${fadeIn} 0.3s ease-in-out` : 'none')};
+  animation: ${ css`${fadeIn} 0.3s ease-in-out`};
 `;
 
-const ModalContent = styled.div<{ isOpen: boolean }>`
+const ModalContent = styled.div`
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 800px;
   padding: 20px 50px;
   position: relative;
-  transform: ${props => (props.isOpen ? 'translateY(0)' : 'translateY(-50px)')};
-  opacity: ${props => (props.isOpen ? '1' : '0')};
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${slideIn} 0.3s ease-in-out` : 'none')};
+  animation: ${ css`${slideIn} 0.3s ease-in-out`};
 `;
 
 const ModalHeader = styled.div`
@@ -109,63 +97,50 @@ const FormDiv = styled.div`
  flex-direction : column;
  gap : 10px;
  margin-top : 20px;
-`
 
+ input
+  {
+    background-color : white;
+    height : 45px; 
+  }
 
-
-const Addassignment : React.FC<ModalProps> = ({isOpen, onClose,intialValues,onAddHandler,onUpdateHandler}) =>  
-    {
-        
-        
-         interface Assignment
-        {
-          id: number,
-          userId: number,
-          organisation: string,
-          title: string,
-          description: string,
-          infohraphicResumeDescription: string,
-          startDate: Date | null,
-          endDate : Date | null,
-          isOngoing: boolean
-        }
-        
-        if(!isOpen) {return null}
-
-    return(
-        <ModalOverlay isOpen={isOpen} onClick={onClose}>
-            <style>
-                {`
-                .datepicker
+  .datepicker
                 {
                   height : 40px;
                   border : 1px solid #ced4da;
                   border-radius : 0.25rem; 
                   font-size : 1rem;
                 }
-            `}
-            </style>
-          <ModalContent isOpen={isOpen} onClick={(e) => e.stopPropagation()}>
+`
+
+
+const Addworkexperience : React.FC<ModalProps> = ({ onClose,intialValues,onAddHandler,onUpdateHandler}) =>  
+    {
+        
+
+    return(
+        <ModalOverlay  onClick={onClose}>
+          <ModalContent  onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
-            <Title>{intialValues.id > 0 ? 'Update' : 'Add' } Assignment</Title>
+            <Title>{intialValues.id > 0 ? 'Update' : 'Add' } Work Experience</Title>
             <ModalClose onClick={onClose}>X</ModalClose>
             </ModalHeader>
             <ModalBody>
             <Formik
               initialValues={intialValues}
-              onSubmit={async(values : Assignment) => {
-                   if(values.id === 0)
-                   {
-                     await AddData(values);
-                     onAddHandler(values);
-                   }
+              onSubmit={async(values : WorkExperience) => {
+                if(values.id === 0)
+                    {
+                      await AddData(values);
+                      onAddHandler(values);
+                    }
+ 
+                    else
+                    {
+                     await UpdateData(values);
+                     onUpdateHandler(values);
+                    }
 
-                   else
-                   {
-                    await UpdateData(values);
-                    onUpdateHandler(values);
-                   }
-                 
               }}
             >
               {({ setFieldValue,values }) => (
@@ -173,19 +148,15 @@ const Addassignment : React.FC<ModalProps> = ({isOpen, onClose,intialValues,onAd
                     <FormDiv>
                     <div>
                      <label>Company / Organisation *</label>
-                     <Input style={OverrideCss} defaultValue={intialValues.organisation} name='organisation' onChange={(e) => setFieldValue('organisation', e.target.value)} />
+                     <Input defaultValue={intialValues.organisation} name='organisation' onChange={(e) => setFieldValue('organisation', e.target.value)} />
                      </div>
                      <div>
-                     <label>Title *</label>
-                     <Input style={OverrideCss} defaultValue={intialValues.title}  name='title' onChange={(e) => setFieldValue('title', e.target.value)} />
+                     <label>Role *</label>
+                     <Input  defaultValue={intialValues.role}  name='role' onChange={(e) => setFieldValue('role', e.target.value)} />
                      </div>
                      <div>
-                     <label>Assignment Description</label>
-                     <Input style={OverrideCss} defaultValue={intialValues.description} name='description' onChange={(e) => setFieldValue('description', e.target.value)} />
-                     </div>
-                     <div>
-                     <label>Brief Description for Infographic Resume</label>
-                     <Input style={OverrideCss} defaultValue={intialValues.infohraphicResumeDescription} name='infohraphicResumeDescription' onChange={(e) => setFieldValue('infohraphicResumeDescription', e.target.value)} />
+                     <label>Role Description</label>
+                     <Input  defaultValue={intialValues.roleDescription} name='roleDescription' onChange={(e) => setFieldValue('roleDescription', e.target.value)} />
                      </div>
                      <FlexDiv>
                      <div>
@@ -212,4 +183,4 @@ const Addassignment : React.FC<ModalProps> = ({isOpen, onClose,intialValues,onAd
     )
 }
 
-export default Addassignment;
+export default Addworkexperience;

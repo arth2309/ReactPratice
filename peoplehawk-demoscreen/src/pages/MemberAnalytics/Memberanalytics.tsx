@@ -3,7 +3,7 @@ import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import { useEffect, useState } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
-import { MemberAnalytics as List, OptionTypes , MemberAnalyticsFilter} from "../../interface/Interface";
+import { MemberAnalytics as List, OptionTypes} from "../../interface/Interface";
 import { MemberAnalyticsList,MemberAnalyticsCount } from "../../services/MemberAnalyticsService";
 import { ReactSelect } from "../../components/layout/form/Select";
 import  personalityQuizCompleted from '../../assests/img/personality_quiz-completed.svg'
@@ -52,15 +52,6 @@ interface SwitchHandleProps {
       isOn: boolean;
     }
     
-    
-
-interface ResumeProps {
-    infographic : boolean,
-    peoplehawk : boolean,
-    member : boolean,
-    any : boolean
-}
-
 interface ColorProps {
     color : string
 }
@@ -378,27 +369,24 @@ const Memberanalytics = () => {
 
    const candidateTypeHandler = (value : string | undefined) =>
    {
-    seturlState({...urlState,memberType : value != undefined ? value : '',page : 1});
-     state.memberType = value != undefined ? value : '';
+    seturlState({...urlState,memberType : value !== undefined ? value : '',page : 1});
+     state.memberType = value !== undefined ? value : '';
       state.page = 1
    }
 
    const countryTypeHandler = (value : number) =>
     {
-     
-      // setCountry(value);
       seturlState({...urlState,countryId : value, page : 1});
-      // setPage(1);
-
+       setPage(1);
     }
 
    
 
-   // eslint-disable-next-line
+   
    
    useEffect(() => { 
-    
     fetchData(); 
+    // eslint-disable-next-line
   },[urlState]);
  
 

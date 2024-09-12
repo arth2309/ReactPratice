@@ -1,23 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
-import { EducationDetail } from "../../interface/Interface";
-import { CSSProperties } from "react";
-import Yup from 'yup'
+import { EducationDetail } from "../interface/Interface";
 import { Form, Formik } from "formik";
-import Input from "../../components/layout/form/Input";
+import Input from "../components/layout/form/Input";
 
 
-const OverrideCss : CSSProperties = {
-    backgroundColor : 'white',
-    height : '45px', 
-}
 
-const FlexCss : CSSProperties = {
-    display : 'flex',
-    alignItems : 'end'
-}
 
 interface ModalProps {
-    isOpen : boolean,
     onClose : () => void,
     defaultValues : EducationDetail,
     onEditHandler : (values : EducationDetail) => void
@@ -42,7 +31,7 @@ const slideIn = keyframes`
   }
 `;
 
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
+const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -53,23 +42,20 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   align-items: center;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.5);
-  opacity: ${props => (props.isOpen ? '1' : '0')};
-  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${fadeIn} 0.3s ease-in-out` : 'none')};
+  animation: ${ css`${fadeIn} 0.3s ease-in-out`};
 `;
 
-const ModalContent = styled.div<{ isOpen: boolean }>`
+const ModalContent = styled.div`
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 800px;
   padding: 20px 50px;
   position: relative;
-  transform: ${props => (props.isOpen ? 'translateY(0)' : 'translateY(-50px)')};
-  opacity: ${props => (props.isOpen ? '1' : '0')};
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${slideIn} 0.3s ease-in-out` : 'none')};
+  animation: ${ css`${slideIn} 0.3s ease-in-out`};
 `;
 
 const ModalHeader = styled.div`
@@ -99,16 +85,29 @@ const ModalBody = styled.div`
    height: 603px;
    overflow-y : auto;
 `;
-const Updateeducation : React.FC<ModalProps> = ({isOpen, onClose,defaultValues,onEditHandler}) =>  
+
+const FormDiv = styled.div`
+input
+  {
+    background-color : white;
+    height : 45px; 
+  }
+
+  .datepicker
+                {
+                  height : 40px;
+                  border : 1px solid #ced4da;
+                  border-radius : 0.25rem; 
+                  font-size : 1rem;
+                }`
+
+
+const Updateeducation : React.FC<ModalProps> = ({ onClose,defaultValues,onEditHandler}) =>  
     {
 
-     
-
-        if(!isOpen) {return null}
-
     return(
-        <ModalOverlay isOpen={isOpen} onClick={onClose}>
-          <ModalContent isOpen={isOpen} onClick={(e) => e.stopPropagation()}>
+        <ModalOverlay onClick={onClose}>
+          <ModalContent  onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
             <Title>Edit</Title>
             <ModalClose onClick={onClose}>X</ModalClose>
@@ -122,23 +121,25 @@ const Updateeducation : React.FC<ModalProps> = ({isOpen, onClose,defaultValues,o
             >
               {({ setFieldValue }) => (
                 <Form>
+                  <FormDiv>
                     <div>
                      <label>School / Organisation *</label>
-                     <Input style={OverrideCss} defaultValue={defaultValues.school} name='school' onChange={(e) => setFieldValue('school', e.target.value)} />
+                     <Input  defaultValue={defaultValues.school} name='school' onChange={(e) => setFieldValue('school', e.target.value)} />
                      </div>
                      <div>
                      <label>Subject *</label>
-                     <Input style={OverrideCss} defaultValue={defaultValues.subject}  name='subject' onChange={(e) => setFieldValue('subject', e.target.value)} />
+                     <Input  defaultValue={defaultValues.subject}  name='subject' onChange={(e) => setFieldValue('subject', e.target.value)} />
                      </div>
                      <div>
                      <label>Grade</label>
-                     <Input style={OverrideCss} defaultValue={defaultValues.grade} name='grade' onChange={(e) => setFieldValue('grade', e.target.value)} />
+                     <Input  defaultValue={defaultValues.grade} name='grade' onChange={(e) => setFieldValue('grade', e.target.value)} />
                      </div>
                      <div>
                      <label>Comments</label>
                      <textarea style={{width : '99%'}} defaultValue={defaultValues.comments} name='comments' onChange={(e) => setFieldValue('comments', e.target.value)}  />
                      </div>
                   <button type="submit">Confirm</button>
+                  </FormDiv>
                 </Form>
               )}
             </Formik>

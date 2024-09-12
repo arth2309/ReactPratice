@@ -17,8 +17,8 @@ public class WorkExperienceService : GenericService<WorkExperience>, IWorkExperi
     public async Task<WorkExperienceDTO> AddData(WorkExperienceDTO workExperienceDTO)
     {
 
-        await AddAsync(workExperienceDTO.FromDto());
-        return workExperienceDTO;
+        var entities = await AddAsync(workExperienceDTO.FromDto());
+        return entities.ToDto();
     }
 
     public async Task<WorkExperienceDTO> DeleteData(int Id)

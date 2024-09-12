@@ -6,6 +6,10 @@ type AuthProvider = {
     children : ReactNode
 }
 
+interface JwtPayload {
+  UserData: string; 
+}
+
 interface Candidate {
   Id : number,
   FirstName : string,
@@ -36,12 +40,12 @@ export const AuthContextProvider = (props : AuthProvider) => {
 
      const intialToken = getToken();
       const[token,setToken] = useState<string | null>(intialToken)
-      const[userData,setUserData] = useState<Candidate | null>(intialToken ? JSON.parse(decodeJwt<any>(intialToken).UserData) : null)
+      const[userData,setUserData] = useState<Candidate | null>(intialToken ? JSON.parse(decodeJwt<JwtPayload>(intialToken).UserData) : null)
       const userIsLoggedIn = !!token
 
       const loginHandler = (token : string) => {
         setToken(token);
-        const claims = decodeJwt<any>(token);
+        const claims = decodeJwt<JwtPayload>(token);
         setUserData(JSON.parse(claims.UserData));
         token && storeToken(token);
       };

@@ -8,7 +8,7 @@ import {
   deleteFile,
   updateFile,
 } from "../../services/ResumeService";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {styled} from 'styled-components';
@@ -95,8 +95,6 @@ const Resumeupload = () => {
   };
 
   const handleSelectOption = (field: string, value: any) => {
-
-   
     if (value.value === "delete") {
       deleteResume();
       setSelectedOption(null);
@@ -149,7 +147,7 @@ const Resumeupload = () => {
       }
     }
   };
-
+  const {userId} = useParams<{userId : string}>();
   return (
     <Container
     >
@@ -162,7 +160,7 @@ const Resumeupload = () => {
         onChange={handleFileChange}
       />
       <NavigateContainer>
-        <BackButton onClick={() => navigate(ROUTES.HOME)}>
+        <BackButton onClick={() => navigate(generatePath(ROUTES.HOME,{userId: 2}))}>
           <Arrow
             className="arrow"
           />

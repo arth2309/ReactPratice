@@ -17,6 +17,10 @@ const EducationCard = styled.div({
     borderRadius : '8px'
 });
 
+const IconDiv = styled.div({
+  cursor : 'pointer'
+});
+
 const EducationCardHead = styled.div({
     display : 'flex',
     justifyContent : 'space-between',
@@ -97,8 +101,8 @@ export const EducationList : React.FC<EducationListProps> = ({openProfile,dataLi
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>
-                <div onClick={() => HandleDelete(index,data.id)}><DeleteIcon /></div>
-                <div onClick={() => OpenEditModal(index)}><EditIcon /> </div>
+                <IconDiv onClick={() => HandleDelete(index,data.id)}><DeleteIcon /></IconDiv>
+                <IconDiv onClick={() => OpenEditModal(index)}><EditIcon /> </IconDiv>
               </IconCard>
             </EducationMainSubCard>
           </EducationMainCard>

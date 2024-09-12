@@ -15,7 +15,16 @@ interface ToastProps
     UPLOAD_RESUME : ToastComponentProps,
     DELETE_RESUME : ToastComponentProps,
     UPDATE_RESUME : ToastComponentProps,
-    EMAIL_ALREADY_EXIST : ToastComponentProps
+    EMAIL_ALREADY_EXIST : ToastComponentProps,
+    DELETE_ASSIGNMENT : ToastComponentProps,
+    DELETE_WORK_EXPERIENCE : ToastComponentProps,
+    DELETE_EDUCATION_DETAIL : ToastComponentProps,
+    ADD_ASSIGNMENT : ToastComponentProps,
+    ADD_WORK_EXPERIENCE : ToastComponentProps,
+    ADD_EDUCATION_DETAIL : ToastComponentProps,
+    UPDATE_ASSIGNMENT : ToastComponentProps,
+    UPDATE_WORK_EXPERIENCE : ToastComponentProps,
+    UPDATE_EDUCATION_DETAIL : ToastComponentProps,
 }
 
 export const TOAST : ToastProps   = {
@@ -63,5 +72,51 @@ export const TOAST : ToastProps   = {
         title : 'Error',
         description : 'email already exist',
         type : 'error'
-    }
+    },
+    ADD_EDUCATION_DETAIL : {
+        title : 'Success',
+        description : 'Education Detail added Successfully',
+        type : 'success'
+    },
+    ADD_ASSIGNMENT : {
+        title : 'Success',
+        description : 'Assignment added Successfully',
+        type : 'success'
+    },
+    ADD_WORK_EXPERIENCE : {
+        title : 'Success',
+        description : 'Work Experience added Successfully',
+        type : 'success'
+    },
+    DELETE_EDUCATION_DETAIL : {
+        title : 'Success',
+        description : 'Education Detail deleted Successfully',
+        type : 'success'
+    },
+    DELETE_ASSIGNMENT : {
+        title : 'Success',
+        description : 'Assignment deleted Successfully',
+        type : 'success'
+    },
+    DELETE_WORK_EXPERIENCE : {
+        title : 'Success',
+        description : 'Work Experience deleted Successfully',
+        type : 'success'
+    },
+
+    UPDATE_EDUCATION_DETAIL : {
+        title : 'Success',
+        description : 'Education Detail updated Successfully',
+        type : 'success'
+    },
+    UPDATE_ASSIGNMENT : {
+        title : 'Success',
+        description : 'Assignment updated Successfully',
+        type : 'success'
+    },
+    UPDATE_WORK_EXPERIENCE : {
+        title : 'Success',
+        description : 'Work Experience updated Successfully',
+        type : 'success'
+    },
 } 

@@ -18,12 +18,15 @@ public class EducationDetailService : GenericService<EducationDetail>, IEducatio
 
     public async Task<List<EducationDetailDto>> AddData(List<EducationDetailDto> educationDetailDtos)
     {
+        List<EducationDetailDto> educationDetailDtos1 = new List<EducationDetailDto>();
+
         foreach (var educationDetailDto in educationDetailDtos)
         {
            educationDetailDto.RewardedDate = DateTime.Parse(educationDetailDto.RewardedDate.ToString());
-            await AddAsync(educationDetailDto.FromDto());
+            var entity = await AddAsync(educationDetailDto.FromDto());
+            educationDetailDtos1.Add(entity.ToDto());
         }
-         return educationDetailDtos;
+         return educationDetailDtos1;
     }
 
     public async Task<EducationDetailDto> DeleteData(int Id)

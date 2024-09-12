@@ -57,12 +57,21 @@ const IconCard = styled.div({
   display : 'flex',
   gap : '10px',
   justifyContent : 'center'
+});
+
+const ButtonDiv = styled.div({
+    display : 'flex',
+    gap : '10px'
+})
+
+const IconDiv = styled.div({
+  cursor : 'pointer'
 })
 
 const PrimaryButton = styled.button({
     cursor: "pointer",
     backgroundColor: "#F96332",
-    width: "300px",
+   
     fontSize : '16px',
     fontWeight : '600',
     display: "flex",
@@ -78,19 +87,25 @@ export const ExperiencedHiredList : React.FC<ExperienceHiredProps> = ({openAssig
                 <EducationCardHead>
                   <EducationCardHeadLeft>
                     <EducationTitle>
-                      Education
+                      Experience
                     </EducationTitle>
                     <div>
-                      List the education and achievements you have attained to help demonstrate your successes in life and your career
+                      List the Assignments and Experience 
                     </div>
                   </EducationCardHeadLeft>
+                  <ButtonDiv>
                   <PrimaryButton onClick={openAssignment}>
                     Add Assignment
                   </PrimaryButton>
                   <PrimaryButton onClick={openWorkExperience}>
                     Add Work Experience
                   </PrimaryButton>
+                  </ButtonDiv>
                 </EducationCardHead>
+                <h3>
+                  Assignment
+                </h3>
+    
                 {assignmentList && assignmentList.map((data, index) => (
           <EducationMainCard key={index}>
              <EducationMainSubCard>
@@ -112,6 +127,9 @@ export const ExperiencedHiredList : React.FC<ExperienceHiredProps> = ({openAssig
                 
 
         ))}
+         <h3>
+                  Work Experience
+                </h3>
         {workExperienceList && workExperienceList.map((data, index) => (
           <EducationMainCard key={index}>
              <EducationMainSubCard>
@@ -125,8 +143,8 @@ export const ExperiencedHiredList : React.FC<ExperienceHiredProps> = ({openAssig
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>
-                <div onClick={() => handleWorkExperienceDelete(index,data.id)}><DeleteIcon /></div>
-                <div onClick={() => OpenWorkExperienceEditModal(index)}><EditIcon /> </div>
+                <IconDiv onClick={() => handleWorkExperienceDelete(index,data.id)}><DeleteIcon /></IconDiv>
+                <IconDiv onClick={() => OpenWorkExperienceEditModal(index)}><EditIcon /> </IconDiv>
               </IconCard>
             </EducationMainSubCard>
           </EducationMainCard>

@@ -8,7 +8,7 @@ import Slider from "./Slider";
 import { SubmitTest} from "../../interface/Interface";
 import { getQuiz, QuizResponse, QuizEligible } from "../../services/PersonalityTestService";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useNavigate } from "react-router-dom";
+import { generatePath, useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ROUTES } from "../../constants/routes";
 
@@ -260,11 +260,13 @@ const Personalitytest: React.FC = () => {
     setIsSliderTouched(true);
   }
 
+  const {userId} = useParams<{userId : string}>();
+
   return (
     <Container>
       <Header />
       <BackButtonContainer>
-        <BackButton onClick={() => {navigate(ROUTES.HOME)}}>
+        <BackButton onClick={() => {navigate(generatePath(ROUTES.HOME, { userId: userId}))}}>
           <ArrowBackIosIcon />
           Back
         </BackButton>

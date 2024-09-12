@@ -1,16 +1,15 @@
 import { Chart} from "chart.js/auto";
 import { CategoryScale } from "chart.js/auto";
 import { Bar} from "react-chartjs-2";
-
 import { CourseInterestData } from "../../IdealCourseInterests";
-import { CourseInterest } from "../../IdealCourseInterests"
+import { CourseInterest } from "../../IdealCourseInterests";
+
 
 Chart.register(CategoryScale);
 
 const Testinterestanalysischart = (props : any) => {
 
     const {onCardHandler} = props
-
     const object =  {
         A: 84,
         C: 81.92,
@@ -25,8 +24,6 @@ const Testinterestanalysischart = (props : any) => {
     
       const array = CourseInterestData.sort((a, b) => object.career_code.indexOf(a.name.charAt(0).toUpperCase()) - object.career_code.indexOf(b.name.charAt(0).toUpperCase())).slice(3,6);
 
-     
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -34,7 +31,6 @@ const Testinterestanalysischart = (props : any) => {
     onClick: (event : any, elements : any) => {
       if (elements.length > 0) {
         const clickedIndex = elements[0].index;
-       
         onCardHandler(array[clickedIndex].name);
       }
     },
@@ -61,8 +57,6 @@ const Testinterestanalysischart = (props : any) => {
             return value.toFixed(2); 
           },
         },
-        
-        
       },
   };
 
@@ -73,31 +67,20 @@ const Testinterestanalysischart = (props : any) => {
 
     datasets: [
       {
-       
         backgroundColor: array.map((item : CourseInterest) => item.color1),
         borderColor: 'rgba(255,99,132,1)',
         borderWidth: 1,
         hoverBackgroundColor: array.map((item : CourseInterest) => item.color2),
         hoverBorderColor: 'rgba(255,99,132,1)',
         data: [82.5,82.35, 82.69] 
-
-
-
       }
     ]
 
   };
 
-  
-
-
-
   return (
     <>
-    <Bar data={data} options={options}  />
-    
-
-
+    <Bar data={data} options={options} />
     </>
   );
 };

@@ -41,18 +41,14 @@ export const Register = async (
     }
   };
   
-  export const Login = async (data: LoginFormValues): Promise<any> => {
+  export const Login = async (data: LoginFormValues): Promise<string | null> => {
     try {
       const response = await apiClient.post(API_ENDPOINTS.LOGIN, data);
       return response.data;
     } catch (error) {
           showToast(TOAST.INVALID_CREDENTIALS.title,TOAST.INVALID_CREDENTIALS.description,TOAST.INVALID_CREDENTIALS.type);
+          return null;
     }
   };
   
-  export const ForgotPassword = async (
-    data: ForgotPasswordValues
-  ): Promise<any> => {
-    const response = apiClient.post<string>(API_ENDPOINTS.FORGOT_PASSWORD, data);
-    showToast(TOAST.INVALID_CREDENTIALS.title,(await response).data,TOAST.INVALID_CREDENTIALS.type);
-  };
+  

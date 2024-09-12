@@ -7,7 +7,9 @@ import { Heading, MainContent } from "./styled";
 
 
 
-const Memberinterestanalysis = (props : any ) => {
+
+
+const Memberinterestanalysis  = (props : any ) => {
 
   const {courseInterest ,chartData} = props
  

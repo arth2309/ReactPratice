@@ -197,6 +197,17 @@ export interface Assignment
   isOngoing: boolean
 }
 
+export interface CandidateDetail 
+{
+   profilePhoto : string | null,
+   userProgress : CandidateProgress,
+   competencies : Competency[],
+   userCompentencyDetails : UserCompetency[],
+   educations : EducationDetail[] | null,
+   assignments : Assignment[] | null,
+   workExperiences : WorkExperience[] | null
+}
+
 export interface WorkExperience
 {
   id: number,
@@ -208,3 +219,12 @@ export interface WorkExperience
   endDate : Date | null,
   isOngoing: boolean
 }
+
+export interface ResumeFile
+{
+    id : number,
+    fileName : string,
+    filePath : string,
+    uploadDate : string
+}
+

@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
     USER_COMPENTENCIES_LIST : 'candidate/user-compentencies',
     COURSE_INTEREST : 'candidate/courseInterests',
     GET_CHART_DATA : 'candidate/1/chart',
+    USER_DETAIL : (UserId : number) => `candidate/${UserId}/candidateDetail`,
     QUIZ_LIST : 'candidate/quiz',
     QUIZ_RESPONSE : 'candidate/personalityreport',
     QUIZ_ELIGIBLE : (UserId : number) => `candidate/personalityreport/${UserId}`,
@@ -59,6 +60,7 @@ export const API_ENDPOINTS = {
     ASSIGNMENT :  `candidate/assignment`,
     WORK_EXPERIENCE_USER_ID : (userId : number) => `candidate/work-experience?UserId=${userId}`,
     WORK_EXPERIENCE :  `candidate/work-experience`
+
 }
 
 

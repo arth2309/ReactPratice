@@ -1,12 +1,13 @@
 import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
-import { FileUploadData } from "../interface/Interface";
+import { FileUploadData, ResumeFile} from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import {TOAST} from '../constants/toast';
 
 
 
-export const uploadFile = async (data: FileUploadData,UserId : number): Promise<any> => {
+
+export const uploadFile = async (data: FileUploadData,UserId : number): Promise<ResumeFile | null> => {
     try {
       const formData = new FormData();
       formData.append(`file`, data.file);
@@ -18,10 +19,9 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
       });
   
       setTimeout(() => {showToast(TOAST.UPLOAD_RESUME.title,TOAST.UPLOAD_RESUME.description,TOAST.UPLOAD_RESUME.type)},1000)
-      return response;
+      return response.data;
     } catch (error) {
-      
-      
+      return null;
     }
   };
   
@@ -34,19 +34,18 @@ export const uploadFile = async (data: FileUploadData,UserId : number): Promise<
       const url = URL.createObjectURL(response.data);
   
       return url;
-    } catch (error: any) {
+    } catch (error) {
       return null;
     }
   };
   
-  export const deleteFile = async (fileId: number): Promise<any> => {
+  export const deleteFile = async (fileId: number): Promise<ResumeFile | null> => {
     try {
       const response = await apiClient.delete(API_ENDPOINTS.CRUD_FILE(fileId));
       setTimeout(() => {showToast(TOAST.DELETE_RESUME.title,TOAST.DELETE_RESUME.description,TOAST.DELETE_RESUME.type)},1000);
       return response.data;
     } catch (error) {
-      
-  
+      return null;
     }
   };
   

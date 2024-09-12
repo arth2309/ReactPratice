@@ -8,20 +8,7 @@ import { getCourseInterest, getChartData } from '../../services/IdealCoursesServ
 
 const Useranalysis = () => {
 
-    const [courseInterest, setCourseInterest] = useState<CourseInterest[]>([
-        {
-          id: 1,
-          name: "ARTISTIC",
-          description:
-            "Artistic types (Creators): tend to think outside the box and to come up with innovative ideas.",
-          features: "Expressive, Imaginative, Free-spirited",
-          likes: "see things from Different Perspectives",
-          courses:
-            "Fine Arts, Graphic Design, Music, Media, Interior Design, Architecture, Communications",
-          color1: "#2e6747",
-          color2: "#58856c",
-        },
-      ]);
+    const [courseInterest, setCourseInterest] = useState<CourseInterest[]>();
 
       const [chartData, setChartData] = useState<ChartData>({
         id: 1,

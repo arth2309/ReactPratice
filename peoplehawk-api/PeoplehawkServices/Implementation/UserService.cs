@@ -23,13 +23,27 @@ public class UserService : GenericService<User>,IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IResumeFileService _resumeFileService;
+    private readonly IPersonalityReportService _personalityReportService;
+    private readonly IEducationDetailService _educationDetailService;
+    private readonly IAssignmentService _assignmentService;
+    private readonly IWorkExperienceService _workExperienceService;
+    private readonly ICompentencyService _compentencyService;
+    private readonly IUserCompentencyDetailService _userCompentencyDetailService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         secretKey = configuration.GetValue<string>("Jwt:Secret");
+        _personalityReportService = personalityReportService;
+        _resumeFileService = resumeFileService;
+        _assignmentService = assignmentService;
+        _educationDetailService = educationDetailService;
+        _workExperienceService = workExperienceService;
+        _compentencyService = compentencyService;
+        _userCompentencyDetailService = userCompentencyDetailService;
     }
 
     public async Task<string> Login(LoginDetails loginDetails)
@@ -140,4 +154,52 @@ public class UserService : GenericService<User>,IUserService
         Expression<Func<User, bool>> predicate = user => user.FirstName.Contains("a") && user.LastName.Contains("g");
         return await _userRepository.GetByCriteriaAsync(filter : predicate,page : page,pageSize : pageSize,includes : includes, orderBy : orderBy);
     }
+
+    public async Task<UserDetailDTO> GetDetail(int UserId)
+    {
+
+        UserDetailDTO userDetailDTO  = new UserDetailDTO();
+        int x = 0;
+        ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);
+        if (resumeFileDTO != null)
+        {
+            x = x + 50;
+        }
+
+        QuizStatus quizStatus = await _personalityReportService.GetReport(UserId);
+
+        if (quizStatus.IsFirstTestGiven == true)
+        {
+            x = x + 50;
+        }
+        userDetailDTO.UserProgress = new ProgressDTO()
+        {
+            isResumeUpload = resumeFileDTO != null ? true : false,
+            Progress = x
+    };
+
+        User user = await FirstorDefaultAsync(x => x.Id == UserId);
+        string? base64String;
+        if (user.ProfilePhoto != null)
+        {
+            string uploadsFolder = Path.Combine("Files");
+            string filePath = Path.Combine(uploadsFolder, user.ProfilePhoto);
+            var fileBytes = File.ReadAllBytes(filePath);
+            base64String = Convert.ToBase64String(fileBytes);
+        }
+
+        else
+        {
+            base64String = null;
+        }
+        userDetailDTO.ProfilePhoto = base64String;
+        userDetailDTO.competencies = await _compentencyService.GetList();
+        userDetailDTO.userCompentencyDetails = await _userCompentencyDetailService.GetList();
+        userDetailDTO.Educations = !(user.MemberType == "Experienced Hire") ? await _educationDetailService.GetList(UserId) : null;
+        userDetailDTO.Assignments = user.MemberType == "Experienced Hire" ? await _assignmentService.GetList(UserId) : null;
+        userDetailDTO.WorkExperiences = user.MemberType == "Experienced Hire" ? await _workExperienceService.GetList(UserId) : null;    
+        return userDetailDTO;
+    }
 }
+
+

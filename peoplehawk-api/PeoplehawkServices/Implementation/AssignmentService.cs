@@ -19,8 +19,8 @@ public class AssignmentService : GenericService<Assignment>, IAssignmentService
     public async Task<AssignmentDTO> AddData(AssignmentDTO assignmentDTO)
     {
    
-            await AddAsync(assignmentDTO.FromDto());
-              return assignmentDTO;
+          var entites =  await AddAsync(assignmentDTO.FromDto());
+              return entites.ToDto();
     }
 
     public async Task<AssignmentDTO> DeleteData(int Id)

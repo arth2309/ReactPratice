@@ -2,10 +2,10 @@ import React, { useState, useEffect , memo} from 'react';
 import { css, keyframes, styled } from 'styled-components';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
-import { ReactSelect } from '../../components/layout/form/Select';
-import { OptionTypes } from '../../interface/Interface';
-import chartImage from '../../assests/img/competency-test-analytics.png';
-import { Competency,UserCompetency } from '../../interface/Interface';
+import { ReactSelect } from '../components/layout/form/Select';
+import { OptionTypes } from '../interface/Interface';
+import chartImage from '../assests/img/competency-test-analytics.png';
+import { Competency,UserCompetency } from '../interface/Interface';
 
 ChartJS.register(
   CategoryScale,
@@ -15,7 +15,6 @@ ChartJS.register(
 );
 
 interface ModalProps {
-    isOpen: boolean;
     onClose: () => void;
     competencies : Competency[] | null;
     candidates : UserCompetency[] | null;
@@ -39,7 +38,7 @@ const slideIn = keyframes`
   }
 `;
 
-const ModalOverlay = styled.div<{ isOpen: boolean }>`
+const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -50,23 +49,21 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
   align-items: center;
   z-index: 1000;
   background: rgba(0, 0, 0, 0.5);
-  opacity: ${props => (props.isOpen ? '1' : '0')};
-  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${fadeIn} 0.3s ease-in-out` : 'none')};
+  animation: ${css`${fadeIn} 0.3s ease-in-out`};
 `;
 
-const ModalContent = styled.div<{ isOpen: boolean }>`
+const ModalContent = styled.div`
   background: #eef2f6;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 800px;
   padding: 20px 10px;
   position: relative;
-  transform: ${props => (props.isOpen ? 'translateY(0)' : 'translateY(-50px)')};
-  opacity: ${props => (props.isOpen ? '1' : '0')};
+  opacity: 1;
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  animation: ${props => (props.isOpen ? css`${slideIn} 0.3s ease-in-out` : 'none')};
+  animation: ${ css`${slideIn} 0.3s ease-in-out`};
 `;
 
 
@@ -102,6 +99,7 @@ const SelectContainer = styled.div`
   margin-top: 20px;
   width: 75%;
   margin-bottom : 64px;
+  z-index : 5;
 
 `;
 
@@ -193,7 +191,6 @@ const radarOptions = {
     legend: {
       display: false,
     },
-    
   },
 
   elements: {
@@ -239,13 +236,13 @@ const radarOptions = {
   },
 };
 
-const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,competencies,candidates }) => {
+const Compentencytestanalytics: React.FC<ModalProps> = ({onClose,competencies,candidates}) => {
 
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [selectedoption,setSelectedOption] = useState<OptionTypes[] | null>(null);
   const [error,setError] = useState<string>('');
 
-  useEffect(() => {setFilteredData([]);setSelectedOption(null)},[isOpen])
+  useEffect(() => {setFilteredData([]);setSelectedOption(null)},[])
   const radarData = {
     labels: competencies?.map(c => c.title),
     datasets: filteredData.map(candidate => ({
@@ -254,15 +251,12 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
       fill : true,
       borderColor: ['red','green','blue'],
     })),
-
   };
-  
 
-  if(!isOpen) {return null}
 
   return (
-    <ModalOverlay isOpen = {isOpen} onClick={onClose}>
-      <ModalContent isOpen = {isOpen} onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay  onClick={onClose}>
+      <ModalContent  onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <Title>Competency Test Analytics</Title>
           <ModalClose onClick={onClose}>X</ModalClose>
@@ -272,6 +266,7 @@ const Compentencytestanalytics: React.FC<ModalProps> = ({ isOpen, onClose,compet
             <label>Find and Compare Members</label>
             <ReactSelect
               value={selectedoption}
+              effect
               showDropdownIndicator
               options={candidates?.map(candidate => ({ label: candidate.name, value: candidate.id }))}
               name="test"
