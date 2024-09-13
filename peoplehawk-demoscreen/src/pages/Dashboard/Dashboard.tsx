@@ -12,7 +12,7 @@ import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {uploadPhoto,fetchUserDetail} from "../../services/HomeService";
-import { Assignment, CandidateDetail, Competency,EducationDetail,UserCompetency, WorkExperience } from "../../interface/Interface";
+import { Assignment, CandidateDetail,EducationDetail, WorkExperience } from "../../interface/Interface";
 import Compentencytestanalytics from "../../modals/Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
@@ -28,10 +28,11 @@ import { DeleteData,UpdateData} from "../../services/EducationDetailService";
 import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
 import Addworkexperience from "../../modals/Addworkexperience";
 import { EducationList } from "../../components/layout/List/EducationList";
-import { DeleteData as DeleteAssigment,UpdateData as UpdateAssignmentData} from "../../services/AssignmentService";
-import { DeleteData as DeleteWorkExperience, UpdateData as UpdateWorkExperienceData} from "../../services/WorkExperience";
+import { DeleteData as DeleteAssigment} from "../../services/AssignmentService";
+import { DeleteData as DeleteWorkExperience} from "../../services/WorkExperience";
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
 import { useParams } from "react-router-dom";
+
 
 
 
@@ -347,7 +348,7 @@ const Images = styled.img({
 
 const Dashboard  = () => {
 
-  
+ 
 
   const dispatch : AppDispatch = useDispatch();
   const { data, loading } = useSelector((state: RootState) => state.data);

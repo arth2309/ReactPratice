@@ -148,6 +148,7 @@ const Resumeupload = () => {
     }
   };
   const {userId} = useParams<{userId : string}>();
+  console.log(userId)
   return (
     <Container
     >

@@ -3,7 +3,7 @@ export const ROUTES = {
     LOGIN :  '/login',
     REGISTER :'/register',
     FORGOT_PASSWORD : '/forgotpassword',
-    HOME :  `:userId/home`,
+    HOME :  `/home`,
     IDEAL_COURSES : '/ideal-courses',
     RESUME : '/resume',
     PERSONALITY_TEST : '/personality-test',

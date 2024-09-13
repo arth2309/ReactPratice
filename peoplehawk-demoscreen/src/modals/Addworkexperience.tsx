@@ -1,9 +1,11 @@
 import styled, { css, keyframes } from "styled-components";
 import { WorkExperience } from "../interface/Interface";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import Input from "../components/layout/form/Input";
 import DatePicker from 'react-datepicker';
 import { AddData, UpdateData } from "../services/WorkExperience";
+import * as Yup from 'yup';
+import moment from "moment";
 
 
 interface ModalProps {
@@ -111,8 +113,17 @@ const FormDiv = styled.div`
                   border-radius : 0.25rem; 
                   font-size : 1rem;
                 }
+                  .error {
+  color: red;
+  font-size: 1rem;
+}
 `
-
+const validationSchema = Yup.object({
+  organisation: Yup.string().required("Please Enter School/Organisation name"),
+  role: Yup.string().required("Please Enter role"),
+  startDate: Yup.date().required("Please enter start date"),
+  endDate: Yup.date().required("Please enter end date"),
+});
 
 const Addworkexperience : React.FC<ModalProps> = ({ onClose,intialValues,onAddHandler,onUpdateHandler}) =>  
     {
@@ -128,6 +139,7 @@ const Addworkexperience : React.FC<ModalProps> = ({ onClose,intialValues,onAddHa
             <ModalBody>
             <Formik
               initialValues={intialValues}
+              validationSchema={validationSchema}
               onSubmit={async(values : WorkExperience) => {
                 if(values.id === 0)
                     {
@@ -149,10 +161,16 @@ const Addworkexperience : React.FC<ModalProps> = ({ onClose,intialValues,onAddHa
                     <div>
                      <label>Company / Organisation *</label>
                      <Input defaultValue={intialValues.organisation} name='organisation' onChange={(e) => setFieldValue('organisation', e.target.value)} />
+                     <div className="error">
+                    <ErrorMessage  name="organisation" />
+                    </div>
                      </div>
                      <div>
                      <label>Role *</label>
                      <Input  defaultValue={intialValues.role}  name='role' onChange={(e) => setFieldValue('role', e.target.value)} />
+                     <div className="error">
+                    <ErrorMessage  name="role" />
+                    </div>
                      </div>
                      <div>
                      <label>Role Description</label>
@@ -161,15 +179,26 @@ const Addworkexperience : React.FC<ModalProps> = ({ onClose,intialValues,onAddHa
                      <FlexDiv>
                      <div>
                      <label>Start Date*</label>
-                     <DatePicker className='datepicker' name = 'startDate' showFullMonthYearPicker selected={values.startDate} placeholderText='Pick a Date' onChange={(date) => setFieldValue('startDate',date)}  />
+                     <DatePicker
+                     maxDate={values.endDate ? moment(values.endDate).add(-1, 'days').toDate() : moment(new Date()).add(-1, 'days').toDate()}
+                      className='datepicker' name = 'startDate' showFullMonthYearPicker selected={values.startDate} placeholderText='Pick a Date' onChange={(date) => setFieldValue('startDate',date)}  />
+                     <div className="error">
+                    <ErrorMessage  name="startDate" />
+                    </div>
                     </div>
                     <div>
                      <label>End Date*</label>
-                     <DatePicker className='datepicker' name = 'endDate' showFullMonthYearPicker selected={values.endDate} placeholderText='Pick a Date' onChange={(date) => setFieldValue('endDate',date)}  />
+                     <DatePicker
+                      minDate={ moment(values.startDate).add(1, 'days').toDate()}
+                      maxDate={new Date()}
+                      className='datepicker' name = 'endDate' showFullMonthYearPicker selected={values.endDate} placeholderText='Pick a Date' onChange={(date) => setFieldValue('endDate',date)}  />
+                     <div className="error">
+                    <ErrorMessage  name="endDate" />
+                    </div>
                     </div>
                     <label>
-            <Field type="checkbox" name="isOngoing" />
-            Ongoing
+                    <Field type="checkbox" name="isOngoing" checked = {values.isOngoing} onChange ={() => {setFieldValue('isOngoing',!values.isOngoing) ; !values.isOngoing ? setFieldValue('endDate',new Date()) : setFieldValue('endDate',null)}}/>
+                    Ongoing
           </label>
           <button type="submit">Confirm</button>
                      </FlexDiv>

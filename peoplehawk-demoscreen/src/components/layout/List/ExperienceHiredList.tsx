@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { Assignment,WorkExperience } from '../../../interface/Interface';
+import moment from 'moment';
 
 interface ExperienceHiredProps {
     openAssignment : () => void,
@@ -109,13 +110,13 @@ export const ExperiencedHiredList : React.FC<ExperienceHiredProps> = ({openAssig
                 {assignmentList && assignmentList.map((data, index) => (
           <EducationMainCard key={index}>
              <EducationMainSubCard>
-              <div>Foundation Degree</div>
-              <div>{data.description}</div>
+             <div>Company</div>
+              <div>{data.title}</div>
+              <div>{data.organisation}</div>
              </EducationMainSubCard>
              <EducationMainSubCard>
-            <div>IT</div>
-            <div>{data.infohraphicResumeDescription}</div>
-            <div>{data.title}</div>
+             <div>IT</div>
+             <div>{moment(data.startDate).format('ll')} - {data.isOngoing ? 'present' : moment(data.endDate).format('ll') }</div>
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>
@@ -133,13 +134,14 @@ export const ExperiencedHiredList : React.FC<ExperienceHiredProps> = ({openAssig
         {workExperienceList && workExperienceList.map((data, index) => (
           <EducationMainCard key={index}>
              <EducationMainSubCard>
-              <div>Foundation Degree</div>
-              <div>{data.roleDescription}</div>
+              <div>Company</div>
+              <div>{data.role}</div>
+              <div>{data.organisation}</div>
              </EducationMainSubCard>
              <EducationMainSubCard>
             <div>IT</div>
-            <div>{data.roleDescription}</div>
-            <div>{data.organisation}</div>
+            <div>{moment(data.startDate).format('ll') + '-' + moment(data.endDate).format('ll')}</div>
+           
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>

@@ -1,16 +1,14 @@
 import styled, { css, keyframes } from "styled-components";
 import { EducationDetail } from "../interface/Interface";
-import { Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 import Input from "../components/layout/form/Input";
-
-
+import * as Yup from 'yup';
 
 
 interface ModalProps {
     onClose : () => void,
     defaultValues : EducationDetail,
     onEditHandler : (values : EducationDetail) => void
-   
 }
 
 const fadeIn = keyframes`
@@ -99,8 +97,19 @@ input
                   border : 1px solid #ced4da;
                   border-radius : 0.25rem; 
                   font-size : 1rem;
-                }`
+                }
 
+.error {
+  color: red;
+  font-size: 1rem;
+}
+                  
+                `
+
+                const validationSchema = Yup.object({
+                  school: Yup.string().required("Please Enter School/Organisation name"),
+                  subject: Yup.string().required("Please Enter subject"),
+                });            
 
 const Updateeducation : React.FC<ModalProps> = ({ onClose,defaultValues,onEditHandler}) =>  
     {
@@ -115,6 +124,9 @@ const Updateeducation : React.FC<ModalProps> = ({ onClose,defaultValues,onEditHa
             <ModalBody>
             <Formik
               initialValues={defaultValues}
+              validationSchema={validationSchema}
+              validateOnChange = {false}
+              validateOnBlur = {false}
               onSubmit={(values : EducationDetail) => {
                  onEditHandler(values);
               }}
@@ -125,18 +137,24 @@ const Updateeducation : React.FC<ModalProps> = ({ onClose,defaultValues,onEditHa
                     <div>
                      <label>School / Organisation *</label>
                      <Input  defaultValue={defaultValues.school} name='school' onChange={(e) => setFieldValue('school', e.target.value)} />
+                     <div className="error">
+                    <ErrorMessage name="school" />
+                    </div>
                      </div>
                      <div>
                      <label>Subject *</label>
                      <Input  defaultValue={defaultValues.subject}  name='subject' onChange={(e) => setFieldValue('subject', e.target.value)} />
+                     <div className="error">
+                    <ErrorMessage name="subject" />
+                    </div>
                      </div>
                      <div>
                      <label>Grade</label>
-                     <Input  defaultValue={defaultValues.grade} name='grade' onChange={(e) => setFieldValue('grade', e.target.value)} />
+                     <Input defaultValue={defaultValues.grade} name='grade' onChange={(e) => setFieldValue('grade', e.target.value)} />
                      </div>
                      <div>
                      <label>Comments</label>
-                     <textarea style={{width : '99%'}} defaultValue={defaultValues.comments} name='comments' onChange={(e) => setFieldValue('comments', e.target.value)}  />
+                     <textarea style={{width : '99%'}} defaultValue={defaultValues.comments} name='comments' onChange={(e) => setFieldValue('comments', e.target.value)} />
                      </div>
                   <button type="submit">Confirm</button>
                   </FormDiv>

@@ -11,7 +11,6 @@ import AuthContext from "../store/AuthContext";
 import "react-datepicker/dist/react-datepicker.css";
 import { AddData } from "../services/EducationDetailService";
 
-
 const FlexDiv = styled.div ({
   display: "flex",
   alignItems: "end",
@@ -189,12 +188,14 @@ const Addeducation: React.FC<ModalProps> = ({ onClose, onAddData }) => {
           <Formik
             initialValues={intialValues}
             validationSchema={validationSchema}
+            validateOnChange = {false}
+            validateOnBlur = {false}
             onSubmit={async (values: FormValues) => {
               const response = await AddData(DataConversion(values));
               response && onAddData(response);
             }}
           >
-            {({ values, setFieldValue, touched, errors }) => (
+            {({values, setFieldValue, touched, errors }) => (
               <Form>
                 <FormDiv>
                 <SchoolDiv>

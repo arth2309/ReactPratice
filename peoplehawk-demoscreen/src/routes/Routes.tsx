@@ -1,4 +1,4 @@
-import { BrowserRouter,Route, Routes as Main, Navigate ,generatePath} from "react-router-dom";
+import { BrowserRouter,Route, Routes as Main, Navigate } from "react-router-dom";
 import Resumeupload from "../pages/Resume/Resumeupload";
 import Useranalysis from "../pages/IdealCoursesAnalysis/Useranalysis";
 import { Login } from "../pages/Authentication/Login";
@@ -11,7 +11,6 @@ import {ROUTES} from '../constants/routes';
 import Memberanalytics from "../pages/MemberAnalytics/Memberanalytics";
 import { getToken } from "../utils/manageAccessToken";
 
-
 const Routes = () => {
     const authCtx = useContext(AuthContext);
     const token = getToken();
@@ -19,15 +18,15 @@ const Routes = () => {
     return(
         <BrowserRouter>
         <Main>
-            <Route path = {ROUTES.BASE} element = {!token ?<Navigate to = {ROUTES.LOGIN}/> :  <Navigate to = {generatePath(ROUTES.HOME, { userId: authCtx.userData ? authCtx.userData.Id.toString() : ''})} />}></Route>
-            <Route path={generatePath(ROUTES.HOME,{userId: authCtx.userData ? authCtx.userData.Id.toString() : '' })} element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
+            <Route path = {ROUTES.BASE} element = {!token ?<Navigate to = {ROUTES.LOGIN}/> :  <Navigate to = {ROUTES.HOME} />}></Route>
+            <Route path={ROUTES.HOME} element = {authCtx.isLoggedIn ?<Dashboard /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
            <Route path = {ROUTES.IDEAL_COURSES} element = {authCtx.isLoggedIn ?<Useranalysis /> : <Navigate to={ROUTES.LOGIN}/>}></Route>  
             <Route path= {ROUTES.RESUME} element = {authCtx.isLoggedIn ?<Resumeupload /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
             <Route path = {ROUTES.LOGIN} element = {<Login />}></Route>
             <Route path = {ROUTES.PERSONALITY_TEST} element = {authCtx.isLoggedIn ?<Personalitytest /> : <Navigate to={ROUTES.LOGIN}/>}></Route>
             <Route path = {ROUTES.REGISTER} element = {<Register />}></Route>
             <Route path = {ROUTES.MEMBER_ANALYTICS} element = {<Memberanalytics />}></Route>
-            <Route path = {ROUTES.OTHERS} element = {!token ?<Navigate to = {ROUTES.LOGIN} /> :  <Navigate to = {generatePath(ROUTES.HOME, { userId: authCtx.userData ? authCtx.userData.Id.toString() : ''})} />}></Route>
+            <Route path = {ROUTES.OTHERS} element = {!token ?<Navigate to = {ROUTES.LOGIN} /> :  <Navigate to = {ROUTES.HOME} />}></Route>
         </Main>
         </BrowserRouter>
     );

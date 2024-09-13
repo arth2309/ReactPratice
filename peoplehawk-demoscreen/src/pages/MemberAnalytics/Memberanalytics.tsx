@@ -23,6 +23,7 @@ import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { useNavigate } from "react-router-dom";
 
+
 const defaults = {
   page: 1,
   isInfographicResume: false,
@@ -353,7 +354,7 @@ const Memberanalytics = () => {
          state.sortBy = urlState.sortBy;
          state.isOn = urlState.isOn;
          state.page = urlState.page;
-         navigate('/home');
+         navigate(':userId/home');
    } 
 
 

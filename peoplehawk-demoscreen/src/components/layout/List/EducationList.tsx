@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { EducationDetail } from '../../../interface/Interface';
+import moment from 'moment';
 
 interface EducationListProps {
     openProfile : () => void,
@@ -57,7 +58,8 @@ const IconCard = styled.div({
   display : 'flex',
   gap : '10px',
   justifyContent : 'center'
-})
+});
+
 
 const PrimaryButton = styled.button({
     cursor: "pointer",
@@ -91,13 +93,14 @@ export const EducationList : React.FC<EducationListProps> = ({openProfile,dataLi
                 {dataList && dataList.map((data, index) => (
           <EducationMainCard key={index}>
              <EducationMainSubCard>
-              <div>Foundation Degree</div>
-              <div>{data.subject}</div>
+              <h4>Foundation Degree</h4>
+              <div>{data.grade}</div>
+              <div>{moment(data.rewardedDate).format('ll')}</div>
              </EducationMainSubCard>
              <EducationMainSubCard>
-            <div>IT</div>
+            <h4>IT</h4>
             <div>{data.subject}</div>
-            <div>{data.grade}</div>
+            <div>{data.school}</div>
             </EducationMainSubCard>
             <EducationMainSubCard>
               <IconCard>

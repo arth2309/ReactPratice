@@ -1,10 +1,14 @@
 import styled, { css, keyframes } from "styled-components";
 import { Assignment } from "../interface/Interface";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik,ErrorMessage } from "formik";
 import Input from "../components/layout/form/Input";
 import DatePicker from "react-datepicker";
 import { AddData, UpdateData } from "../services/AssignmentService";
 import * as Yup from "yup";
+import moment from "moment";
+import { newDate } from "react-datepicker/dist/date_utils";
+
+
 
 
 interface ModalProps {
@@ -118,7 +122,11 @@ const FormDiv = styled.div`
                   border-radius : 0.25rem; 
                   font-size : 1rem;
                 }
-  
+
+        .error {
+  color: red;
+  font-size: 1rem;
+}
 `;
 
 const Addassignment: React.FC<ModalProps> = ({
@@ -173,6 +181,9 @@ const Addassignment: React.FC<ModalProps> = ({
                         setFieldValue("organisation", e.target.value)
                       }
                     />
+                    <div className="error">
+                    <ErrorMessage  name="organisation" />
+                    </div>
                   </div>
                   <div>
                     {/* <label>Title *</label> */}
@@ -182,8 +193,10 @@ const Addassignment: React.FC<ModalProps> = ({
                       onChange={(e) => setFieldValue("title", e.target.value)}
                       label="Title"
                       required
-                      
                     />
+                    <div className="error">
+                    <ErrorMessage  name="title" />
+                    </div>
                   </div>
                   <div>
                     <label>Assignment Description</label>
@@ -214,25 +227,35 @@ const Addassignment: React.FC<ModalProps> = ({
                       <DatePicker
                         className="datepicker"
                         name="startDate"
+                        maxDate={values.endDate ? moment(values.endDate).add(-1, 'days').toDate() : moment(new Date()).add(-1, 'days').toDate()}
                         showFullMonthYearPicker
                         selected={values.startDate}
                         placeholderText="Pick a Date"
                         onChange={(date) => setFieldValue("startDate", date)}
                       />
+                      <div className="error">
+                    <ErrorMessage  name="startDate" />
+                    </div>
                     </div>
                     <div>
                       <label>End Date*</label>
                       <DatePicker
                         className="datepicker"
+                        disabled = {values.isOngoing}
+                        minDate={ moment(values.startDate).add(1, 'days').toDate()}
+                        maxDate={new Date()}
                         name="endDate"
                         showFullMonthYearPicker
                         selected={values.endDate}
                         placeholderText="Pick a Date"
                         onChange={(date) => setFieldValue("endDate", date)}
                       />
+                       <div className="error">
+                    <ErrorMessage  name="endDate" />
+                    </div>
                     </div>
                     <label>
-                      <Field type="checkbox" name="isOngoing" />
+                      <Field type="checkbox" name="isOngoing" checked = {values.isOngoing} onChange ={() => {setFieldValue('isOngoing',!values.isOngoing) ; !values.isOngoing ? setFieldValue('endDate',new Date()) : setFieldValue('endDate',null)}}/>
                       Ongoing
                     </label>
                     <button type="submit">Confirm</button>
