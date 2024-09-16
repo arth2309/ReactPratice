@@ -14,4 +14,10 @@ public class UserDetailDTO
 
     public List<CompetencyDTO>? competencies { get; set; }
 
+    public List<CourseInterestDTO>? CourseInterestDetails { get; set;}
+
+    public ChartDTO? ChartDetail { get; set; }
+
+    public string? Resume { get; set; } 
+
 }

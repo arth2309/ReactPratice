@@ -13,4 +13,6 @@ public interface IResumeFileService : IGenericService<ResumeFile>
     Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId);
 
     Task<ResumeFileDTO> GetUserResume(int UserId);
+
+    Task<string?> GetFileString(int UserId);
 }

@@ -56,9 +56,33 @@ public class ResumeFileService : GenericService<ResumeFile>,IResumeFileService
         }
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
         var fileBytes = File.ReadAllBytes(filePath);
+
         return (fileBytes, resumeFile.FileName);
     }
 
+    public async Task<string?> GetFileString(int UserId)
+    {
+        ResumeFile resumeFile = await FirstorDefaultAsync(x => x.UserId == UserId);
+        if (resumeFile == null)
+        {
+            throw new KeyNotFoundException(ErrorMessages.ResumeNotUpload);
+        }
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", resumeFile.FileName);
+        var fileBytes = File.ReadAllBytes(filePath);
+
+        string? base64String;
+        if(filePath!=null)
+        {
+            base64String = Convert.ToBase64String(fileBytes);
+        }
+        else
+        {
+            base64String = null;
+        }
+        return base64String;
+    }
+
+   
     public async Task<ResumeFileDTO> UpdateFile(IFormFile file, int UserId)
     {
         ResumeFile resumeFile = await _resumeFileRepository.FirstOrDefaultAsync(x => x.UserId == UserId);

@@ -30,9 +30,11 @@ public class UserService : GenericService<User>,IUserService
     private readonly IWorkExperienceService _workExperienceService;
     private readonly ICompentencyService _compentencyService;
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
+    private readonly ICourseInterestService _courseInterestService;
+    private readonly IChartService _chartService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -44,6 +46,9 @@ public class UserService : GenericService<User>,IUserService
         _workExperienceService = workExperienceService;
         _compentencyService = compentencyService;
         _userCompentencyDetailService = userCompentencyDetailService;
+        _courseInterestService = courseInterestService;
+        _chartService = chartService;
+
     }
 
     public async Task<string> Login(LoginDetails loginDetails)
@@ -197,7 +202,10 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.userCompentencyDetails = await _userCompentencyDetailService.GetList();
         userDetailDTO.Educations = !(user.MemberType == "Experienced Hire") ? await _educationDetailService.GetList(UserId) : null;
         userDetailDTO.Assignments = user.MemberType == "Experienced Hire" ? await _assignmentService.GetList(UserId) : null;
-        userDetailDTO.WorkExperiences = user.MemberType == "Experienced Hire" ? await _workExperienceService.GetList(UserId) : null;    
+        userDetailDTO.WorkExperiences = user.MemberType == "Experienced Hire" ? await _workExperienceService.GetList(UserId) : null;
+        userDetailDTO.CourseInterestDetails = await _courseInterestService.GetCourseInterestLists();
+        userDetailDTO.ChartDetail = await _chartService.GetChartdata(1);
+        userDetailDTO.Resume = await _resumeFileService.GetFileString(UserId);
         return userDetailDTO;
     }
 }

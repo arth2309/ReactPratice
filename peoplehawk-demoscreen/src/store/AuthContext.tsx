@@ -54,8 +54,6 @@ export const AuthContextProvider = (props : AuthProvider) => {
         setToken(null);
         setUserData(null);
         removeToken();
-
-        
       }
 
       const contextValue : Auth = {

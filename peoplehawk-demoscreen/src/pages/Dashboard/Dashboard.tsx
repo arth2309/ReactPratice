@@ -10,13 +10,21 @@ import linkedin from "../../assests/img/linkedin-icon.svg";
 import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { showToast, ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {uploadPhoto,fetchUserDetail} from "../../services/HomeService";
-import { Assignment, CandidateDetail,EducationDetail, WorkExperience } from "../../interface/Interface";
+import {
+  showToast,
+  ToastComponent,
+} from "../../components/layout/ToastComponent/Toastcomponent";
+import { uploadPhoto, fetchUserDetail } from "../../services/HomeService";
+import {
+  Assignment,
+  CandidateDetail,
+  EducationDetail,
+  WorkExperience,
+} from "../../interface/Interface";
 import Compentencytestanalytics from "../../modals/Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
-import { RootState,AppDispatch } from "../../store/Redux";
+import { RootState, AppDispatch } from "../../store/Redux";
 import { useDispatch, useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import Addeducation from "../../modals/Addeducation";
@@ -24,17 +32,15 @@ import Updateeducation from "../../modals/Updateeducation";
 import Addassignment from "../../modals/Addassignment";
 import queryString from "query-string";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
-import { DeleteData,UpdateData} from "../../services/EducationDetailService";
+import { DeleteData, UpdateData } from "../../services/EducationDetailService";
 import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
 import Addworkexperience from "../../modals/Addworkexperience";
 import { EducationList } from "../../components/layout/List/EducationList";
-import { DeleteData as DeleteAssigment} from "../../services/AssignmentService";
-import { DeleteData as DeleteWorkExperience} from "../../services/WorkExperience";
+import { DeleteData as DeleteAssigment } from "../../services/AssignmentService";
+import { DeleteData as DeleteWorkExperience } from "../../services/WorkExperience";
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
 import { useParams } from "react-router-dom";
-
-
-
+import { useApi } from "../../store/ReducerContext";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -51,14 +57,14 @@ const defaults = {
   isMemberResume: false,
   isPeopleHawkResume: false,
   isAll: false,
-  sortOrder: 'asc',
+  sortOrder: "asc",
   orderedBy: 1,
   isProfilePhoto: false,
-  sortBy : 'Last Updated',
-  isOn : false,
-  searchTerm : '',
-  countryId : 0,
-  memberType: '',
+  sortBy: "Last Updated",
+  isOn: false,
+  searchTerm: "",
+  countryId: 0,
+  memberType: "",
 };
 
 const Container = styled.div({
@@ -77,9 +83,8 @@ const LeftContainer = styled.div({
   alignItems: "center",
   backgroundColor: "#B8DFF5",
   height: "100%",
-  padding : "21px",
-  minHeight : '950px',
- 
+  padding: "21px",
+  minHeight: "950px",
 
   "@media (max-width : 992px)": {
     display: "none",
@@ -87,10 +92,10 @@ const LeftContainer = styled.div({
 });
 
 const BrokerList = styled.div({
-  fontSize : '17px',
-  fontWeight : '600',
-  color : '#394456'
-})
+  fontSize: "17px",
+  fontWeight: "600",
+  color: "#394456",
+});
 
 const LeftChildContainer = styled.div({
   width: "80%",
@@ -106,8 +111,8 @@ const Heading = styled.div({
   fontFamily: "obviously",
   borderBottom: "5px solid #F96332",
   fontSize: "25px",
-  marginTop : "20px",
-  width : '350px'
+  marginTop: "20px",
+  width: "350px",
 });
 
 const Card1 = styled.div({
@@ -129,7 +134,7 @@ const Card1Item = styled.div({
   cursor: "pointer",
   fontSize: "14px",
   color: "#394456",
-  width : "163px"
+  width: "163px",
 });
 
 const Card2 = styled.div({
@@ -146,7 +151,7 @@ const Card2Item = styled.div({
   padding: "15px 25px 5px 25px",
   gap: "15px",
   borderRadius: "8px",
-  width : "175px"
+  width: "175px",
 });
 
 const Card2Sub = styled.div({
@@ -163,17 +168,19 @@ const Card2SubItem = styled.div({
   padding: "5px 25px 5px 25px",
   gap: "13px",
   borderRadius: "8px",
-  width : '50px',
-  height : '100px'
+  width: "50px",
+  height: "100px",
 });
 
 const Progress = styled.div({
   fontSize: "40px",
   color: "#F96332",
-  fontWeight : "600"
+  fontWeight: "600",
 });
 
-const Trophy = styled.div.withConfig({shouldForwardProp: (prop) => !['trophyWidth','trophyHeight'].includes(prop)})<TrophyProps>((props) => ({
+const Trophy = styled.div.withConfig({
+  shouldForwardProp: (prop) => !["trophyWidth", "trophyHeight"].includes(prop),
+})<TrophyProps>((props) => ({
   width: props.trophyWidth,
   backgroundColor: "#F96332",
   borderRadius: "50%",
@@ -191,14 +198,14 @@ const Card3 = styled.div({
   marginTop: "20px",
   padding: "10px",
   borderRadius: "8px",
-  width : '337px'
+  width: "337px",
 });
 
 const BrokerImg = styled.img`
     object-fit: cover;
     object-position: center;
     height: 200px;
-}`
+}`;
 
 const Card3Item = styled.div({
   display: "flex",
@@ -221,8 +228,8 @@ const PrimaryButton = styled.button({
   cursor: "pointer",
   backgroundColor: "#F96332",
   width: "300px",
-  fontSize : '16px',
-  fontWeight : '600',
+  fontSize: "16px",
+  fontWeight: "600",
   display: "flex",
   justifyContent: "center",
   borderRadius: "20px",
@@ -234,17 +241,19 @@ const OutlineButton = styled.button({
   background: "transparent",
   border: "1px solid #F96332",
   width: "300px",
-  fontSize : '16px',
-  fontWeight : '600',
+  fontSize: "16px",
+  fontWeight: "600",
   display: "flex",
   justifyContent: "center",
   borderRadius: "20px",
   color: "#394456",
 });
 
-const BorderBottom = styled.div.withConfig({shouldForwardProp: (prop) => ['bw'].includes(prop)})<BorderBottomProps>((props) => ({
+const BorderBottom = styled.div.withConfig({
+  shouldForwardProp: (prop) => ["bw"].includes(prop),
+})<BorderBottomProps>((props) => ({
   borderBottom: "3px solid #F96332",
-  width:  `${props.bw}px`,
+  width: `${props.bw}px`,
   maxWidth: "100%",
   marginTop: "10px",
 }));
@@ -266,7 +275,7 @@ const MobileCard1 = styled.div({
   flexDirection: "column",
   gap: "10px",
   alignItems: "center",
-  marginBottom : '15px'
+  marginBottom: "15px",
 });
 
 const MobileCard2 = styled.div({
@@ -274,7 +283,7 @@ const MobileCard2 = styled.div({
   flexDirection: "column",
   justifyContent: "start",
   width: "50%",
-  marginTop : '20px',
+  marginTop: "20px",
 
   "@media (max-width : 768px)": {
     width: "70%",
@@ -291,300 +300,403 @@ const ObviouslyOrange = styled.div({
   fontFamily: "obviously",
   fontSize: "25px",
   lineHeight: "25px",
-  color : '#F96332'
+  color: "#F96332",
 });
 
 const RightContainer = styled.div({
-    width : '100%',
-    display : 'flex',
-    flexDirection : 'column',
-    padding : '16px 80px',
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  padding: "16px 80px",
 
-    "@media (max-width : 992px)": {
-       padding : '16px 0px'
+  "@media (max-width : 992px)": {
+    padding: "16px 0px",
   },
-})
-
-const RightHeading = styled.div({
-     display : 'flex',
-     justifyContent : 'start',
-
-     "@media (max-width : 992px)": {
-       paddingLeft : '16px'
-  },
-    
-})
-
-const RightHeading1 = styled.h1({
-  color : '#394456', 
-  letterSpacing : '1px'
-})
-
-const RightHeadingSpan = styled.span({
-   color : '#F96332',
-   fontFamily : 'obviously',
-   fontWeight : 'bold'
-})
-
-const MobileButtonDiv = styled.div({
-    display : 'none',
-    flexDirection : 'column',
-    alignItems : 'center',
-
-    "@media (max-width : 992px)": {
-       display : 'flex'
-  },
-})
-
-const Images = styled.img({
-
-  cursor : 'pointer',
-  height : '30px',
-
-  '&:hover' : {
-    filter : 'invert(43%) sepia(93%) saturate(2389%) hue-rotate(154deg) brightness(101%) contrast(101%)',
-  }
 });
 
-const Dashboard  = () => {
+const RightHeading = styled.div({
+  display: "flex",
+  justifyContent: "start",
 
- 
+  "@media (max-width : 992px)": {
+    paddingLeft: "16px",
+  },
+});
 
-  const dispatch : AppDispatch = useDispatch();
+const RightHeading1 = styled.h1({
+  color: "#394456",
+  letterSpacing: "1px",
+});
+
+const RightHeadingSpan = styled.span({
+  color: "#F96332",
+  fontFamily: "obviously",
+  fontWeight: "bold",
+});
+
+const MobileButtonDiv = styled.div({
+  display: "none",
+  flexDirection: "column",
+  alignItems: "center",
+
+  "@media (max-width : 992px)": {
+    display: "flex",
+  },
+});
+
+const Images = styled.img({
+  cursor: "pointer",
+  height: "30px",
+
+  "&:hover": {
+    filter:
+      "invert(43%) sepia(93%) saturate(2389%) hue-rotate(154deg) brightness(101%) contrast(101%)",
+  },
+});
+
+const Dashboard = () => {
+  const dispatch: AppDispatch = useDispatch();
   const { data, loading } = useSelector((state: RootState) => state.data);
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
-  const [candidateDetail,setCandidateDetail] = useState<CandidateDetail | null>(null);
+  const [candidateDetail, setCandidateDetail] =
+    useState<CandidateDetail | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [dataList, setDataList] = useState<EducationDetail[]>([]);
-  const [assignmentList,setAssignmentList] = useState<Assignment[]>([]);
-  const [workExperienceList,setWorkExperienceList] = useState<WorkExperience[]>([]);
-  const {state} = useMemberAnalytics();
+  const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
+  const [workExperienceList, setWorkExperienceList] = useState<
+    WorkExperience[]
+  >([]);
+  const { state } = useMemberAnalytics();
+  const ctx = useApi();
+  console.log(ctx);
 
   const handleAddData = (data: EducationDetail[]) => {
-    setDataList((prevState) => [...prevState,...data]);
+    // setDataList((prevState) => [...prevState, ...data]);
+    ctx.dispatch({type : 'ADD_EDUCATION_DETAIL',payload : data})
     setProfileOpen(false);
-    setTimeout(() => {showToast(TOAST.ADD_EDUCATION_DETAIL.title,TOAST.ADD_EDUCATION_DETAIL.description,TOAST.ADD_EDUCATION_DETAIL.type)},100);
-  }
-  
+    setTimeout(() => {
+      showToast(
+        TOAST.ADD_EDUCATION_DETAIL.title,
+        TOAST.ADD_EDUCATION_DETAIL.description,
+        TOAST.ADD_EDUCATION_DETAIL.type
+      );
+    }, 100);
+  };
 
   useEffect(() => {
-       fetchdata();
-       // eslint-disable-next-line
-  },[])
+   fetchdata();
+    // eslint-disable-next-line
+  }, []);
 
-  const fetchdata = async() => {
-    if(authctx.userData)
-    {
-
+  const fetchdata = async () => {
+    if (authctx.userData) {
       const response = await fetchUserDetail(authctx.userData.Id);
-      if(response)
-      {
+      if (response) {
+        response &&
+          ctx.dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
         response && setCandidateDetail(response);
-        response.profilePhoto && setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`)
+        response.profilePhoto &&
+          setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
         response.assignments && setAssignmentList(response.assignments);
-        response.workExperiences && setWorkExperienceList(response.workExperiences);
+        response.workExperiences &&
+          setWorkExperienceList(response.workExperiences);
         response.educations && setDataList(response.educations);
       }
     }
-  }
+  };
 
-    const handleFileChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            
-            if (file.size > 15*1024) {
-                showToast(TOAST.FILE_LIMIT.title, TOAST.FILE_LIMIT.description,TOAST.FILE_LIMIT.type);
-                return;
-            }
-                if(authctx.userData)
-                {
-                   await uploadPhoto(authctx.userData.Id,{file : file})
-                }
-            const imageUrl = URL.createObjectURL(file);
-            setImageSrc(imageUrl);
-            return () => URL.revokeObjectURL(imageUrl);
-        }
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 15 * 1024) {
+        showToast(
+          TOAST.FILE_LIMIT.title,
+          TOAST.FILE_LIMIT.description,
+          TOAST.FILE_LIMIT.type
+        );
+        return;
       }
-
-      const intialAssignmentValues : Assignment = {
-        id : 0,
-        userId : authctx.userData ? authctx.userData.Id : 0,
-        title : '',
-        organisation : '',
-        startDate : null,
-        endDate : null,
-        isOngoing : false,
-        description : '',
-        infohraphicResumeDescription : ''
-    } 
-
-    const intialWorkExperienceValues : WorkExperience = {
-      id : 0,
-      userId : authctx.userData ? authctx.userData.Id : 0,
-      role : '',
-      organisation : '',
-      startDate : null,
-      endDate : null,
-      isOngoing : false,
-      roleDescription : '',
-     
-  } 
-
-      const [isModalOpen, setModalOpen] = useState(false);
-      const [isProfileOpen,setProfileOpen] = useState<boolean>(false);
-      const [isAssignmentOpen,setAssignmentOpen] = useState<boolean>(false);
-      const [isWorkExperienceOpen,setWorkExperienceOpen] = useState<boolean>(false);
-      const [isUpdateProfileOpen,setUpdateProfileOpen] = useState<boolean>(false);
-      const [index,setIndex] = useState<number>(0);
-      const[assignmentIndex,setAssignmentIndex] = useState<number>(0);
-      const[workExperienceIndex,setWorkExperienceIndex] = useState<number>(0);
-      const [assignmentValues,setAssignmentValues] = useState<Assignment>(intialAssignmentValues);
-      const [workExperiencedValues,setWorkExperiencedValues] = useState<WorkExperience>(intialWorkExperienceValues);
-      const [updateValues,setUpdateValues] = useState<EducationDetail>({
-        id : 0,
-        userId : 0,
-        school : '',
-        grade : '',
-        rewardedDate : null,
-        subject : '',
-        comments : ''
-     });
-      const openProfile = () => {setProfileOpen(true)};
-      const closeProfile = useCallback(() => {setProfileOpen(false)},[]);
-      const closeUpdateProfile = useCallback(() => {setUpdateProfileOpen(false)},[]);
-      const openModal = () => {window.screen.width > 900 ? setModalOpen(true) : showToast(TOAST.MOBILE_VIEW_NOT_SUPPORTED.title,TOAST.MOBILE_VIEW_NOT_SUPPORTED.description,TOAST.MOBILE_VIEW_NOT_SUPPORTED.type)};
-      const closeModal = useCallback(() => {setModalOpen(false)},[]);
-      const openAssignment = () => {setAssignmentValues(intialAssignmentValues); setAssignmentOpen(true)};
-      const closeAssignment = useCallback(() => {setAssignmentOpen(false) },[]);
-      const openWorkExperience = () => {setWorkExperiencedValues(intialWorkExperienceValues);setWorkExperienceOpen(true)};
-      const closeWorkExperience = useCallback(() => {setWorkExperienceOpen(false)},[]);
-      
-      const {userId} = useParams<{userId : string}>();
-       console.log(userId);
-      const HandleDelete = async(index : number,id : number) => {
-      await DeleteData(id);
-      const updatedItems = dataList.filter((_, i) => i !== index);
-      setTimeout(() => {showToast(TOAST.DELETE_EDUCATION_DETAIL.title,TOAST.DELETE_EDUCATION_DETAIL.description,TOAST.DELETE_EDUCATION_DETAIL.type)},100);
-       setDataList(updatedItems);
+      if (authctx.userData) {
+        await uploadPhoto(authctx.userData.Id, { file: file });
+      }
+      const imageUrl = URL.createObjectURL(file);
+      setImageSrc(imageUrl);
+      return () => URL.revokeObjectURL(imageUrl);
     }
+  };
 
-    const handleAddAssignmentData = (data: Assignment) => {
-      setAssignmentList((prevState) => [...prevState,data]);
-      setAssignmentOpen(false);
-      setTimeout(() => {showToast(TOAST.ADD_ASSIGNMENT.title,TOAST.ADD_ASSIGNMENT.description,TOAST.ADD_ASSIGNMENT.type)},100);
-    }
+  const intialAssignmentValues: Assignment = {
+    id: 0,
+    userId: authctx.userData ? authctx.userData.Id : 0,
+    title: "",
+    organisation: "",
+    startDate: null,
+    endDate: null,
+    isOngoing: false,
+    description: "",
+    infohraphicResumeDescription: "",
+  };
 
-    const handleAddWorkExperienceData = (data: WorkExperience) => {
-      setWorkExperienceList((prevState) => [...prevState,data]);
-      setWorkExperienceOpen(false);
-      setTimeout(() => {showToast(TOAST.ADD_WORK_EXPERIENCE.title,TOAST.ADD_WORK_EXPERIENCE.description,TOAST.ADD_WORK_EXPERIENCE.type)},100);
-    }
+  const intialWorkExperienceValues: WorkExperience = {
+    id: 0,
+    userId: authctx.userData ? authctx.userData.Id : 0,
+    role: "",
+    organisation: "",
+    startDate: null,
+    endDate: null,
+    isOngoing: false,
+    roleDescription: "",
+  };
 
-    const handleAssignmentDelete = async(index : number,id : number) => {
-      await DeleteAssigment(id);
-      const updatedItems = assignmentList.filter((_, i) => i !== index);
-       setAssignmentList(updatedItems);
-       setTimeout(() => {showToast(TOAST.DELETE_ASSIGNMENT.title,TOAST.DELETE_ASSIGNMENT.description,TOAST.DELETE_ASSIGNMENT.type)},100);
-    }
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
+  const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
+  const [isWorkExperienceOpen, setWorkExperienceOpen] =
+    useState<boolean>(false);
+  const [isUpdateProfileOpen, setUpdateProfileOpen] = useState<boolean>(false);
+  const [index, setIndex] = useState<number>(0);
+  const [assignmentIndex, setAssignmentIndex] = useState<number>(0);
+  const [workExperienceIndex, setWorkExperienceIndex] = useState<number>(0);
+  const [assignmentValues, setAssignmentValues] = useState<Assignment>(
+    intialAssignmentValues
+  );
+  const [workExperiencedValues, setWorkExperiencedValues] =
+    useState<WorkExperience>(intialWorkExperienceValues);
+  const [updateValues, setUpdateValues] = useState<EducationDetail>({
+    id: 0,
+    userId: 0,
+    school: "",
+    grade: "",
+    rewardedDate: null,
+    subject: "",
+    comments: "",
+  });
+  const openProfile = () => {
+    setProfileOpen(true);
+  };
+  const closeProfile = useCallback(() => {
+    setProfileOpen(false);
+  }, []);
+  const closeUpdateProfile = useCallback(() => {
+    setUpdateProfileOpen(false);
+  }, []);
+  const openModal = () => {
+    window.screen.width > 900
+      ? setModalOpen(true)
+      : showToast(
+          TOAST.MOBILE_VIEW_NOT_SUPPORTED.title,
+          TOAST.MOBILE_VIEW_NOT_SUPPORTED.description,
+          TOAST.MOBILE_VIEW_NOT_SUPPORTED.type
+        );
+  };
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+  }, []);
+  const openAssignment = () => {
+    setAssignmentValues(intialAssignmentValues);
+    setAssignmentOpen(true);
+  };
+  const closeAssignment = useCallback(() => {
+    setAssignmentOpen(false);
+  }, []);
+  const openWorkExperience = () => {
+    setWorkExperiencedValues(intialWorkExperienceValues);
+    setWorkExperienceOpen(true);
+  };
+  const closeWorkExperience = useCallback(() => {
+    setWorkExperienceOpen(false);
+  }, []);
 
-    const handleWorkExperienceDelete = async(index : number,id : number) => {
-      await DeleteWorkExperience(id);
-      const updatedItems = workExperienceList.filter((_, i) => i !== index);
-       setWorkExperienceList(updatedItems);
-       setTimeout(() => {showToast(TOAST.DELETE_WORK_EXPERIENCE.title,TOAST.DELETE_WORK_EXPERIENCE.description,TOAST.DELETE_WORK_EXPERIENCE.type)},100);
-    }
+  const { userId } = useParams<{ userId: string }>();
+  console.log(userId);
+  const HandleDelete = async (index: number, id: number) => {
+    await DeleteData(id);
+   ctx.dispatch({type : 'DELETE_EDUCATION_DETAIL',payload : index})
+    setTimeout(() => {
+      showToast(
+        TOAST.DELETE_EDUCATION_DETAIL.title,
+        TOAST.DELETE_EDUCATION_DETAIL.description,
+        TOAST.DELETE_EDUCATION_DETAIL.type
+      );
+    }, 100);
+   
+  };
 
-    const OpenEditModal = (id : number) => {
-      setIndex(id);
-      const updatedItems = dataList.find((_, i) => i === id);
-      if(updatedItems)
-      {
+  const handleAddAssignmentData = (data: Assignment) => {
+    setAssignmentList((prevState) => [...prevState, data]);
+    setAssignmentOpen(false);
+    setTimeout(() => {
+      showToast(
+        TOAST.ADD_ASSIGNMENT.title,
+        TOAST.ADD_ASSIGNMENT.description,
+        TOAST.ADD_ASSIGNMENT.type
+      );
+    }, 100);
+  };
+
+  const handleAddWorkExperienceData = (data: WorkExperience) => {
+    setWorkExperienceList((prevState) => [...prevState, data]);
+    setWorkExperienceOpen(false);
+    setTimeout(() => {
+      showToast(
+        TOAST.ADD_WORK_EXPERIENCE.title,
+        TOAST.ADD_WORK_EXPERIENCE.description,
+        TOAST.ADD_WORK_EXPERIENCE.type
+      );
+    }, 100);
+  };
+
+  const handleAssignmentDelete = async (index: number, id: number) => {
+    await DeleteAssigment(id);
+    const updatedItems = assignmentList.filter((_, i) => i !== index);
+    setAssignmentList(updatedItems);
+    setTimeout(() => {
+      showToast(
+        TOAST.DELETE_ASSIGNMENT.title,
+        TOAST.DELETE_ASSIGNMENT.description,
+        TOAST.DELETE_ASSIGNMENT.type
+      );
+    }, 100);
+  };
+
+  const handleWorkExperienceDelete = async (index: number, id: number) => {
+    await DeleteWorkExperience(id);
+    const updatedItems = workExperienceList.filter((_, i) => i !== index);
+    setWorkExperienceList(updatedItems);
+    setTimeout(() => {
+      showToast(
+        TOAST.DELETE_WORK_EXPERIENCE.title,
+        TOAST.DELETE_WORK_EXPERIENCE.description,
+        TOAST.DELETE_WORK_EXPERIENCE.type
+      );
+    }, 100);
+  };
+
+  const OpenEditModal = (id: number) => {
+    setIndex(id);
+    const updatedItems = ctx.state.educations.find((_, i) => i === id);
+    if (updatedItems) {
       setUpdateValues(updatedItems);
       setUpdateProfileOpen(true);
-      }
-  }
+    }
+  };
 
-  const OpenAssignmentEditModal = (id : number) => {
+  const OpenAssignmentEditModal = (id: number) => {
     setAssignmentIndex(id);
     const updatedItems = assignmentList.find((_, i) => i === id);
-    if(updatedItems)
-    {
-    setAssignmentValues(updatedItems);
-     setAssignmentOpen(true)
+    if (updatedItems) {
+      setAssignmentValues(updatedItems);
+      setAssignmentOpen(true);
     }
-}
+  };
 
-const OpenWorkExperienceEditModal = (id : number) => {
-  setWorkExperienceIndex(id);
-  const updatedItems = workExperienceList.find((_, i) => i === id);
-  if(updatedItems)
-  {
-  setWorkExperiencedValues(updatedItems);
-  setWorkExperienceOpen(true);
-  }
-}
+  const OpenWorkExperienceEditModal = (id: number) => {
+    setWorkExperienceIndex(id);
+    const updatedItems = workExperienceList.find((_, i) => i === id);
+    if (updatedItems) {
+      setWorkExperiencedValues(updatedItems);
+      setWorkExperienceOpen(true);
+    }
+  };
 
-
-
-  
-  const EditData = async(values : EducationDetail) =>
-  {
+  const EditData = async (values: EducationDetail) => {
     await UpdateData(values);
-    const updatedItems = dataList.map((item, i) =>
-      i === index ? values : item
-    );
-    setDataList(updatedItems);
-     closeUpdateProfile();
-     setTimeout(() => {showToast(TOAST.UPDATE_EDUCATION_DETAIL.title,TOAST.UPDATE_EDUCATION_DETAIL.description,TOAST.UPDATE_EDUCATION_DETAIL.type)},100);
-  }
-
-  const EditAssignmentData = async(values : Assignment) =>
-    {
-     
-      const updatedItems = assignmentList.map((item, i) =>
-        i === assignmentIndex ? values : item
+   ctx.dispatch({type : 'UPDATE_EDUCATION_DETAIL',payload : {item : values,i : index}})
+    closeUpdateProfile();
+    setTimeout(() => {
+      showToast(
+        TOAST.UPDATE_EDUCATION_DETAIL.title,
+        TOAST.UPDATE_EDUCATION_DETAIL.description,
+        TOAST.UPDATE_EDUCATION_DETAIL.type
       );
-      setAssignmentList(updatedItems);
-       closeAssignment();
-       setTimeout(() => {showToast(TOAST.UPDATE_ASSIGNMENT.title,TOAST.UPDATE_ASSIGNMENT.description,TOAST.UPDATE_ASSIGNMENT.type)},100);
-    }
-    const EditWorkExperienceData = async(values : WorkExperience) =>
-      {
-       
-        const updatedItems = workExperienceList.map((item, i) =>
-          i === workExperienceIndex ? values : item
-        );
-        setWorkExperienceList(updatedItems);
-         closeWorkExperience();
-         setTimeout(() => {showToast(TOAST.UPDATE_WORK_EXPERIENCE.title,TOAST.UPDATE_WORK_EXPERIENCE.description,TOAST.UPDATE_WORK_EXPERIENCE.type)},100);
-      }
+    }, 100);
+  };
+
+  const EditAssignmentData = async (values: Assignment) => {
+    const updatedItems = assignmentList.map((item, i) =>
+      i === assignmentIndex ? values : item
+    );
+    setAssignmentList(updatedItems);
+    closeAssignment();
+    setTimeout(() => {
+      showToast(
+        TOAST.UPDATE_ASSIGNMENT.title,
+        TOAST.UPDATE_ASSIGNMENT.description,
+        TOAST.UPDATE_ASSIGNMENT.type
+      );
+    }, 100);
+  };
+  const EditWorkExperienceData = async (values: WorkExperience) => {
+    const updatedItems = workExperienceList.map((item, i) =>
+      i === workExperienceIndex ? values : item
+    );
+    setWorkExperienceList(updatedItems);
+    closeWorkExperience();
+    setTimeout(() => {
+      showToast(
+        TOAST.UPDATE_WORK_EXPERIENCE.title,
+        TOAST.UPDATE_WORK_EXPERIENCE.description,
+        TOAST.UPDATE_WORK_EXPERIENCE.type
+      );
+    }, 100);
+  };
 
   return (
-    <Fragment> 
-     {candidateDetail && isModalOpen && <Compentencytestanalytics  onClose={closeModal} competencies = {candidateDetail.competencies} candidates = {candidateDetail.userCompentencyDetails} /> }
-     {isProfileOpen && <Addeducation  onClose={closeProfile} onAddData={handleAddData} />  }
-     {isAssignmentOpen && <Addassignment  onClose={closeAssignment} intialValues={assignmentValues} onAddHandler={handleAddAssignmentData} onUpdateHandler={EditAssignmentData} /> }
-     {isWorkExperienceOpen && <Addworkexperience  onClose={closeWorkExperience} intialValues={workExperiencedValues} onAddHandler={handleAddWorkExperienceData} onUpdateHandler={EditWorkExperienceData} />}
-     {isUpdateProfileOpen && <Updateeducation onClose={closeUpdateProfile} defaultValues ={updateValues} onEditHandler={EditData}/> }
+    <Fragment>
+      {candidateDetail && isModalOpen && (
+        <Compentencytestanalytics
+          onClose={closeModal}
+          competencies={candidateDetail.competencies}
+          candidates={candidateDetail.userCompentencyDetails}
+        />
+      )}
+      {isProfileOpen && (
+        <Addeducation onClose={closeProfile} onAddData={handleAddData} />
+      )}
+      {isAssignmentOpen && (
+        <Addassignment
+          onClose={closeAssignment}
+          intialValues={assignmentValues}
+          onAddHandler={handleAddAssignmentData}
+          onUpdateHandler={EditAssignmentData}
+        />
+      )}
+      {isWorkExperienceOpen && (
+        <Addworkexperience
+          onClose={closeWorkExperience}
+          intialValues={workExperiencedValues}
+          onAddHandler={handleAddWorkExperienceData}
+          onUpdateHandler={EditWorkExperienceData}
+        />
+      )}
+      {isUpdateProfileOpen && (
+        <Updateeducation
+          onClose={closeUpdateProfile}
+          defaultValues={updateValues}
+          onEditHandler={EditData}
+        />
+      )}
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
         <MobileCard1>
-        <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
-                <img
-                   src={ imageSrc || profile || profile} alt="profile" 
-                   style={{height : '120px',width : '120px', borderRadius : '50%'}}
-                  
-                />
-                <input
-                    type="file"
-                    id="file-input"
-                    accept="image/png, image/jpeg" 
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                />
-            </label>
+          <label htmlFor="file-input" style={{ cursor: "pointer" }}>
+            <img
+              src={imageSrc || profile }
+              alt="profile"
+              style={{ height: "120px", width: "120px", borderRadius: "50%" }}
+            />
+            <input
+              type="file"
+              id="file-input"
+              accept="image/png, image/jpeg"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+          </label>
           <Trophy trophyHeight="40px" trophyWidth="40px">
             <img src={trophy} alt="trophy" />
           </Trophy>
@@ -598,45 +710,59 @@ const OpenWorkExperienceEditModal = (id : number) => {
       </MobileLeftContainer>
       <Container>
         <LeftContainer>
-        <Heading>Welcome <span style={{color : '#F96332'}}>{authctx.userData?.FirstName}</span></Heading>
-       
+          <Heading>
+            Welcome{" "}
+            <span style={{ color: "#F96332" }}>
+              {authctx.userData?.FirstName}
+            </span>
+          </Heading>
+
           <LeftChildContainer>
             <LeftChildMainContainer>
               <Card1>
-                <Card1Item >
+                <Card1Item>
                   <strong>View My Profile</strong>
                 </Card1Item>
-                <Card1Item >
+                <Card1Item>
                   <strong>What's included</strong>
                 </Card1Item>
               </Card1>
               <Card2>
-                <Card2Item >
+                <Card2Item>
                   <h2 style={{ color: "#394456", margin: "0px" }}>
                     {" "}
                     {authctx.userData?.FirstName} {authctx.userData?.LastName}
                   </h2>
-                  <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
-                <img
-                    src={ imageSrc || profile} alt="profile" 
-                   style={{height : '140px',width : '140px', borderRadius : '50%'}}
-                  
-                />
-                <input
-                    type="file"
-                    id="file-input"
-                    accept="image/png, image/jpeg" 
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                />
-            </label>
+                  <label htmlFor="file-input" style={{ cursor: "pointer" }}>
+                    <img
+                      src={imageSrc || profile}
+                      alt="profile"
+                      style={{
+                        height: "140px",
+                        width: "140px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                    <input
+                      type="file"
+                      id="file-input"
+                      accept="image/png, image/jpeg"
+                      onChange={handleFileChange}
+                      style={{ display: "none" }}
+                    />
+                  </label>
                 </Card2Item>
                 <Card2Sub>
                   <Card2SubItem>
                     <div style={{ color: "#394456" }}>
                       <strong> Progress</strong>
                     </div>
-                    <Progress> {loading && <ClipLoader /> } {candidateDetail &&  `${candidateDetail.userProgress.progress}%`}</Progress>
+                    <Progress>
+                      {" "}
+                      {loading && <ClipLoader />}{" "}
+                      {candidateDetail &&
+                        `${candidateDetail.userProgress?.progress}%`}
+                    </Progress>
                   </Card2SubItem>
                   <Card2SubItem>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
@@ -651,7 +777,7 @@ const OpenWorkExperienceEditModal = (id : number) => {
               <Card3>
                 <BrokerImg src={broker} alt="broker" />
                 <Card3Item>
-                  <div style = {{color:"#394456"}}>Your personality Type</div>
+                  <div style={{ color: "#394456" }}>Your personality Type</div>
                   <Broker>Broker</Broker>
                   <div>
                     <div style={{ fontSize: "12px", letterSpacing: "1px" }}>
@@ -661,45 +787,112 @@ const OpenWorkExperienceEditModal = (id : number) => {
                     <BrokerList>Concrete</BrokerList>
                     <BrokerList>Team-builder</BrokerList>
                   </div>
-                  <div style={{ marginTop: "20px",color : '#394456' }}>
+                  <div style={{ marginTop: "20px", color: "#394456" }}>
                     Share your personality type
                   </div>
                   <Card3Img>
-                    <Images src={facebook} alt="facebook"  />
+                    <Images src={facebook} alt="facebook" />
                     <Images src={twitter} alt="twitter" />
-                    <Images src={linkedin} alt="linkedin"  />
+                    <Images src={linkedin} alt="linkedin" />
                   </Card3Img>
                 </Card3Item>
-                
               </Card3>
-             
-              <PrimaryButton  onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality test</PrimaryButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{(candidateDetail && candidateDetail.userProgress.isResumeUpload) ? 'View ' : 'Upload '} Your Resume</OutlineButton>
-              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
-              <OutlineButton onClick={() => {navigate(`/member-analytics?${queryString.stringify(
-              overrideAndEncodeState(state, state, defaults)
-            )}`)}}>Member Analytics</OutlineButton>
-             
+
+              <PrimaryButton
+                onClick={() => {
+                  navigate(ROUTES.PERSONALITY_TEST);
+                }}
+              >
+                Take Your Personality test
+              </PrimaryButton>
+              <OutlineButton
+                onClick={() => {
+                  navigate(ROUTES.IDEAL_COURSES);
+                }}
+              >
+                Ideal Course Analysis
+              </OutlineButton>
+              <OutlineButton
+                onClick={() => {
+                  navigate(ROUTES.RESUME);
+                }}
+              >
+                {candidateDetail && candidateDetail.userProgress?.isResumeUpload
+                  ? "View "
+                  : "Upload "}{" "}
+                Your Resume
+              </OutlineButton>
+              <PrimaryButton onClick={openModal}>
+                Competency Test Analytics
+              </PrimaryButton>
+              <OutlineButton
+                onClick={() => {
+                  navigate(
+                    `/member-analytics?${queryString.stringify(
+                      overrideAndEncodeState(state, state, defaults)
+                    )}`
+                  );
+                }}
+              >
+                Member Analytics
+              </OutlineButton>
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />
         </LeftContainer>
         <RightContainer>
-               <RightHeading>
-                <RightHeading1>Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress</RightHeading1>
-               </RightHeading>
-               {authctx.userData && authctx.userData.MemberType !== 'Experienced Hire' ? 
-               <EducationList dataList={dataList} openProfile={openProfile} HandleDelete={HandleDelete} OpenEditModal={OpenEditModal} /> :
-               <ExperiencedHiredList openAssignment={openAssignment} openWorkExperience={openWorkExperience} assignmentList={assignmentList} workExperienceList={workExperienceList} handleAssignmentDelete={handleAssignmentDelete} handleWorkExperienceDelete={handleWorkExperienceDelete}
-               OpenAssignmentEditModal={OpenAssignmentEditModal} OpenWorkExperienceEditModal={OpenWorkExperienceEditModal}/>
-}
-              <MobileButtonDiv>
-              <PrimaryButton onClick={() => {navigate(ROUTES.PERSONALITY_TEST)}}>Take Your Personality Test</PrimaryButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.IDEAL_COURSES)}}>Ideal Course Analysis</OutlineButton>
-              <OutlineButton onClick={() => {navigate(ROUTES.RESUME)}}>{data? data.isResumeUpload ? 'View '  : 'Upload ' : 'Upload '} Your Resume</OutlineButton>
-              <PrimaryButton onClick={openModal}>Competency Test Analytics</PrimaryButton>
-              </MobileButtonDiv>
+          <RightHeading>
+            <RightHeading1>
+              Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress
+            </RightHeading1>
+          </RightHeading>
+          {authctx.userData &&
+          authctx.userData.MemberType !== "Experienced Hire" ? (
+            <EducationList
+              dataList={ctx.state.educations}
+              openProfile={openProfile}
+              HandleDelete={HandleDelete}
+              OpenEditModal={OpenEditModal}
+            />
+          ) : (
+            <ExperiencedHiredList
+              openAssignment={openAssignment}
+              openWorkExperience={openWorkExperience}
+              assignmentList={assignmentList}
+              workExperienceList={workExperienceList}
+              handleAssignmentDelete={handleAssignmentDelete}
+              handleWorkExperienceDelete={handleWorkExperienceDelete}
+              OpenAssignmentEditModal={OpenAssignmentEditModal}
+              OpenWorkExperienceEditModal={OpenWorkExperienceEditModal}
+            />
+          )}
+          <MobileButtonDiv>
+            <PrimaryButton
+              onClick={() => {
+                navigate(ROUTES.PERSONALITY_TEST);
+              }}
+            >
+              Take Your Personality Test
+            </PrimaryButton>
+            <OutlineButton
+              onClick={() => {
+                navigate(ROUTES.IDEAL_COURSES);
+              }}
+            >
+              Ideal Course Analysis
+            </OutlineButton>
+            <OutlineButton
+              onClick={() => {
+                navigate(ROUTES.RESUME);
+              }}
+            >
+              {data ? (data.isResumeUpload ? "View " : "Upload ") : "Upload "}{" "}
+              Your Resume
+            </OutlineButton>
+            <PrimaryButton onClick={openModal}>
+              Competency Test Analytics
+            </PrimaryButton>
+          </MobileButtonDiv>
         </RightContainer>
       </Container>
     </Fragment>

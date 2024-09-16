@@ -200,13 +200,22 @@ export interface Assignment
 export interface CandidateDetail 
 {
    profilePhoto : string | null,
+   navigate : boolean,
    userProgress : CandidateProgress,
    competencies : Competency[],
    userCompentencyDetails : UserCompetency[],
-   educations : EducationDetail[] | null,
-   assignments : Assignment[] | null,
-   workExperiences : WorkExperience[] | null
+   educations : EducationDetail[] ,
+   assignments : Assignment[] ,
+   workExperiences : WorkExperience[],
+   courseInterestDetails : CourseInterest[] | null
+   chartDetail : ChartData | null
+   resume : string | null
 }
+
+
+
+
+
 
 export interface WorkExperience
 {

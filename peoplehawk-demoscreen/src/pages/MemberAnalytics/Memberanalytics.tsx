@@ -24,6 +24,7 @@ import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { useNavigate } from "react-router-dom";
 
 
+
 const defaults = {
   page: 1,
   isInfographicResume: false,
@@ -315,7 +316,7 @@ const Memberanalytics = () => {
    const [isVisible, setIsVisible] = useState<boolean>(false);
    const[count,setCount] = useState<number>(0);
    const navigate = useNavigate();
-
+ 
    
  
   const handleSwitchToggle = () => {

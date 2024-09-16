@@ -8,13 +8,14 @@ import {
   deleteFile,
   updateFile,
 } from "../../services/ResumeService";
-import { generatePath, useNavigate, useParams } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
 import {styled} from 'styled-components';
 import { OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
 import { ROUTES } from "../../constants/routes";
+import { useApi } from "../../store/ReducerContext";
 
 
 const Container = styled.div`
@@ -58,17 +59,22 @@ const UploadButton = styled.button`
 
 const Resumeupload = () => {
 
-  const [isDisabled,setIsDisabled] = useState<boolean>(true);
-  const option : OptionTypes[] = [{label : 'Update',value : 'update', isDisabled : isDisabled},{label :'Download', value :'download',isDisabled :isDisabled },{label : 'Delete',value : 'delete',isDisabled : isDisabled}]
 
-  const [selectedFileUrl, setSelectedFileUrl] = useState<string | null>(null);
+
+  const {state,dispatch} = useApi();
+  const option : OptionTypes[] = [{label : 'Update',value : 'update', isDisabled : !state.userProgress.isResumeUpload},{label :'Download', value :'download',isDisabled :!state.userProgress.isResumeUpload },{label : 'Delete',value : 'delete',isDisabled : !state.userProgress.isResumeUpload}]
   const [selectedOption, setSelectedOption] = useState<OptionTypes | null>(null);
   const authCtx = useContext(AuthContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
+
+    if(!state.navigate)
+    {
+      fetchData();
+    }
    // eslint-disable-next-line
   }, []);
   const fetchData = async () => {
@@ -76,11 +82,9 @@ const Resumeupload = () => {
     {
       const result = await fetchFile(authCtx.userData.Id);
       if (result) {
-        setSelectedFileUrl(result);
-        setIsDisabled(false);
+       dispatch({type : 'GET_RESUME_DATA',payload : result});
       }
     }
-    
   };
 
   const deleteResume = async () => {
@@ -88,8 +92,7 @@ const Resumeupload = () => {
       {
     const result = await deleteFile(authCtx.userData.Id);
     if (result) {
-      setSelectedFileUrl(null);
-      setIsDisabled(true);
+     dispatch({type : 'DELETE_RESUME_DATA'});
     }
   }
   };
@@ -100,9 +103,9 @@ const Resumeupload = () => {
       setSelectedOption(null);
     }
 
-    if (value.value === "download" && selectedFileUrl !== null) {
+    if (value.value === "download" && state.resume !== null) {
       const link = document.createElement("a");
-      link.href = selectedFileUrl;
+      link.href = state.resume;
       link.download = "Resume.pdf";
       link.click();
       setSelectedOption(null);
@@ -118,9 +121,7 @@ const Resumeupload = () => {
     if (fileInputRef.current) {
       
         fileInputRef.current?.click();
-        setIsDisabled(false);
       }
-    
   };
 
   const updateResume = () => {
@@ -133,22 +134,18 @@ const Resumeupload = () => {
     const file = event.target.files?.[0];
 
     if (file && authCtx.userData) {
-      if (selectedFileUrl) {
+      if (state.resume) {
         const result = await updateFile(authCtx.userData.Id, { file });
-        setSelectedFileUrl(result);
-        setIsDisabled(false);
+        dispatch({type : 'UPDATE_RESUME_DATA',payload : result});
       }
        else 
       {
         await uploadFile({ file },authCtx.userData.Id);
-        const url = URL.createObjectURL(file);
-        setSelectedFileUrl(url);
-        
+        dispatch({type : 'POST_RESUME_DATA',payload : URL.createObjectURL(file)});
       }
     }
   };
-  const {userId} = useParams<{userId : string}>();
-  console.log(userId)
+ 
   return (
     <Container
     >
@@ -183,7 +180,7 @@ const Resumeupload = () => {
       </NavigateContainer>
       <div className="border-bottom"></div>
       <div className="d-flex  justify-content-center">
-        {selectedFileUrl === null ? (
+        {state.resume === null ? (
           <div className="upload-card d-flex flex-column align-items-center ">
             <h4>Do you already have a Resume/CV?</h4>
             <div>
@@ -201,19 +198,19 @@ const Resumeupload = () => {
           <div
             className="text-align-center"
             style={
-              selectedFileUrl === null
+              state.resume === null
                 ? { marginTop: "160px" }
                 : { marginTop: "120px" }
             }
           >
-            {selectedFileUrl !== null && (
+            {state.resume !== null && (
               <div>
                 {/* eslint-disable-next-line */}
-                <a href={selectedFileUrl} target="_blank">
+                <a href={state.resume} target="_blank" rel="noopener noreferrer">
                 Problem in Viewing PDF ? View in another Tab
                 </a>
                 <embed
-                  src={selectedFileUrl}
+                  src={state.resume}
                   width="100%"
                   className="mt-1"
                   height="700px"

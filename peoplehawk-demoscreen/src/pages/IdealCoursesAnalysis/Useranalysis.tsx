@@ -5,6 +5,7 @@ import Memberinterestanalysis from "./Memberinterestanalysis";
 import Testinterestanalysis from "./Testinterestanalysis";
 import { CourseInterest,ChartData } from '../../interface/Interface';
 import { getCourseInterest, getChartData } from '../../services/IdealCoursesServices';
+import { useApi } from '../../store/ReducerContext';
 
 const Useranalysis = () => {
 
@@ -22,20 +23,31 @@ const Useranalysis = () => {
       });
     
       useEffect(() => {
-        fetchData();
+        if(state.chartDetail)
+        {
+          setChartData(state.chartDetail);
+          state.courseInterestDetails && setCourseInterest(state.courseInterestDetails);
+        }
+        else
+        {
+          fetchData();
+        }
+      
       }, []);
     
       const fetchData = async () => {
         try {
           const result = await getCourseInterest();
           const result1 = await getChartData();
-    
           result && setCourseInterest(result);
           result1 && setChartData(result1);
         } catch (error) {}
       };
 
+      const {state} = useApi();
+      
    return(
+
     <div>
      <Header />
      <Banner />

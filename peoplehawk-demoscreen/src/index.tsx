@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './store/AuthContext';
 import { MemberAnalyticsProvider } from './store/MemberAnalyticsContext';
+import { ReducerProvider } from './store/ReducerContext';
 import store from './store/Redux';
 import { Provider } from 'react-redux';
 
@@ -13,11 +14,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <AuthContextProvider>
+    <ReducerProvider>
     <MemberAnalyticsProvider>
     <Provider store={store}>
     <App />
     </Provider>
     </MemberAnalyticsProvider>
+    </ReducerProvider>
   </AuthContextProvider>
 );
 
