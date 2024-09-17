@@ -29,7 +29,7 @@ export const AddData = async(data : EducationDetail[]) : Promise<EducationDetail
 export const DeleteData = async(userId : number) : Promise<EducationDetail | null> => {
     try {
         const response = await apiClient.delete(API_ENDPOINTS.EDUCATION_DETAIL_USER_ID(userId));
-        return response.data;
+        return response.data; 
     }
 
     catch (error)

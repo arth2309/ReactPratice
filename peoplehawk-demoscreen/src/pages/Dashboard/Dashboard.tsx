@@ -195,7 +195,7 @@ const Card3 = styled.div({
   backgroundColor: "#DBEFFA",
   display: "flex",
   gap: "37px",
-  marginTop: "20px",
+  margin: "20px 0px",
   padding: "10px",
   borderRadius: "8px",
   width: "337px",
@@ -355,25 +355,15 @@ const Images = styled.img({
 });
 
 const Dashboard = () => {
-  const dispatch: AppDispatch = useDispatch();
   const { data, loading } = useSelector((state: RootState) => state.data);
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
-  const [candidateDetail, setCandidateDetail] =
-    useState<CandidateDetail | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [dataList, setDataList] = useState<EducationDetail[]>([]);
-  const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
-  const [workExperienceList, setWorkExperienceList] = useState<
-    WorkExperience[]
-  >([]);
   const { state } = useMemberAnalytics();
   const ctx = useApi();
-  console.log(ctx);
 
   const handleAddData = (data: EducationDetail[]) => {
-    // setDataList((prevState) => [...prevState, ...data]);
-    ctx.dispatch({type : 'ADD_EDUCATION_DETAIL',payload : data})
+    ctx.dispatch({ type: "ADD_EDUCATION_DETAIL", payload: data });
     setProfileOpen(false);
     setTimeout(() => {
       showToast(
@@ -385,7 +375,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-   fetchdata();
+    fetchdata();
     // eslint-disable-next-line
   }, []);
 
@@ -395,13 +385,8 @@ const Dashboard = () => {
       if (response) {
         response &&
           ctx.dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
-        response && setCandidateDetail(response);
         response.profilePhoto &&
           setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
-        response.assignments && setAssignmentList(response.assignments);
-        response.workExperiences &&
-          setWorkExperienceList(response.workExperiences);
-        response.educations && setDataList(response.educations);
       }
     }
   };
@@ -511,10 +496,10 @@ const Dashboard = () => {
   }, []);
 
   const { userId } = useParams<{ userId: string }>();
-  console.log(userId);
+
   const HandleDelete = async (index: number, id: number) => {
     await DeleteData(id);
-   ctx.dispatch({type : 'DELETE_EDUCATION_DETAIL',payload : index})
+    ctx.dispatch({ type: "DELETE_EDUCATION_DETAIL", payload: index });
     setTimeout(() => {
       showToast(
         TOAST.DELETE_EDUCATION_DETAIL.title,
@@ -522,11 +507,10 @@ const Dashboard = () => {
         TOAST.DELETE_EDUCATION_DETAIL.type
       );
     }, 100);
-   
   };
 
   const handleAddAssignmentData = (data: Assignment) => {
-    setAssignmentList((prevState) => [...prevState, data]);
+    ctx.dispatch({ type: "ADD_ASSIGNMENT", payload: data });
     setAssignmentOpen(false);
     setTimeout(() => {
       showToast(
@@ -538,7 +522,7 @@ const Dashboard = () => {
   };
 
   const handleAddWorkExperienceData = (data: WorkExperience) => {
-    setWorkExperienceList((prevState) => [...prevState, data]);
+    ctx.dispatch({ type: "ADD_WORK_EXPERIENCE", payload: data });
     setWorkExperienceOpen(false);
     setTimeout(() => {
       showToast(
@@ -551,8 +535,7 @@ const Dashboard = () => {
 
   const handleAssignmentDelete = async (index: number, id: number) => {
     await DeleteAssigment(id);
-    const updatedItems = assignmentList.filter((_, i) => i !== index);
-    setAssignmentList(updatedItems);
+    ctx.dispatch({ type: "DELETE_ASSIGNMENT", payload: index });
     setTimeout(() => {
       showToast(
         TOAST.DELETE_ASSIGNMENT.title,
@@ -564,8 +547,7 @@ const Dashboard = () => {
 
   const handleWorkExperienceDelete = async (index: number, id: number) => {
     await DeleteWorkExperience(id);
-    const updatedItems = workExperienceList.filter((_, i) => i !== index);
-    setWorkExperienceList(updatedItems);
+    ctx.dispatch({ type: "DELETE_WORK_EXPERIENCE", payload: index });
     setTimeout(() => {
       showToast(
         TOAST.DELETE_WORK_EXPERIENCE.title,
@@ -577,34 +559,43 @@ const Dashboard = () => {
 
   const OpenEditModal = (id: number) => {
     setIndex(id);
-    const updatedItems = ctx.state.educations.find((_, i) => i === id);
-    if (updatedItems) {
-      setUpdateValues(updatedItems);
-      setUpdateProfileOpen(true);
+    if (ctx.state.educations) {
+      const updatedItems = ctx.state.educations.find((_, i) => i === id);
+      if (updatedItems) {
+        setUpdateValues(updatedItems);
+        setUpdateProfileOpen(true);
+      }
     }
   };
 
   const OpenAssignmentEditModal = (id: number) => {
     setAssignmentIndex(id);
-    const updatedItems = assignmentList.find((_, i) => i === id);
-    if (updatedItems) {
-      setAssignmentValues(updatedItems);
-      setAssignmentOpen(true);
+    if (ctx.state.assignments) {
+      const updatedItems = ctx.state.assignments.find((_, i) => i === id);
+      if (updatedItems) {
+        setAssignmentValues(updatedItems);
+        setAssignmentOpen(true);
+      }
     }
   };
 
   const OpenWorkExperienceEditModal = (id: number) => {
     setWorkExperienceIndex(id);
-    const updatedItems = workExperienceList.find((_, i) => i === id);
-    if (updatedItems) {
-      setWorkExperiencedValues(updatedItems);
-      setWorkExperienceOpen(true);
+    if (ctx.state.workExperiences) {
+      const updatedItems = ctx.state.workExperiences.find((_, i) => i === id);
+      if (updatedItems) {
+        setWorkExperiencedValues(updatedItems);
+        setWorkExperienceOpen(true);
+      }
     }
   };
 
   const EditData = async (values: EducationDetail) => {
     await UpdateData(values);
-   ctx.dispatch({type : 'UPDATE_EDUCATION_DETAIL',payload : {item : values,i : index}})
+    ctx.dispatch({
+      type: "UPDATE_EDUCATION_DETAIL",
+      payload: { item: values, i: index },
+    });
     closeUpdateProfile();
     setTimeout(() => {
       showToast(
@@ -616,10 +607,10 @@ const Dashboard = () => {
   };
 
   const EditAssignmentData = async (values: Assignment) => {
-    const updatedItems = assignmentList.map((item, i) =>
-      i === assignmentIndex ? values : item
-    );
-    setAssignmentList(updatedItems);
+    ctx.dispatch({
+      type: "UPDATE_ASSIGNMENT",
+      payload: { item: values, i: assignmentIndex },
+    });
     closeAssignment();
     setTimeout(() => {
       showToast(
@@ -630,10 +621,10 @@ const Dashboard = () => {
     }, 100);
   };
   const EditWorkExperienceData = async (values: WorkExperience) => {
-    const updatedItems = workExperienceList.map((item, i) =>
-      i === workExperienceIndex ? values : item
-    );
-    setWorkExperienceList(updatedItems);
+    ctx.dispatch({
+      type: "UPDATE_WORK_EXPERIENCE",
+      payload: { item: values, i: workExperienceIndex },
+    });
     closeWorkExperience();
     setTimeout(() => {
       showToast(
@@ -646,11 +637,11 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-      {candidateDetail && isModalOpen && (
+      {isModalOpen && (
         <Compentencytestanalytics
           onClose={closeModal}
-          competencies={candidateDetail.competencies}
-          candidates={candidateDetail.userCompentencyDetails}
+          competencies={ctx.state.competencies}
+          candidates={ctx.state.userCompentencyDetails}
         />
       )}
       {isProfileOpen && (
@@ -685,7 +676,7 @@ const Dashboard = () => {
         <MobileCard1>
           <label htmlFor="file-input" style={{ cursor: "pointer" }}>
             <img
-              src={imageSrc || profile }
+              src={imageSrc || profile}
               alt="profile"
               style={{ height: "120px", width: "120px", borderRadius: "50%" }}
             />
@@ -760,8 +751,7 @@ const Dashboard = () => {
                     <Progress>
                       {" "}
                       {loading && <ClipLoader />}{" "}
-                      {candidateDetail &&
-                        `${candidateDetail.userProgress?.progress}%`}
+                      {ctx.state && `${ctx.state.userProgress?.progress}%`}
                     </Progress>
                   </Card2SubItem>
                   <Card2SubItem>
@@ -798,13 +788,6 @@ const Dashboard = () => {
                 </Card3Item>
               </Card3>
 
-              <PrimaryButton
-                onClick={() => {
-                  navigate(ROUTES.PERSONALITY_TEST);
-                }}
-              >
-                Take Your Personality test
-              </PrimaryButton>
               <OutlineButton
                 onClick={() => {
                   navigate(ROUTES.IDEAL_COURSES);
@@ -812,18 +795,23 @@ const Dashboard = () => {
               >
                 Ideal Course Analysis
               </OutlineButton>
+              <PrimaryButton onClick={openModal}>
+                Competency Test Analytics
+              </PrimaryButton>
               <OutlineButton
                 onClick={() => {
                   navigate(ROUTES.RESUME);
                 }}
               >
-                {candidateDetail && candidateDetail.userProgress?.isResumeUpload
-                  ? "View "
-                  : "Upload "}{" "}
+                {ctx.state.userProgress?.isResumeUpload ? "View " : "Upload "}{" "}
                 Your Resume
               </OutlineButton>
-              <PrimaryButton onClick={openModal}>
-                Competency Test Analytics
+              <PrimaryButton
+                onClick={() => {
+                  navigate(ROUTES.PERSONALITY_TEST);
+                }}
+              >
+                Take Your Personality test
               </PrimaryButton>
               <OutlineButton
                 onClick={() => {
@@ -858,8 +846,8 @@ const Dashboard = () => {
             <ExperiencedHiredList
               openAssignment={openAssignment}
               openWorkExperience={openWorkExperience}
-              assignmentList={assignmentList}
-              workExperienceList={workExperienceList}
+              assignmentList={ctx.state.assignments}
+              workExperienceList={ctx.state.workExperiences}
               handleAssignmentDelete={handleAssignmentDelete}
               handleWorkExperienceDelete={handleWorkExperienceDelete}
               OpenAssignmentEditModal={OpenAssignmentEditModal}

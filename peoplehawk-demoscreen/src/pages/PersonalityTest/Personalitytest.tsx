@@ -1,22 +1,26 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import Header from "../../components/layout/header/Header";
 import { styled } from "styled-components";
 import { Range, getTrackBackground } from "react-range";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import personalityBaneer from "../../assests/img/personality_test_banner.svg";
 import Slider from "./Slider";
-import { SubmitTest} from "../../interface/Interface";
-import { getQuiz, QuizResponse, QuizEligible } from "../../services/PersonalityTestService";
+import { QuizResult, SubmitTest } from "../../interface/Interface";
+import {
+  getQuiz,
+  QuizResponse,
+  QuizEligible,
+} from "../../services/PersonalityTestService";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ROUTES } from "../../constants/routes";
-
+import ResultChart from "./ResultChart";
 
 const Container = styled.div({
   backgroundColor: "#DBEFFA",
   height: "100vh",
-  minHeight : '1200px',
+  minHeight: "1200px",
 });
 
 const BackButtonContainer = styled.div({
@@ -52,9 +56,9 @@ const Container1 = styled.div({
   borderRadius: "8px",
   marginTop: "15px",
 
-  '@media (max-width : 576px)' : {
-    width : '70%'
-  }
+  "@media (max-width : 576px)": {
+    width: "70%",
+  },
 });
 
 const SubContainer1 = styled.div({
@@ -97,15 +101,14 @@ const OutlineButton = styled.button({
   color: "black",
   fontWeight: "700",
   fontSize: "14px",
-
 });
 
 const OutlineButtonDiv = styled.div({
-   display : 'flex',
-   gap : '10px',
+  display: "flex",
+  gap: "10px",
 
-   "@media (max-width : 1150px)": {
-    display: 'block'
+  "@media (max-width : 1150px)": {
+    display: "block",
   },
 
   "@media (max-width : 840px)": {
@@ -115,10 +118,7 @@ const OutlineButtonDiv = styled.div({
   "@media (max-width : 576px)": {
     display: "block",
   },
-
-})
-
-
+});
 
 const Paragraph = styled.p({
   fontSize: "15px",
@@ -135,9 +135,9 @@ const Container2 = styled.div({
   backgroundColor: "white",
   borderRadius: "8px",
 
-  '@media (max-width : 576px)' : {
-    width : '70%'
-  }
+  "@media (max-width : 576px)": {
+    width: "70%",
+  },
 });
 
 const Text = styled.div({
@@ -178,29 +178,34 @@ interface Quiz1 {
   value: number;
 }
 
+const ResultMaker = (list: QuizResult[]): number[] => {
+  let array: number[] = [];
+  for (let i = 0; i < 5; i++) {
+    array.push((list[2 * i].answer + list[2 * i + 1].answer) / 2);
+  }
+  return array;
+};
+
 const Personalitytest: React.FC = () => {
   React.useEffect(() => {
     Quizeligible();
-   // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   const Quizeligible = async () => {
-
-    if(authCtx.userData)
-    {
+    if (authCtx.userData) {
       const result = await QuizEligible(authCtx.userData.Id);
-    
+
       if (result) {
         setTestCount(result.testNo);
         SetisSubmit(result.isFirstTestGiven);
-        
-        if(result.testNo < 3)
-        {
-           await fetchQuizList();
+        result.quizResponse && setQuizResult(ResultMaker(result.quizResponse));
+
+        if (result.testNo < 3) {
+          await fetchQuizList();
         }
       }
     }
-   
   };
 
   const fetchQuizList = async () => {
@@ -213,11 +218,12 @@ const Personalitytest: React.FC = () => {
   };
 
   const [values, setValues] = React.useState([0]);
+  const [quizResult, setQuizResult] = React.useState<number[]>([]);
   const [quizBank, setQuizBank] = React.useState<Quiz1[] | null>(null);
   const [isSubmit, SetisSubmit] = React.useState<boolean>(false);
   const [testCount, setTestCount] = React.useState<number>(0);
-  const [isSliderTouched,setIsSliderTouched] = React.useState<boolean>(false);
-  const [currentQuestion,setCurrentQuestion] = React.useState<number>(0);
+  const [isSliderTouched, setIsSliderTouched] = React.useState<boolean>(false);
+  const [currentQuestion, setCurrentQuestion] = React.useState<number>(0);
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -235,13 +241,12 @@ const Personalitytest: React.FC = () => {
     if (quizBank) {
       const response: SubmitTest[] = quizBank.map((item) => ({
         quizId: item.id,
-        userId: authCtx.userData?authCtx.userData.Id : 0,
+        userId: authCtx.userData ? authCtx.userData.Id : 0,
         answer: item.value,
         testNo: testCount + 1,
       }));
       SetisSubmit(true);
       await QuizResponse(response);
-
     }
   };
 
@@ -258,15 +263,19 @@ const Personalitytest: React.FC = () => {
 
   const handleTouch = () => {
     setIsSliderTouched(true);
-  }
+  };
 
-  const {userId} = useParams<{userId : string}>();
+  const { userId } = useParams<{ userId: string }>();
 
   return (
     <Container>
       <Header />
       <BackButtonContainer>
-        <BackButton onClick={() => {navigate(generatePath(ROUTES.HOME, { userId: userId}))}}>
+        <BackButton
+          onClick={() => {
+            navigate(generatePath(ROUTES.HOME, { userId: userId }));
+          }}
+        >
           <ArrowBackIosIcon />
           Back
         </BackButton>
@@ -282,9 +291,9 @@ const Personalitytest: React.FC = () => {
             </h2>
             <Paragraph>
               We scoured the ends of the earth to find the holy grail of
-              personality profiling. Turns out it didn’t exist. That’s why we
+              personality profiling. Turns out it didn't exist. That's why we
               had to invent it ourselves. The reason? Because employers love to
-              know what instincts you’ve got, and how your judgement and
+              know what instincts you've got, and how your judgement and
               business radar has served you and your employers in the past.
             </Paragraph>
             <OutlineButtonDiv>
@@ -304,7 +313,6 @@ const Personalitytest: React.FC = () => {
         <Container2>
           {!isSubmit ? (
             <div
-
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -342,14 +350,13 @@ const Personalitytest: React.FC = () => {
                   )}
                   renderThumb={({ props }) => (
                     <div
-                       
                       {...props}
                       key={props.key}
                       style={{
                         ...props.style,
-                        height: "0px", 
+                        height: "0px",
                         width: "0px",
-                        backgroundColor: "transparent", 
+                        backgroundColor: "transparent",
                       }}
                     />
                   )}
@@ -368,15 +375,11 @@ const Personalitytest: React.FC = () => {
                   <OutlineButton1
                     onClick={() => {
                       setValues((prevstate) => [prevstate[0] - 1]);
-                      if(values[0] >= currentQuestion || values[0] === 1)
-                        {
-                          setIsSliderTouched(true)
-                        }
-                        else
-                        {
-                          setIsSliderTouched(false)
-                        }
-      
+                      if (values[0] >= currentQuestion || values[0] === 1) {
+                        setIsSliderTouched(true);
+                      } else {
+                        setIsSliderTouched(false);
+                      }
                     }}
                   >
                     Previous Question
@@ -384,26 +387,19 @@ const Personalitytest: React.FC = () => {
                 )}
                 {values[0] < 9 && (
                   <PrimaryButton
-                  disabled = {!isSliderTouched}
+                    disabled={!isSliderTouched}
                     onClick={() => {
-                      
-                        
                       setValues((prevstate) => [prevstate[0] + 1]);
-                      if(values[0] - 1 === currentQuestion)
-                        {
-                         setCurrentQuestion((c) => c +1);
-                        }
-                      
+                      if (values[0] - 1 === currentQuestion) {
+                        setCurrentQuestion((c) => c + 1);
+                      }
+
                       setIsSliderTouched(false);
-                      if(values[0] >= currentQuestion)
-                        {
-                          setIsSliderTouched(false)
-                        }
-                        else
-                        {
-                          setIsSliderTouched(true)
-                        }
-                      
+                      if (values[0] >= currentQuestion) {
+                        setIsSliderTouched(false);
+                      } else {
+                        setIsSliderTouched(true);
+                      }
                     }}
                   >
                     Next Question
@@ -438,9 +434,12 @@ const Personalitytest: React.FC = () => {
                     not available
                   </strong>
                 </div>
-              ) : <PrimaryButton onClick={reTestHandler}>Re-Test</PrimaryButton> }
+              ) : (
+                <PrimaryButton onClick={reTestHandler}>Re-Test</PrimaryButton>
+              )}
             </div>
           )}
+          <ResultChart result={quizResult} />
         </Container2>
       </MainContainer>
     </Container>

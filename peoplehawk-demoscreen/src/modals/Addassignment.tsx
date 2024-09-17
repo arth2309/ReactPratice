@@ -1,15 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
 import { Assignment } from "../interface/Interface";
-import { Field, Form, Formik,ErrorMessage } from "formik";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import Input from "../components/layout/form/Input";
 import DatePicker from "react-datepicker";
 import { AddData, UpdateData } from "../services/AssignmentService";
 import * as Yup from "yup";
 import moment from "moment";
 import { newDate } from "react-datepicker/dist/date_utils";
-
-
-
 
 interface ModalProps {
   onClose: () => void;
@@ -56,7 +53,9 @@ const ModalOverlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  animation: ${ css`${fadeIn} 0.3s ease-in-out`};
+  animation: ${css`
+    ${fadeIn} 0.3s ease-in-out
+  `};
 `;
 
 const ModalContent = styled.div`
@@ -67,7 +66,9 @@ const ModalContent = styled.div`
   padding: 20px 50px;
   position: relative;
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  animation: ${ css`${slideIn} 0.3s ease-in-out`};
+  animation: ${css`
+    ${slideIn} 0.3s ease-in-out
+  `};
 `;
 
 const ModalHeader = styled.div`
@@ -109,24 +110,22 @@ const FormDiv = styled.div`
   gap: 10px;
   margin-top: 20px;
 
-  input
-  {
-    background-color : white;
-    height : 45px; 
+  input {
+    background-color: white;
+    height: 45px;
   }
 
-  .datepicker
-                {
-                  height : 40px;
-                  border : 1px solid #ced4da;
-                  border-radius : 0.25rem; 
-                  font-size : 1rem;
-                }
+  .datepicker {
+    height: 40px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+  }
 
-        .error {
-  color: red;
-  font-size: 1rem;
-}
+  .error {
+    color: red;
+    font-size: 1rem;
+  }
 `;
 
 const Addassignment: React.FC<ModalProps> = ({
@@ -144,13 +143,12 @@ const Addassignment: React.FC<ModalProps> = ({
     infohraphicResumeDescription: string;
     startDate: Date | null;
     endDate: Date | null;
-    isOngoing: boolean;
+    isOngoing: boolean; 
   }
 
- 
   return (
-    <ModalOverlay  onClick={onClose}>
-    <ModalContent  onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay onClick={onClose}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <Title>{intialValues.id > 0 ? "Update" : "Add"} Assignment</Title>
           <ModalClose onClick={onClose}>X</ModalClose>
@@ -182,7 +180,7 @@ const Addassignment: React.FC<ModalProps> = ({
                       }
                     />
                     <div className="error">
-                    <ErrorMessage  name="organisation" />
+                      <ErrorMessage name="organisation" />
                     </div>
                   </div>
                   <div>
@@ -195,7 +193,7 @@ const Addassignment: React.FC<ModalProps> = ({
                       required
                     />
                     <div className="error">
-                    <ErrorMessage  name="title" />
+                      <ErrorMessage name="title" />
                     </div>
                   </div>
                   <div>
@@ -227,22 +225,28 @@ const Addassignment: React.FC<ModalProps> = ({
                       <DatePicker
                         className="datepicker"
                         name="startDate"
-                        maxDate={values.endDate ? moment(values.endDate).add(-1, 'days').toDate() : moment(new Date()).add(-1, 'days').toDate()}
+                        maxDate={
+                          values.endDate
+                            ? moment(values.endDate).add(-1, "days").toDate()
+                            : moment(new Date()).add(-1, "days").toDate()
+                        }
                         showFullMonthYearPicker
                         selected={values.startDate}
                         placeholderText="Pick a Date"
                         onChange={(date) => setFieldValue("startDate", date)}
                       />
                       <div className="error">
-                    <ErrorMessage  name="startDate" />
-                    </div>
+                        <ErrorMessage name="startDate" />
+                      </div>
                     </div>
                     <div>
                       <label>End Date*</label>
                       <DatePicker
                         className="datepicker"
-                        disabled = {values.isOngoing}
-                        minDate={ moment(values.startDate).add(1, 'days').toDate()}
+                        disabled={values.isOngoing}
+                        minDate={moment(values.startDate)
+                          .add(1, "days")
+                          .toDate()}
                         maxDate={new Date()}
                         name="endDate"
                         showFullMonthYearPicker
@@ -250,12 +254,22 @@ const Addassignment: React.FC<ModalProps> = ({
                         placeholderText="Pick a Date"
                         onChange={(date) => setFieldValue("endDate", date)}
                       />
-                       <div className="error">
-                    <ErrorMessage  name="endDate" />
-                    </div>
+                      <div className="error">
+                        <ErrorMessage name="endDate" />
+                      </div>
                     </div>
                     <label>
-                      <Field type="checkbox" name="isOngoing" checked = {values.isOngoing} onChange ={() => {setFieldValue('isOngoing',!values.isOngoing) ; !values.isOngoing ? setFieldValue('endDate',new Date()) : setFieldValue('endDate',null)}}/>
+                      <Field
+                        type="checkbox"
+                        name="isOngoing"
+                        checked={values.isOngoing}
+                        onChange={() => {
+                          setFieldValue("isOngoing", !values.isOngoing);
+                          !values.isOngoing
+                            ? setFieldValue("endDate", new Date())
+                            : setFieldValue("endDate", null);
+                        }}
+                      />
                       Ongoing
                     </label>
                     <button type="submit">Confirm</button>

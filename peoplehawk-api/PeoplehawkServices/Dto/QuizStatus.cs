@@ -6,4 +6,6 @@
 
     public int testNo { get; set; }
 
+    public List<PersonalityReportDTO>? quizResponse { get; set; }
+
 }

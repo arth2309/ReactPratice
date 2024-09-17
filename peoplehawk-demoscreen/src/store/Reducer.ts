@@ -1,3 +1,4 @@
+import { stat } from 'fs';
 import { CandidateDetail,CourseInterest,ChartData, WorkExperience, Assignment, EducationDetail } from '../interface/Interface'
 
 
@@ -73,23 +74,23 @@ export const apiReducer = (state : CandidateDetail,action : Action) : CandidateD
         case 'POST_PROFILE_PHOTO':
         return {...state,profilePhoto : action.payload}
         case 'ADD_ASSIGNMENT':
-        return {...state, assignments : [...state.assignments,action.payload]}
+        return (state.assignments ? {...state, assignments : [...state.assignments,action.payload]} : state)
         case 'ADD_WORK_EXPERIENCE':
-            return {...state, workExperiences : [...state.workExperiences,action.payload]}
+            return (state.workExperiences ? {...state, workExperiences : [...state.workExperiences,action.payload]} : state)
         case 'ADD_EDUCATION_DETAIL':
-            return {...state,educations : [...state.educations,...action.payload]}
+            return (state.educations ? {...state,educations : [...state.educations,...action.payload]} : state)
          case 'DELETE_ASSIGNMENT':
-            return {...state, assignments : state.assignments.filter((_,index) => index !== action.payload)}
+            return (state.assignments ?{...state, assignments : state.assignments.filter((_,index) => index !== action.payload)} : state)
         case 'DELETE_WORK_EXPERIENCE':
-            return {...state, workExperiences : state.workExperiences.filter((_,index) => index !== action.payload)}
+            return (state.workExperiences ? {...state, workExperiences : state.workExperiences.filter((_,index) => index !== action.payload)} : state)
         case 'DELETE_EDUCATION_DETAIL':
-            return {...state,educations : state.educations.filter((_,index) => index !== action.payload)}
+            return (state.educations ? {...state,educations : state.educations.filter((_,index) => index !== action.payload)} : state)
         case 'UPDATE_ASSIGNMENT':
-                return {...state, assignments : state.assignments.map((item, i) => i === action.payload.i ? action.payload.item : item)}
+                return (state.assignments ? {...state, assignments : state.assignments.map((item, i) => i === action.payload.i ? action.payload.item : item)} : state)
         case 'UPDATE_WORK_EXPERIENCE':
-                return {...state, workExperiences : state.workExperiences.map((item, i) => i === action.payload.i ? action.payload.item : item)}
+                return (state.workExperiences ? {...state, workExperiences : state.workExperiences.map((item, i) => i === action.payload.i ? action.payload.item : item)} : state)
         case 'UPDATE_EDUCATION_DETAIL':
-                return {...state,educations : state.educations.map((item, i) => i === action.payload.i ? action.payload.item : item)}
+                return (state.educations ? {...state,educations : state.educations.map((item, i) => i === action.payload.i ? action.payload.item : item)} : state)
         default:
         return state;
     }

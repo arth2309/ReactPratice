@@ -21,31 +21,19 @@ const Memberinterestanalysischart = (props: any) => {
 
   const data1 = selecteditems.map((item) => chartData[item]);
 
-  const options : any= {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: "y" as const,
     animation: {
-      duration: 5000, 
-//       easing :' easeOutBounce'
-// ,
-//       onProgress : (animation : any) => {
-//        animation : {
-       
-//        }
-//       },
-//       onComplete : (animation : any) => {
-//         const progress = animation.currentStep / animation.numSteps;
-//         console.log('comp');
-//       }
-           
-     
+      duration: 5000,
     },
     scales: {
       y: {
         ticks: {
           align: "center",
-          color: courseInterest && courseInterest.map((item: Course) => item.color1),
+          color:
+            courseInterest && courseInterest.map((item: Course) => item.color1),
         } as const,
       },
     },
@@ -53,7 +41,7 @@ const Memberinterestanalysischart = (props: any) => {
       legend: {
         display: false,
       },
-      
+
       tooltip: {
         callbacks: {
           label: function (tooltipItem: any) {
@@ -69,10 +57,12 @@ const Memberinterestanalysischart = (props: any) => {
 
     datasets: [
       {
-        backgroundColor:courseInterest &&  courseInterest.map((item: Course) => item.color1),
-        hoverBackgroundColor:courseInterest &&  courseInterest.map((item: Course) => item.color2),
+        backgroundColor:
+          courseInterest && courseInterest.map((item: Course) => item.color1),
+        hoverBackgroundColor:
+          courseInterest && courseInterest.map((item: Course) => item.color2),
         hoverBorderColor: "rgba(255,99,132,1)",
-        data: [10,23,34,23,78,66],
+        data: [10, 23, 34, 23, 78, 66],
       },
     ],
   };

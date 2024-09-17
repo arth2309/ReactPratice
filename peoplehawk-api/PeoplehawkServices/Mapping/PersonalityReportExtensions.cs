@@ -28,4 +28,9 @@ public static class PersonalityReportExtensions
 
         };
     }
+
+    public static List<PersonalityReportDTO> ToDtoList(this List<PersonalityReport> personalityReports) 
+    {
+        return personalityReports.Select(p => p.ToDto()).OrderBy(x=>x.Id).ToList();
+    }
 }

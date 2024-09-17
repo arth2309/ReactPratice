@@ -200,14 +200,12 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.ProfilePhoto = base64String;
         userDetailDTO.competencies = await _compentencyService.GetList();
         userDetailDTO.userCompentencyDetails = await _userCompentencyDetailService.GetList();
-        userDetailDTO.Educations = !(user.MemberType == "Experienced Hire") ? await _educationDetailService.GetList(UserId) : null;
-        userDetailDTO.Assignments = user.MemberType == "Experienced Hire" ? await _assignmentService.GetList(UserId) : null;
-        userDetailDTO.WorkExperiences = user.MemberType == "Experienced Hire" ? await _workExperienceService.GetList(UserId) : null;
+        userDetailDTO.Educations =  await _educationDetailService.GetList(UserId) ;
+        userDetailDTO.Assignments = await _assignmentService.GetList(UserId);
+        userDetailDTO.WorkExperiences = await _workExperienceService.GetList(UserId);
         userDetailDTO.CourseInterestDetails = await _courseInterestService.GetCourseInterestLists();
         userDetailDTO.ChartDetail = await _chartService.GetChartdata(1);
-        userDetailDTO.Resume = await _resumeFileService.GetFileString(UserId);
+        userDetailDTO.Resume = userDetailDTO.UserProgress.isResumeUpload ? await _resumeFileService.GetFileString(UserId) : null;
         return userDetailDTO;
     }
 }
-
-
