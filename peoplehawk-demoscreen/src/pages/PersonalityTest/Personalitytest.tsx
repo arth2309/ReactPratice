@@ -16,6 +16,11 @@ import { generatePath, useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ROUTES } from "../../constants/routes";
 import ResultChart from "./ResultChart";
+import pioneer from "../../assests/img/Pioneer.png";
+import broker from "../../assests/img/broker.png";
+import achiever from "../../assests/img/Achiever.png";
+import director from "../../assests/img/Director.png";
+import anchor from "../../assests/img/Anchor.png";
 
 const Container = styled.div({
   backgroundColor: "#DBEFFA",
@@ -172,19 +177,49 @@ const OutlineButton1 = styled.button({
   fontSize: "14px",
 });
 
+const ResultDiv = styled.div({
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+});
+
+const ResultImg = styled.img({
+  width: "25%",
+  height: "260px",
+});
+
 interface Quiz1 {
   id: number;
   question: string;
   value: number;
 }
 
-const ResultMaker = (list: QuizResult[]): number[] => {
-  let array: number[] = [];
-  for (let i = 0; i < 5; i++) {
-    array.push((list[2 * i].answer + list[2 * i + 1].answer) / 2);
+export const resultMaker = (
+  list: QuizResult[] | null
+): { array: number[]; index: number } | null => {
+  if (list == null) {
+    return null;
+  } else {
+    let index = 0;
+    console.log(index);
+    let value = 0;
+    let array: number[] = [];
+    for (let i = 0; i < 5; i++) {
+      array.push((list[2 * i].answer + list[2 * i + 1].answer) / 2);
+    }
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] > value) {
+        value = array[i];
+        index = i;
+      }
+    }
+    console.log(index);
+    return { array: array, index: index };
   }
-  return array;
 };
+
+const imageArray = [pioneer, broker, achiever, director, anchor];
 
 const Personalitytest: React.FC = () => {
   React.useEffect(() => {
@@ -197,9 +232,11 @@ const Personalitytest: React.FC = () => {
       const result = await QuizEligible(authCtx.userData.Id);
 
       if (result) {
+        const list = resultMaker(result.quizResponse);
         setTestCount(result.testNo);
         SetisSubmit(result.isFirstTestGiven);
-        result.quizResponse && setQuizResult(ResultMaker(result.quizResponse));
+        list && setQuizResult(list.array);
+        list && setImageIndex(list.index);
 
         if (result.testNo < 3) {
           await fetchQuizList();
@@ -219,6 +256,7 @@ const Personalitytest: React.FC = () => {
 
   const [values, setValues] = React.useState([0]);
   const [quizResult, setQuizResult] = React.useState<number[]>([]);
+  const [imageIndex, setImageIndex] = React.useState<number>(0);
   const [quizBank, setQuizBank] = React.useState<Quiz1[] | null>(null);
   const [isSubmit, SetisSubmit] = React.useState<boolean>(false);
   const [testCount, setTestCount] = React.useState<number>(0);
@@ -245,8 +283,15 @@ const Personalitytest: React.FC = () => {
         answer: item.value,
         testNo: testCount + 1,
       }));
+      const quiz: QuizResult[] = quizBank.map((item) => ({
+        quizId: item.id,
+        answer: item.value,
+      }));
       SetisSubmit(true);
       await QuizResponse(response);
+      const result = resultMaker(quiz);
+      result && setQuizResult(result.array);
+      result && setImageIndex(result.index);
     }
   };
 
@@ -411,35 +456,20 @@ const Personalitytest: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "20px",
-              }}
-            >
-              <div style={{ fontSize: "20px", fontFamily: "cursive" }}>
-                <strong>Quiz Submitted Succesfully</strong>
-              </div>
-              <CheckCircleIcon
-                htmlColor="#F96332"
-                style={{ fontSize: "100px" }}
-              />
-              {testCount >= 3 ? (
-                <div style={{ fontSize: "20px", fontFamily: "cursive" }}>
-                  <strong>
-                    As you have re-attempted the quiz twice. re-test option is
-                    not available
-                  </strong>
-                </div>
-              ) : (
+            <>
+              <ResultDiv>
+                <ResultImg
+                  src={imageArray[imageIndex]}
+                  alt="personality-type"
+                />
+                <ResultChart result={quizResult} />
+              </ResultDiv>
+
+              {testCount < 3 && (
                 <PrimaryButton onClick={reTestHandler}>Re-Test</PrimaryButton>
               )}
-            </div>
+            </>
           )}
-          <ResultChart result={quizResult} />
         </Container2>
       </MainContainer>
     </Container>

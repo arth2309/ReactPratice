@@ -20,4 +20,7 @@ public class UserDetailDTO
 
     public string? Resume { get; set; } 
 
+    public QuizStatus QuizDetail { get; set; }
+
+    public List<QuizDTO>? QuizQuestion { get; set; }
 }

@@ -209,6 +209,8 @@ export interface CandidateDetail {
   courseInterestDetails: CourseInterest[] | null;
   chartDetail: ChartData | null;
   resume: string | null;
+  quizDetail: QuizStatus;
+  quizQuestion: Quiz | null;
 }
 
 export interface WorkExperience {

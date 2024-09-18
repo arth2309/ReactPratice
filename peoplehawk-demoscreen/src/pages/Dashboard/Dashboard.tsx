@@ -4,7 +4,11 @@ import { styled } from "styled-components";
 import "../../stylesheets/obviously-font.css";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import trophy from "../../assests/img/trophy-icon.svg";
+import pioneer from "../../assests/img/Pioneer.png";
 import broker from "../../assests/img/broker.png";
+import achiever from "../../assests/img/Achiever.png";
+import director from "../../assests/img/Director.png";
+import anchor from "../../assests/img/Anchor.png";
 import facebook from "../../assests/img/facebook-icon.svg";
 import linkedin from "../../assests/img/linkedin-icon.svg";
 import twitter from "../../assests/img/twitter-icon.svg";
@@ -17,15 +21,14 @@ import {
 import { uploadPhoto, fetchUserDetail } from "../../services/HomeService";
 import {
   Assignment,
-  CandidateDetail,
   EducationDetail,
   WorkExperience,
 } from "../../interface/Interface";
 import Compentencytestanalytics from "../../modals/Compentencytestanalytics";
 import { ROUTES } from "../../constants/routes";
 import { TOAST } from "../../constants/toast";
-import { RootState, AppDispatch } from "../../store/Redux";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/Redux";
+import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import Addeducation from "../../modals/Addeducation";
 import Updateeducation from "../../modals/Updateeducation";
@@ -39,8 +42,8 @@ import { EducationList } from "../../components/layout/List/EducationList";
 import { DeleteData as DeleteAssigment } from "../../services/AssignmentService";
 import { DeleteData as DeleteWorkExperience } from "../../services/WorkExperience";
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
-import { useParams } from "react-router-dom";
 import { useApi } from "../../store/ReducerContext";
+import { resultMaker } from "../PersonalityTest/Personalitytest";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -354,6 +357,8 @@ const Images = styled.img({
   },
 });
 
+const imageArray = [pioneer, broker, achiever, director, anchor];
+
 const Dashboard = () => {
   const { data, loading } = useSelector((state: RootState) => state.data);
   const authctx = useContext(AuthContext);
@@ -387,6 +392,8 @@ const Dashboard = () => {
           ctx.dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
         response.profilePhoto &&
           setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
+        const list = resultMaker(response.quizDetail.quizResponse);
+        list && setPersonalityIndex(list.index);
       }
     }
   };
@@ -442,6 +449,7 @@ const Dashboard = () => {
   const [isWorkExperienceOpen, setWorkExperienceOpen] =
     useState<boolean>(false);
   const [isUpdateProfileOpen, setUpdateProfileOpen] = useState<boolean>(false);
+  const [personalityIndex, setPersonalityIndex] = useState<number>(0);
   const [index, setIndex] = useState<number>(0);
   const [assignmentIndex, setAssignmentIndex] = useState<number>(0);
   const [workExperienceIndex, setWorkExperienceIndex] = useState<number>(0);
@@ -494,8 +502,6 @@ const Dashboard = () => {
   const closeWorkExperience = useCallback(() => {
     setWorkExperienceOpen(false);
   }, []);
-
-  const { userId } = useParams<{ userId: string }>();
 
   const HandleDelete = async (index: number, id: number) => {
     await DeleteData(id);
@@ -765,7 +771,9 @@ const Dashboard = () => {
                 </Card2Sub>
               </Card2>
               <Card3>
-                <BrokerImg src={broker} alt="broker" />
+                {ctx.state.quizDetail.testNo > 0 && (
+                  <BrokerImg src={imageArray[personalityIndex]} alt="broker" />
+                )}
                 <Card3Item>
                   <div style={{ color: "#394456" }}>Your personality Type</div>
                   <Broker>Broker</Broker>

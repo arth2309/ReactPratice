@@ -32,9 +32,10 @@ public class UserService : GenericService<User>,IUserService
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
     private readonly ICourseInterestService _courseInterestService;
     private readonly IChartService _chartService;
+    private readonly IQuizService _quizService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -48,6 +49,7 @@ public class UserService : GenericService<User>,IUserService
         _userCompentencyDetailService = userCompentencyDetailService;
         _courseInterestService = courseInterestService;
         _chartService = chartService;
+        _quizService = quizService;
 
     }
 
@@ -205,6 +207,8 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.WorkExperiences = await _workExperienceService.GetList(UserId);
         userDetailDTO.CourseInterestDetails = await _courseInterestService.GetCourseInterestLists();
         userDetailDTO.ChartDetail = await _chartService.GetChartdata(1);
+        userDetailDTO.QuizDetail = await _personalityReportService.GetReport(UserId);
+        userDetailDTO.QuizQuestion = userDetailDTO.QuizDetail.testNo < 3 ? await _quizService.GetAllQuiz() : null;
         userDetailDTO.Resume = userDetailDTO.UserProgress.isResumeUpload ? await _resumeFileService.GetFileString(UserId) : null;
         return userDetailDTO;
     }
