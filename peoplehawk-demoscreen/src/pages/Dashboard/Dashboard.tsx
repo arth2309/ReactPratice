@@ -44,6 +44,7 @@ import { DeleteData as DeleteWorkExperience } from "../../services/WorkExperienc
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
 import { useApi } from "../../store/ReducerContext";
 import { resultMaker } from "../PersonalityTest/Personalitytest";
+import Note from "../../modals/Note";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -446,6 +447,7 @@ const Dashboard = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
+  const [isNoteOpen, setIsNoteOpen] = useState<boolean>(false);
   const [isWorkExperienceOpen, setWorkExperienceOpen] =
     useState<boolean>(false);
   const [isUpdateProfileOpen, setUpdateProfileOpen] = useState<boolean>(false);
@@ -472,6 +474,9 @@ const Dashboard = () => {
   };
   const closeProfile = useCallback(() => {
     setProfileOpen(false);
+  }, []);
+  const closeNote = useCallback(() => {
+    setIsNoteOpen(false);
   }, []);
   const closeUpdateProfile = useCallback(() => {
     setUpdateProfileOpen(false);
@@ -650,6 +655,7 @@ const Dashboard = () => {
           candidates={ctx.state.userCompentencyDetails}
         />
       )}
+      {isNoteOpen && <Note onClose={closeNote} profileImg={imageSrc} />}
       {isProfileOpen && (
         <Addeducation onClose={closeProfile} onAddData={handleAddData} />
       )}
@@ -717,7 +723,11 @@ const Dashboard = () => {
           <LeftChildContainer>
             <LeftChildMainContainer>
               <Card1>
-                <Card1Item>
+                <Card1Item
+                  onClick={() => {
+                    setIsNoteOpen(true);
+                  }}
+                >
                   <strong>View My Profile</strong>
                 </Card1Item>
                 <Card1Item>

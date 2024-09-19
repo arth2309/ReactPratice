@@ -6,6 +6,9 @@ import {
   WorkExperience,
   Assignment,
   EducationDetail,
+  QuizResult,
+  QuizStatus,
+  Quiz,
 } from "../interface/Interface";
 
 export type Action =
@@ -31,7 +34,9 @@ export type Action =
   | {
       type: "UPDATE_EDUCATION_DETAIL";
       payload: { item: EducationDetail; i: number };
-    };
+    }
+  | { type: "POST_PERSONALITY_REPORT"; payload: QuizStatus }
+  | { type: "POST_QUIZ_QUESTION"; payload: Quiz };
 
 const base64ToBlob = (base64String: string | null): string | null => {
   if (base64String == null) {
@@ -184,6 +189,10 @@ export const apiReducer = (
             ),
           }
         : state;
+    case "POST_PERSONALITY_REPORT":
+      return { ...state, quizDetail: action.payload };
+    case "POST_QUIZ_QUESTION":
+      return { ...state, quizQuestion: action.payload };
     default:
       return state;
   }
