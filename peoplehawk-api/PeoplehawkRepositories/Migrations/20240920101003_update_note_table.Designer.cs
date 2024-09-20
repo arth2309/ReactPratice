@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeoplehawkRepositories;
@@ -11,9 +12,11 @@ using PeoplehawkRepositories;
 namespace PeoplehawkRepositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240920101003_update_note_table")]
+    partial class update_note_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,28 +62,6 @@ namespace PeoplehawkRepositories.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AssignmentDetails");
-                });
-
-            modelBuilder.Entity("PeoplehawkRepositories.Models.AudioNote", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
-
-                    b.Property<int?>("UserId")
-                        .IsRequired()
-                        .HasColumnType("integer");
-
-                    b.Property<string>("filePath")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AudioNotes");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
@@ -419,28 +400,6 @@ namespace PeoplehawkRepositories.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("PeoplehawkRepositories.Models.TextNote", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("UserId")
-                        .IsRequired()
-                        .HasColumnType("integer");
-
-                    b.Property<string>("textNote")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TextNotes");
-                });
-
             modelBuilder.Entity("PeoplehawkRepositories.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -554,17 +513,6 @@ namespace PeoplehawkRepositories.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PeoplehawkRepositories.Models.AudioNote", b =>
-                {
-                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
                 {
                     b.HasOne("PeoplehawkRepositories.Models.User", "User")
@@ -630,17 +578,6 @@ namespace PeoplehawkRepositories.Migrations
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.ResumeFile", b =>
-                {
-                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PeoplehawkRepositories.Models.TextNote", b =>
                 {
                     b.HasOne("PeoplehawkRepositories.Models.User", "User")
                         .WithMany()

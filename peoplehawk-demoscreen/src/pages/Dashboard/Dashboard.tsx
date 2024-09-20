@@ -359,6 +359,7 @@ const Images = styled.img({
 });
 
 const imageArray = [pioneer, broker, achiever, director, anchor];
+const typeArray = ["Pioneer", "Broker", "Achiever", "Director", "Anchor"];
 
 const Dashboard = () => {
   const { data, loading } = useSelector((state: RootState) => state.data);
@@ -723,15 +724,15 @@ const Dashboard = () => {
           <LeftChildContainer>
             <LeftChildMainContainer>
               <Card1>
+                <Card1Item>
+                  <strong>View My Profile</strong>
+                </Card1Item>
                 <Card1Item
                   onClick={() => {
                     setIsNoteOpen(true);
                   }}
                 >
-                  <strong>View My Profile</strong>
-                </Card1Item>
-                <Card1Item>
-                  <strong>What's included</strong>
+                  <strong>View My Notes</strong>
                 </Card1Item>
               </Card1>
               <Card2>
@@ -786,7 +787,7 @@ const Dashboard = () => {
                 )}
                 <Card3Item>
                   <div style={{ color: "#394456" }}>Your personality Type</div>
-                  <Broker>Broker</Broker>
+                  <Broker>{typeArray[personalityIndex]}</Broker>
                   <div>
                     <div style={{ fontSize: "12px", letterSpacing: "1px" }}>
                       <i>Your key strengths:</i>
@@ -829,7 +830,9 @@ const Dashboard = () => {
                   navigate(ROUTES.PERSONALITY_TEST);
                 }}
               >
-                Take Your Personality test
+                {ctx.state.quizDetail.testNo > 0
+                  ? "View Your Personality Result"
+                  : "Take Your Personality Test"}
               </PrimaryButton>
               <OutlineButton
                 onClick={() => {
@@ -878,7 +881,9 @@ const Dashboard = () => {
                 navigate(ROUTES.PERSONALITY_TEST);
               }}
             >
-              Take Your Personality Test
+              {ctx.state.quizDetail.testNo > 0
+                ? "View Your Personality Result"
+                : "Take Your Personality Test"}
             </PrimaryButton>
             <OutlineButton
               onClick={() => {

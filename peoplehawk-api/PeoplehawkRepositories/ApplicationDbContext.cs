@@ -40,4 +40,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Assignment> AssignmentDetails { get; set; }
 
     public DbSet<WorkExperience> WorkExperienceDetails { get; set;}
+    public DbSet<AudioNote> AudioNotes { get; set; }
+
+    public DbSet<TextNote> TextNotes { get; set; }
 }

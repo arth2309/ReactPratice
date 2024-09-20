@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Files\" />
+    <Folder Include="Audios\" />
   </ItemGroup>
 
   <ItemGroup>

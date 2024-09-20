@@ -1,11 +1,13 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import profile from "../assests/img/profile_placeholder-3x.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "../store/AuthContext";
-import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { useAudioRecorder } from "react-audio-voice-recorder";
 import MicNoneIcon from "@mui/icons-material/MicNone";
 import ModeOutlinedIcon from "@mui/icons-material/ModeOutlined";
 import { Formik, Form } from "formik";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import recordButton from "../assests/img/record-removebg-preview.png";
 
 interface ModalProps {
   onClose: () => void;
@@ -46,10 +48,10 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: white;
+  background: #eef2f6;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  width: 275px;
   padding: 20px;
   margin: 0 25px 10px 0;
   position: relative;
@@ -86,6 +88,29 @@ const IconButton = styled.button({
   height: "80px",
 });
 
+const Card = styled.div({
+  backgroundColor: "white",
+  display: "flex",
+  flexDirection: "column",
+  gap: "5px",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "140px",
+  height: "126px",
+  borderRadius: "8px",
+  margin: "10px 0px",
+});
+
+const NoteTextArea = styled.textarea({
+  width: "249px",
+  height: "200px",
+});
+
+const CardTitle = styled.div({
+  fontSize: "1rem",
+  color: "#4D5767",
+});
+
 const ModalClose = styled.button`
   border: none;
   font-size: 18px;
@@ -99,6 +124,8 @@ const ModalClose = styled.button`
 
 const NoteDiv = styled.div({
   fontSize: "20px",
+  fontWeight: 600,
+  margin: "10px 0px",
 });
 
 const Container = styled.div({
@@ -108,9 +135,64 @@ const Container = styled.div({
   alignItems: "center",
 });
 
+const ViewButton = styled.button({
+  background: "transparent",
+  padding: "10px 20px",
+  fontSize: "18px",
+  color: "#4D5767",
+  width: "80%",
+  border: "1px solid #4D5767",
+  marginTop: "25px",
+});
+
+const TextCard = styled.div({
+  backgroundColor: "white",
+  display: "flex",
+  flexDirection: "column",
+  gap: "5px",
+  alignItems: "start",
+  padding: "10px",
+  width: "fit-content",
+  borderRadius: "8px",
+  margin: "10px 0px",
+});
+
+const BackButton = styled.button({
+  background: "transparent",
+  color: "black",
+  display: "flex",
+  gap: "10px",
+  alignItems: "center",
+  padding: "0px",
+});
+
+const scaleAnimation = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+const RecordButtonImg = styled.img<{ isRecording: boolean }>`
+  height: 200px;
+  ${({ isRecording }) =>
+    isRecording &&
+    css`
+      animation: ${scaleAnimation} 0.5s infinite;
+    `}
+`;
+
+const SaveButton = styled.button({
+  backgroundColor: "#0097A2",
+});
+
 const ModalBody = styled.div`
-  height: 400px;
-  overflow-y: auto;
+  height: 415px;
 `;
 
 const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
@@ -128,11 +210,14 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
     setIsHome(false);
   };
 
+  const addAudioNote = () => {
+    setIsAudioNote(true);
+    setIsHome(false);
+  };
+
   const addAudioElement = () => {
     if (isRecording) {
-      recordingBlob &&
-        setAudioNoteList((prevList) => [...prevList, recordingBlob]);
-      stopRecording(); // Store the audio blob
+      stopRecording();
     } else {
       startRecording();
     }
@@ -141,6 +226,8 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const viewNote = () => {
     setIsViewHistory(true);
     setIsHome(false);
+    setIsAudioNote(false);
+    setIstextNote(false);
   };
 
   const back = () => {
@@ -153,6 +240,12 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const { startRecording, stopRecording, isRecording, recordingBlob } =
     useAudioRecorder();
 
+  useEffect(() => {
+    if (!recordingBlob) return;
+    setAudioNoteList((prevState) => [...prevState, recordingBlob]);
+    // recordingBlob will be present at this point after 'stopRecording' has been called
+  }, [recordingBlob]);
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -164,21 +257,32 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
           <ModalClose onClick={onClose}>X</ModalClose>
         </ModalHeader>
         <ModalBody>
+          <NoteDiv>
+            {isHome && "Add A Note"}
+            {isTextNote && "Add A Text Note"}
+            {isAudioNote && "Add A Audio Note"}
+            {isViewHistory && "View Note"}
+          </NoteDiv>
           {isHome && (
             <>
-              <NoteDiv>Add a Note ...</NoteDiv>
               <Container>
-                <IconButton onClick={addText}>
-                  <ModeOutlinedIcon fontSize="large" />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    addAudioElement();
-                  }}
-                >
-                  <MicNoneIcon fontSize="large" />
-                </IconButton>
-                <button onClick={viewNote}>View History</button>
+                <Card>
+                  <IconButton onClick={addText}>
+                    <ModeOutlinedIcon fontSize="large" />
+                  </IconButton>
+                  <CardTitle>Add Text Note</CardTitle>
+                </Card>
+                <Card>
+                  <IconButton
+                    onClick={() => {
+                      addAudioNote();
+                    }}
+                  >
+                    <MicNoneIcon fontSize="large" />
+                  </IconButton>
+                  <CardTitle>Add Audio Note</CardTitle>
+                </Card>
+                <ViewButton onClick={viewNote}>View History</ViewButton>
               </Container>
             </>
           )}
@@ -192,31 +296,48 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
             >
               {({ setFieldValue }) => (
                 <Form>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <button onClick={back}>Back</button>
-                    <textarea
+                  <TextCard>
+                    <BackButton onClick={back}>Back</BackButton>
+                    <NoteTextArea
                       name="text"
                       onChange={(e) => {
                         setFieldValue("text", e.target.value);
                       }}
                     />
-                    <button type="submit">Save</button>
-                  </div>
+                    <SaveButton type="submit">Save</SaveButton>
+                  </TextCard>
+                  <ViewButton onClick={viewNote}>View History</ViewButton>
                 </Form>
               )}
             </Formik>
           )}
+          {isAudioNote && (
+            <Container>
+              <BackButton onClick={back}>back</BackButton>
+              <RecordButtonImg
+                isRecording={isRecording}
+                src={recordButton}
+                height="200px"
+                alt="record-button"
+                onClick={addAudioElement}
+              />
+              <ViewButton onClick={viewNote}>View History</ViewButton>
+            </Container>
+          )}
           {isViewHistory && (
-            <ul>
-              {textNoteList.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-              {audioNoteList.map((blob, index) => (
-                <li key={index}>
-                  <audio controls src={URL.createObjectURL(blob)} />
-                </li>
-              ))}
-            </ul>
+            <div>
+              <BackButton onClick={back}>back</BackButton>
+              <ul>
+                {textNoteList.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+                {audioNoteList.map((blob, index) => (
+                  <li key={index}>
+                    <audio controls src={URL.createObjectURL(blob)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </ModalBody>
       </ModalContent>

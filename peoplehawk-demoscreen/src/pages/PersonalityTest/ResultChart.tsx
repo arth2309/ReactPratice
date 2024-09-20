@@ -14,7 +14,7 @@ interface ChartProps {
 
 const Container = styled.div({
   height: "260px",
-  width: "60%",
+  width: "100%",
 });
 
 const ResultChart: FC<ChartProps> = ({ result }) => {

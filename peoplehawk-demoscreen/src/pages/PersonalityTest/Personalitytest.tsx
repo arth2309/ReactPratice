@@ -185,7 +185,7 @@ const ResultDiv = styled.div({
 
 const ResultImg = styled.img({
   width: "25%",
-  height: "260px",
+  height: "360px",
 });
 
 interface Quiz1 {
@@ -220,6 +220,7 @@ export const resultMaker = (
 };
 
 const imageArray = [pioneer, broker, achiever, director, anchor];
+const typeArray = ["Pioneer", "Broker", "Achiever", "Director", "Anchor"];
 
 const Personalitytest: React.FC = () => {
   React.useEffect(() => {
@@ -462,7 +463,11 @@ const Personalitytest: React.FC = () => {
                   src={imageArray[imageIndex]}
                   alt="personality-type"
                 />
-                <ResultChart result={quizResult} />
+                <div style={{ width: "60%" }}>
+                  <h3>Your Personality Type : {typeArray[imageIndex]} </h3>
+                  <h3>Key Stength : Unflappable,Concrete,Team-builder</h3>
+                  <ResultChart result={quizResult} />
+                </div>
               </ResultDiv>
 
               {testCount < 3 && (
