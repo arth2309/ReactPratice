@@ -211,6 +211,8 @@ export interface CandidateDetail {
   resume: string | null;
   quizDetail: QuizStatus;
   quizQuestion: Quiz | null;
+  audioNoteList: AudioNote[];
+  textNoteList: TextNote[];
 }
 
 export interface WorkExperience {
@@ -229,4 +231,16 @@ export interface ResumeFile {
   fileName: string;
   filePath: string;
   uploadDate: string;
+}
+
+export interface AudioNote {
+  id: number;
+  userId: number;
+  file: string;
+}
+
+export interface TextNote {
+  id: number;
+  userId: number;
+  textNote: string;
 }

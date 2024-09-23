@@ -33,9 +33,11 @@ public class UserService : GenericService<User>,IUserService
     private readonly ICourseInterestService _courseInterestService;
     private readonly IChartService _chartService;
     private readonly IQuizService _quizService;
+    private readonly ITextNoteService _textNoteService;
+    private readonly IAudioNoteService _audioNoteService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -50,6 +52,8 @@ public class UserService : GenericService<User>,IUserService
         _courseInterestService = courseInterestService;
         _chartService = chartService;
         _quizService = quizService;
+        _audioNoteService = audioNoteService;
+        _textNoteService = textNoteService;
 
     }
 
@@ -210,6 +214,8 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.QuizDetail = await _personalityReportService.GetReport(UserId);
         userDetailDTO.QuizQuestion = userDetailDTO.QuizDetail.testNo < 3 ? await _quizService.GetAllQuiz() : null;
         userDetailDTO.Resume = userDetailDTO.UserProgress.isResumeUpload ? await _resumeFileService.GetFileString(UserId) : null;
+        userDetailDTO.TextNoteList = await _textNoteService.GetNoteList(UserId);
+        userDetailDTO.AudioNoteList = await _audioNoteService.GetNoteList(UserId);
         return userDetailDTO;
     }
 }

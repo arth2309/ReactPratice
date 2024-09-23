@@ -6,11 +6,27 @@ public static class AudioNoteExtensions
 {
     public static AudioNoteDTO ToDto(this AudioNote audioNote)
     {
+        string? base64String;
+
+
+        if (audioNote.filePath != null)
+        {
+            
+            string filePath = Path.Combine(audioNote.filePath);
+            var fileBytes = File.ReadAllBytes(filePath);
+            base64String = Convert.ToBase64String(fileBytes);
+        }
+
+        else
+        {
+            base64String = null;
+        }
+
         return new AudioNoteDTO
         {
             Id = audioNote.Id,
             UserId = audioNote.UserId,
-            filePath = audioNote.filePath
+            file = base64String
         };
     }
 
@@ -26,9 +42,15 @@ public static class AudioNoteExtensions
 
         return new AudioNote
         {
-            Id = 0,
+           
             UserId = audioNotePostDto.UserId,
             filePath = Path.Combine("/Audios", audioNotePostDto.formFile.FileName)
     };
+
+    }
+
+    public static List<AudioNoteDTO> ToDtoList(this List<AudioNote> audioNoteList) 
+    {
+        return audioNoteList.Select(audioNote => audioNote.ToDto()).OrderBy(x => x.Id).ToList();   
     }
 }

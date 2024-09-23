@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import {
   CandidateDetail,
   CourseInterest,
@@ -9,6 +8,7 @@ import {
   QuizResult,
   QuizStatus,
   Quiz,
+  TextNote,
 } from "../interface/Interface";
 
 export type Action =
@@ -36,9 +36,11 @@ export type Action =
       payload: { item: EducationDetail; i: number };
     }
   | { type: "POST_PERSONALITY_REPORT"; payload: QuizStatus }
-  | { type: "POST_QUIZ_QUESTION"; payload: Quiz };
+  | { type: "POST_QUIZ_QUESTION"; payload: Quiz }
+  | { type: "POST_AUDIO_NOTE" }
+  | { type: "POST_TEXT_NOTE"; payload: TextNote };
 
-const base64ToBlob = (base64String: string | null): string | null => {
+export const base64ToBlob = (base64String: string | null): string | null => {
   if (base64String == null) {
     return null;
   }
@@ -71,6 +73,8 @@ export const intialState: CandidateDetail = {
   resume: null,
   quizQuestion: null,
   quizDetail: { isFirstTestGiven: false, testNo: 0, quizResponse: null },
+  audioNoteList: [],
+  textNoteList: [],
 };
 
 export const apiReducer = (
@@ -193,6 +197,13 @@ export const apiReducer = (
       return { ...state, quizDetail: action.payload };
     case "POST_QUIZ_QUESTION":
       return { ...state, quizQuestion: action.payload };
+    case "POST_AUDIO_NOTE":
+      return state;
+    case "POST_TEXT_NOTE":
+      return {
+        ...state,
+        textNoteList: [...state.textNoteList, action.payload],
+      };
     default:
       return state;
   }

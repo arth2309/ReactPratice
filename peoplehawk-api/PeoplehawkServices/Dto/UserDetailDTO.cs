@@ -23,4 +23,8 @@ public class UserDetailDTO
     public QuizStatus QuizDetail { get; set; }
 
     public List<QuizDTO>? QuizQuestion { get; set; }
+
+    public List<TextNoteDto>? TextNoteList { get; set; }
+
+    public List<AudioNoteDTO>? AudioNoteList { get; set; }  
 }

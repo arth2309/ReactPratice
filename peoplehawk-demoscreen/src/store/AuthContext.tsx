@@ -15,6 +15,7 @@ interface Candidate {
   FirstName: string;
   LastName: string;
   MemberType: string;
+  RoleId: number;
 }
 
 interface Auth {

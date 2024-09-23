@@ -29,14 +29,28 @@ const Routes = () => {
             !token ? (
               <Navigate to={ROUTES.LOGIN} />
             ) : (
-              <Navigate to={ROUTES.HOME} />
+              <Navigate
+                to={
+                  authCtx.userData && authCtx.userData.RoleId == 1
+                    ? ROUTES.HOME
+                    : ROUTES.MEMBER_ANALYTICS
+                }
+              />
             )
           }
         ></Route>
         <Route
           path={ROUTES.HOME}
           element={
-            authCtx.isLoggedIn ? <Dashboard /> : <Navigate to={ROUTES.LOGIN} />
+            authCtx.isLoggedIn ? (
+              authCtx.userData && authCtx.userData.RoleId == 1 ? (
+                <Dashboard />
+              ) : (
+                <Memberanalytics />
+              )
+            ) : (
+              <Navigate to={ROUTES.LOGIN} />
+            )
           }
         ></Route>
         <Route

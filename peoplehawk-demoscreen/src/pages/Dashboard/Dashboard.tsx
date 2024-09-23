@@ -392,6 +392,7 @@ const Dashboard = () => {
       if (response) {
         response &&
           ctx.dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
+        console.log(ctx);
         response.profilePhoto &&
           setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
         const list = resultMaker(response.quizDetail.quizResponse);

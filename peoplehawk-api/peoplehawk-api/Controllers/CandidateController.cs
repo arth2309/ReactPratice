@@ -23,8 +23,10 @@ public class CandidateController : BaseController
     private readonly IEducationDetailService _educationDetailService;
     private readonly IWorkExperienceService _workExperienceService;
     private readonly IAssignmentService _assignmentService;
+    private readonly ITextNoteService _textNoteService;
+    private readonly IAudioNoteService _audioNoteService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -38,6 +40,8 @@ public class CandidateController : BaseController
         _educationDetailService = educationDetailService;
         _assignmentService = assignmentService;
         _workExperienceService = workExperienceService;
+        _textNoteService = textNoteService;
+        _audioNoteService = audioNoteService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -247,5 +251,19 @@ public class CandidateController : BaseController
     {
         ValidateModel();
         return await _workExperienceService.UpdateData(workExperienceDTO);
+    }
+
+    [HttpPost("audio-note")]
+    public async Task<AudioNoteDTO> AudioNote([FromForm] AudioNotePostDto audioNotePostDto)
+    {
+        ValidateModel();
+        return await _audioNoteService.AddNote(audioNotePostDto);   
+    }
+
+    [HttpPost("text-note")]
+
+    public async Task<TextNoteDto> TextNote(TextNoteDto textNoteDto)
+    {
+        return await _textNoteService.AddNote(textNoteDto);
     }
 }

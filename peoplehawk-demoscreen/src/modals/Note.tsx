@@ -6,8 +6,10 @@ import { useAudioRecorder } from "react-audio-voice-recorder";
 import MicNoneIcon from "@mui/icons-material/MicNone";
 import ModeOutlinedIcon from "@mui/icons-material/ModeOutlined";
 import { Formik, Form } from "formik";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import recordButton from "../assests/img/record-removebg-preview.png";
+import { useApi } from "../store/ReducerContext";
+import { addTextNote } from "../services/TextNoteService";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 interface ModalProps {
   onClose: () => void;
@@ -157,13 +159,18 @@ const TextCard = styled.div({
   margin: "10px 0px",
 });
 
+const DummyDiv = styled.div({
+  width: "100%",
+});
+
 const BackButton = styled.button({
   background: "transparent",
-  color: "black",
+  color: "#F96332",
   display: "flex",
-  gap: "10px",
   alignItems: "center",
   padding: "0px",
+  fontSize: "16px",
+  fontWeight: 600,
 });
 
 const scaleAnimation = keyframes`
@@ -189,6 +196,9 @@ const RecordButtonImg = styled.img<{ isRecording: boolean }>`
 
 const SaveButton = styled.button({
   backgroundColor: "#0097A2",
+  padding: "12px 26px",
+  fontSize: "15px",
+  fontWeight: 700,
 });
 
 const ModalBody = styled.div`
@@ -197,7 +207,7 @@ const ModalBody = styled.div`
 
 const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const { userData } = useContext(AuthContext);
-
+  const { state, dispatch } = useApi();
   const [isTextNote, setIstextNote] = useState<boolean>(false);
   const [isAudioNote, setIsAudioNote] = useState<boolean>(false);
   const [isViewHistory, setIsViewHistory] = useState<boolean>(false);
@@ -216,6 +226,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   };
 
   const addAudioElement = () => {
+    console.log("hii");
     if (isRecording) {
       stopRecording();
     } else {
@@ -235,6 +246,23 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
     setIsAudioNote(false);
     setIstextNote(false);
     setIsHome(true);
+  };
+
+  const base64ToBlob = (base64String: string): string => {
+    const byteCharacters = atob(base64String);
+    const byteArrays: Uint8Array[] = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return URL.createObjectURL(
+      new Blob(byteArrays, { type: "application/pdf" })
+    );
   };
 
   const { startRecording, stopRecording, isRecording, recordingBlob } =
@@ -288,20 +316,29 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
           )}
           {isTextNote && (
             <Formik
-              initialValues={{ text: "" }}
-              onSubmit={(values) => {
-                setTextNoteList((prevState) => [...prevState, values.text]);
+              initialValues={{
+                id: 0,
+                userId: userData ? userData.Id : 0,
+                textNote: "",
+              }}
+              onSubmit={async (values) => {
+                setTextNoteList((prevState) => [...prevState, values.textNote]);
+                dispatch({ type: "POST_TEXT_NOTE", payload: values });
+                await addTextNote(values);
                 back();
               }}
             >
               {({ setFieldValue }) => (
                 <Form>
                   <TextCard>
-                    <BackButton onClick={back}>Back</BackButton>
+                    <BackButton onClick={back}>
+                      <KeyboardArrowLeftIcon />
+                      Back
+                    </BackButton>
                     <NoteTextArea
-                      name="text"
+                      name="textNote"
                       onChange={(e) => {
-                        setFieldValue("text", e.target.value);
+                        setFieldValue("textNote", e.target.value);
                       }}
                     />
                     <SaveButton type="submit">Save</SaveButton>
@@ -313,7 +350,12 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
           )}
           {isAudioNote && (
             <Container>
-              <BackButton onClick={back}>back</BackButton>
+              <DummyDiv>
+                <BackButton onClick={back}>
+                  <KeyboardArrowLeftIcon />
+                  Back
+                </BackButton>
+              </DummyDiv>
               <RecordButtonImg
                 isRecording={isRecording}
                 src={recordButton}
@@ -328,15 +370,17 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
             <div>
               <BackButton onClick={back}>back</BackButton>
               <ul>
-                {textNoteList.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-                {audioNoteList.map((blob, index) => (
-                  <li key={index}>
-                    <audio controls src={URL.createObjectURL(blob)} />
-                  </li>
+                {state.textNoteList.map((item, index) => (
+                  <li key={index}>{item.textNote}</li>
                 ))}
               </ul>
+              {state.audioNoteList.map((blob, index) => (
+                <li key={index}>
+                  {base64ToBlob(blob.file) ? (
+                    <audio controls src={base64ToBlob(blob.file)} />
+                  ) : null}
+                </li>
+              ))}
             </div>
           )}
         </ModalBody>

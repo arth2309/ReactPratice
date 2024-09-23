@@ -1,4 +1,6 @@
-﻿namespace PeoplehawkServices.Dto;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace PeoplehawkServices.Dto;
 
 public class AudioNoteDTO
 {
@@ -6,5 +8,5 @@ public class AudioNoteDTO
 
     public int? UserId { get; set; }
 
-    public string? filePath { get; set; }
+    public string? file { get; set; }
 }
