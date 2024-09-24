@@ -1,14 +1,17 @@
 import styled, { css, keyframes } from "styled-components";
 import profile from "../assests/img/profile_placeholder-3x.png";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../store/AuthContext";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import MicNoneIcon from "@mui/icons-material/MicNone";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ReplayIcon from "@mui/icons-material/Replay";
 import ModeOutlinedIcon from "@mui/icons-material/ModeOutlined";
 import { Formik, Form } from "formik";
 import recordButton from "../assests/img/record-removebg-preview.png";
 import { useApi } from "../store/ReducerContext";
 import { addTextNote } from "../services/TextNoteService";
+import { uploadAudioNote } from "../services/AudioNoteService";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
 interface ModalProps {
@@ -173,6 +176,10 @@ const BackButton = styled.button({
   fontWeight: 600,
 });
 
+const Audio = styled.audio({
+  width: "250px",
+});
+
 const scaleAnimation = keyframes`
   0% {
     transform: scale(1);
@@ -212,8 +219,12 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const [isAudioNote, setIsAudioNote] = useState<boolean>(false);
   const [isViewHistory, setIsViewHistory] = useState<boolean>(false);
   const [isHome, setIsHome] = useState<boolean>(true);
-  const [textNoteList, setTextNoteList] = useState<string[]>([]);
-  const [audioNoteList, setAudioNoteList] = useState<Blob[]>([]); // Store audio blobs here
+  const [isRecordingStopped, setIsRecordingStopped] = useState<boolean>(false);
+  const fetchAudio = async (recording: Blob, userId: number) => {
+    const response = await uploadAudioNote(userId, recording);
+    response && dispatch({ type: "POST_AUDIO_NOTE", payload: response });
+  };
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const addText = () => {
     setIstextNote(true);
@@ -226,12 +237,16 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   };
 
   const addAudioElement = () => {
-    console.log("hii");
     if (isRecording) {
       stopRecording();
+      setIsRecordingStopped(true);
     } else {
       startRecording();
     }
+  };
+
+  const handlePlay = () => {
+    audioRef.current?.play();
   };
 
   const viewNote = () => {
@@ -240,6 +255,11 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
     setIsAudioNote(false);
     setIstextNote(false);
   };
+
+  const RecordDiv = styled.div({
+    display: "flex",
+    gap: "10px",
+  });
 
   const back = () => {
     setIsViewHistory(false);
@@ -261,18 +281,12 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
       byteArrays.push(byteArray);
     }
     return URL.createObjectURL(
-      new Blob(byteArrays, { type: "application/pdf" })
+      new Blob(byteArrays, { type: "audio/webm;codecs=opus" })
     );
   };
 
   const { startRecording, stopRecording, isRecording, recordingBlob } =
     useAudioRecorder();
-
-  useEffect(() => {
-    if (!recordingBlob) return;
-    setAudioNoteList((prevState) => [...prevState, recordingBlob]);
-    // recordingBlob will be present at this point after 'stopRecording' has been called
-  }, [recordingBlob]);
 
   return (
     <ModalOverlay onClick={onClose}>
@@ -280,7 +294,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
         <ModalHeader>
           <Title>
             <ProfileImg src={profileImg || profile} alt="profile" />{" "}
-            <div>{userData && userData.FirstName} Invited</div>
+            <div>{userData && userData.FirstName}</div>
           </Title>
           <ModalClose onClick={onClose}>X</ModalClose>
         </ModalHeader>
@@ -322,7 +336,6 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                 textNote: "",
               }}
               onSubmit={async (values) => {
-                setTextNoteList((prevState) => [...prevState, values.textNote]);
                 dispatch({ type: "POST_TEXT_NOTE", payload: values });
                 await addTextNote(values);
                 back();
@@ -356,13 +369,53 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                   Back
                 </BackButton>
               </DummyDiv>
-              <RecordButtonImg
-                isRecording={isRecording}
-                src={recordButton}
-                height="200px"
-                alt="record-button"
-                onClick={addAudioElement}
-              />
+              {isRecordingStopped ? (
+                <>
+                  <RecordDiv>
+                    <div onClick={handlePlay}>
+                      <PlayArrowIcon style={{ fontSize: "100px" }} />
+                      {recordingBlob && (
+                        <audio
+                          style={{ display: "none" }}
+                          ref={audioRef}
+                          src={URL.createObjectURL(recordingBlob)}
+                        />
+                      )}
+                    </div>
+                    <div
+                      onClick={() => {
+                        setIsRecordingStopped(false);
+                      }}
+                    >
+                      <ReplayIcon style={{ fontSize: "100px" }} />
+                    </div>
+                  </RecordDiv>
+                  <SaveButton
+                    onClick={async () => {
+                      recordingBlob &&
+                        (await fetchAudio(
+                          recordingBlob,
+                          userData ? userData.Id : 0
+                        ));
+                      setIsRecordingStopped(false);
+                    }}
+                  >
+                    Save
+                  </SaveButton>
+                </>
+              ) : (
+                <>
+                  <RecordButtonImg
+                    isRecording={isRecording}
+                    src={recordButton}
+                    height="200px"
+                    alt="record-button"
+                    onClick={addAudioElement}
+                  />
+                  <div>{isRecording ? "Stop" : "Start"} Recording</div>
+                </>
+              )}
+
               <ViewButton onClick={viewNote}>View History</ViewButton>
             </Container>
           )}
@@ -375,12 +428,20 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                 ))}
               </ul>
               {state.audioNoteList.map((blob, index) => (
-                <li key={index}>
+                <div key={index}>
                   {base64ToBlob(blob.file) ? (
-                    <audio controls src={base64ToBlob(blob.file)} />
+                    <Audio
+                      controls
+                      src={`data:audio/mpeg;base64,${blob.file}`}
+                    />
                   ) : null}
-                </li>
+                </div>
               ))}
+              {/* {audioNoteList.map((blob, index) => (
+                <div key={index}>
+                  {<Audio controls src={URL.createObjectURL(blob)} />}
+                </div>
+              ))} */}
             </div>
           )}
         </ModalBody>

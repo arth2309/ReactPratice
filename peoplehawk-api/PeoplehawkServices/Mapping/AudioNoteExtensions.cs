@@ -4,6 +4,7 @@ using PeoplehawkServices.Dto;
 namespace PeoplehawkServices.Mapping;
 public static class AudioNoteExtensions
 {
+ 
     public static AudioNoteDTO ToDto(this AudioNote audioNote)
     {
         string? base64String;
@@ -30,22 +31,23 @@ public static class AudioNoteExtensions
         };
     }
 
-    public static AudioNote FromDto(this AudioNotePostDto audioNotePostDto) 
+    public async static Task<AudioNote> FromDto(this AudioNotePostDto audioNotePostDto) 
     {
-        
+
         string uploadsFolder = Path.Combine("Audios");
-        string filePath = Path.Combine(uploadsFolder, audioNotePostDto.formFile.FileName);
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        var randomFileName = Path.GetRandomFileName();
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(randomFileName);
+        string filePath = Path.Combine(uploadsFolder, $"{fileNameWithoutExtension}.mp3");
+        using (var stream = new FileStream(filePath, FileMode.Create)) 
         {
-             audioNotePostDto.formFile.CopyToAsync(stream);
+            await audioNotePostDto.formFile.CopyToAsync(stream);
         }
 
         return new AudioNote
         {
-           
             UserId = audioNotePostDto.UserId,
-            filePath = Path.Combine("/Audios", audioNotePostDto.formFile.FileName)
-    };
+            filePath = Path.Combine("Audios", $"{fileNameWithoutExtension}.mp3")
+        };
 
     }
 

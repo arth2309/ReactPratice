@@ -5,10 +5,10 @@ import {
   WorkExperience,
   Assignment,
   EducationDetail,
-  QuizResult,
   QuizStatus,
   Quiz,
   TextNote,
+  AudioNote,
 } from "../interface/Interface";
 
 export type Action =
@@ -37,7 +37,7 @@ export type Action =
     }
   | { type: "POST_PERSONALITY_REPORT"; payload: QuizStatus }
   | { type: "POST_QUIZ_QUESTION"; payload: Quiz }
-  | { type: "POST_AUDIO_NOTE" }
+  | { type: "POST_AUDIO_NOTE"; payload: AudioNote }
   | { type: "POST_TEXT_NOTE"; payload: TextNote };
 
 export const base64ToBlob = (base64String: string | null): string | null => {
@@ -198,7 +198,10 @@ export const apiReducer = (
     case "POST_QUIZ_QUESTION":
       return { ...state, quizQuestion: action.payload };
     case "POST_AUDIO_NOTE":
-      return state;
+      return {
+        ...state,
+        audioNoteList: [...state.audioNoteList, action.payload],
+      };
     case "POST_TEXT_NOTE":
       return {
         ...state,

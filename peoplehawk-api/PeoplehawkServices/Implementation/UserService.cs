@@ -31,13 +31,15 @@ public class UserService : GenericService<User>,IUserService
     private readonly ICompentencyService _compentencyService;
     private readonly IUserCompentencyDetailService _userCompentencyDetailService;
     private readonly ICourseInterestService _courseInterestService;
+    private readonly IMemberAnalyticsService _memberAnalyticsService;
     private readonly IChartService _chartService;
     private readonly IQuizService _quizService;
     private readonly ITextNoteService _textNoteService;
     private readonly IAudioNoteService _audioNoteService;
+    private readonly ICompletionRepository _completionRepository;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration, IPersonalityReportService personalityReportService,IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -54,6 +56,8 @@ public class UserService : GenericService<User>,IUserService
         _quizService = quizService;
         _audioNoteService = audioNoteService;
         _textNoteService = textNoteService;
+        _completionRepository  = completionRepository;  
+        _memberAnalyticsService = memberAnalyticsService;
 
     }
 
@@ -93,7 +97,15 @@ public class UserService : GenericService<User>,IUserService
             throw new BadHttpRequestException(ErrorMessages.EmailAlreadyExist);
         }
         userDTO.Password = HashHelper.HashedInput(userDTO.Password);
-        await AddAsync(_mapper.Map<User>(userDTO));
+        var entity = await AddAsync(_mapper.Map<User>(userDTO));
+
+        Completion completion = new Completion();
+        var entity1 = await _completionRepository.AddAsync(completion);
+
+        MemberAnalytics memberAnalytics = new MemberAnalytics();
+        memberAnalytics.UserId = entity.Id;
+       memberAnalytics.CompletionId = entity1.Id;
+        await _memberAnalyticsService.AddAsync(memberAnalytics);
         return userDTO;
     }
 

@@ -1,11 +1,11 @@
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
-import { FileUploadData, ResumeFile } from "../interface/Interface";
+import { AudioNote } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 
-export const uploadFile = async (
+export const uploadAudioNote = async (
   userId: number,
   file: Blob
-): Promise<ResumeFile | null> => {
+): Promise<AudioNote | null> => {
   try {
     const formData = new FormData();
     formData.append(`formFile`, file);
@@ -16,10 +16,9 @@ export const uploadFile = async (
         "Content-Type": "multipart/form-data",
       },
     });
-
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return null;
-    userId;
   }
 };

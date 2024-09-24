@@ -17,7 +17,7 @@ public class AudioNoteService : GenericService<AudioNote>, IAudioNoteService
 
     public async Task<AudioNoteDTO> AddNote(AudioNotePostDto audioNotePostDto)
     {
-        var entity = await AddAsync(audioNotePostDto.FromDto());
+        var entity = await AddAsync(await audioNotePostDto.FromDto());
         return entity.ToDto();
     }
 

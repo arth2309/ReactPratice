@@ -835,7 +835,7 @@ const Dashboard = () => {
                   ? "View Your Personality Result"
                   : "Take Your Personality Test"}
               </PrimaryButton>
-              <OutlineButton
+              {/* <OutlineButton
                 onClick={() => {
                   navigate(
                     `/member-analytics?${queryString.stringify(
@@ -845,7 +845,7 @@ const Dashboard = () => {
                 }}
               >
                 Member Analytics
-              </OutlineButton>
+              </OutlineButton> */}
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />
