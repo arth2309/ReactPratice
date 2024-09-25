@@ -27,7 +27,8 @@ public static class AudioNoteExtensions
         {
             Id = audioNote.Id,
             UserId = audioNote.UserId,
-            file = base64String
+            file = base64String,
+            SendDate = audioNote.SendDate
         };
     }
 
@@ -46,7 +47,8 @@ public static class AudioNoteExtensions
         return new AudioNote
         {
             UserId = audioNotePostDto.UserId,
-            filePath = Path.Combine("Audios", $"{fileNameWithoutExtension}.mp3")
+            filePath = Path.Combine("Audios", $"{fileNameWithoutExtension}.mp3"),
+            SendDate = DateTime.UtcNow
         };
 
     }

@@ -25,4 +25,11 @@ public class TextNoteService : GenericService<TextNote>, ITextNoteService
         var entities = await _textNoteRepository.GetByCriteriaAsync(filter: x => x.UserId == UserId);
         return entities.ToDtoList();
     }
+
+    public async Task<TextNoteDto> DeleteNote(int Id)
+    {
+        var entity = await DeleteAsync(x => x.Id == Id);
+        return entity.ToDto();
+    }
+
 }

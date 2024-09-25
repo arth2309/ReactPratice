@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import profile from "../assests/img/profile_placeholder-3x.png";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import AuthContext from "../store/AuthContext";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import MicNoneIcon from "@mui/icons-material/MicNone";
@@ -10,9 +10,11 @@ import ModeOutlinedIcon from "@mui/icons-material/ModeOutlined";
 import { Formik, Form } from "formik";
 import recordButton from "../assests/img/record-removebg-preview.png";
 import { useApi } from "../store/ReducerContext";
-import { addTextNote } from "../services/TextNoteService";
-import { uploadAudioNote } from "../services/AudioNoteService";
+import { addTextNote, deleteNote } from "../services/TextNoteService";
+import { uploadAudioNote, deleteAudioNote } from "../services/AudioNoteService";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import moment from "moment";
 
 interface ModalProps {
   onClose: () => void;
@@ -51,6 +53,36 @@ const ModalOverlay = styled.div`
   transition: opacity 1s ease-in-out;
   animation: ${fadeIn} 1s ease-in-out;
 `;
+
+const NotesCard = styled.div`
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: white;
+  color: black;
+  margin-top: 10px;
+  padding: 10px;
+  margin-left: 10px;
+  border-radius: 15px;
+`;
+
+const NotesContent = styled.div({
+  display: "flex",
+  width: "100%",
+  justifyContent: "start",
+  fontSize: "15px",
+  color: "#1d5d90",
+  fontWeight: 700,
+});
+
+const NotesDate = styled.div({
+  display: "flex",
+  width: "100%",
+  alignItems: "end",
+  justifyContent: "space-between",
+  fontSize: "10px",
+});
 
 const ModalContent = styled.div`
   background: #eef2f6;
@@ -212,6 +244,11 @@ const ModalBody = styled.div`
   height: 415px;
 `;
 
+const HistoryDiv = styled.div`
+  height: 300px; /* Set a fixed height for the container */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+`;
+
 const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const { userData } = useContext(AuthContext);
   const { state, dispatch } = useApi();
@@ -268,25 +305,18 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
     setIsHome(true);
   };
 
-  const base64ToBlob = (base64String: string): string => {
-    const byteCharacters = atob(base64String);
-    const byteArrays: Uint8Array[] = [];
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512);
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-    return URL.createObjectURL(
-      new Blob(byteArrays, { type: "audio/webm;codecs=opus" })
-    );
-  };
-
   const { startRecording, stopRecording, isRecording, recordingBlob } =
     useAudioRecorder();
+
+  const deleteTextNote = async (id: number) => {
+    await deleteNote(id);
+    dispatch({ type: "DELETE_TEXT_NOTE", payload: id });
+  };
+
+  const deleteAudio = async (id: number) => {
+    await deleteAudioNote(id);
+    dispatch({ type: "DELETE_AUDIO_NOTE", payload: id });
+  };
 
   return (
     <ModalOverlay onClick={onClose}>
@@ -334,10 +364,12 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                 id: 0,
                 userId: userData ? userData.Id : 0,
                 textNote: "",
+                sendDate: new Date(),
               }}
               onSubmit={async (values) => {
-                dispatch({ type: "POST_TEXT_NOTE", payload: values });
-                await addTextNote(values);
+                const response = await addTextNote(values);
+                response &&
+                  dispatch({ type: "POST_TEXT_NOTE", payload: response });
                 back();
               }}
             >
@@ -373,7 +405,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                 <>
                   <RecordDiv>
                     <div onClick={handlePlay}>
-                      <PlayArrowIcon style={{ fontSize: "100px" }} />
+                      <PlayArrowIcon style={{ fontSize: "150px" }} />
                       {recordingBlob && (
                         <audio
                           style={{ display: "none" }}
@@ -387,7 +419,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                         setIsRecordingStopped(false);
                       }}
                     >
-                      <ReplayIcon style={{ fontSize: "100px" }} />
+                      <ReplayIcon style={{ fontSize: "150px" }} />
                     </div>
                   </RecordDiv>
                   <SaveButton
@@ -421,27 +453,57 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
           )}
           {isViewHistory && (
             <div>
-              <BackButton onClick={back}>back</BackButton>
-              <ul>
-                {state.textNoteList.map((item, index) => (
-                  <li key={index}>{item.textNote}</li>
+              <BackButton onClick={back}>
+                <KeyboardArrowLeftIcon />
+                Back
+              </BackButton>
+              <HistoryDiv>
+                <div style={{ margin: "10px 0px" }}>
+                  {state.textNoteList.map((item, index) => (
+                    <NotesCard key={index}>
+                      <NotesContent>{item.textNote}</NotesContent>
+                      <NotesDate>
+                        <div
+                          onClick={() => {
+                            deleteTextNote(item.id);
+                          }}
+                        >
+                          <DeleteOutlineOutlinedIcon
+                            style={{ fontSize: "18px" }}
+                          />
+                        </div>
+                        {moment(item.sendDate).format("lll")}
+                      </NotesDate>
+                    </NotesCard>
+                  ))}
+                </div>
+                {state.audioNoteList.map((blob, index) => (
+                  <div key={index}>
+                    {blob.file ? (
+                      <NotesCard>
+                        <NotesContent>
+                          <Audio
+                            controls
+                            src={`data:audio/mpeg;base64,${blob.file}`}
+                          />
+                        </NotesContent>
+                        <NotesDate>
+                          <div
+                            onClick={() => {
+                              deleteAudio(blob.id);
+                            }}
+                          >
+                            <DeleteOutlineOutlinedIcon
+                              style={{ fontSize: "18px" }}
+                            />
+                          </div>
+                          {moment(blob.sendDate).format("lll")}
+                        </NotesDate>
+                      </NotesCard>
+                    ) : null}
+                  </div>
                 ))}
-              </ul>
-              {state.audioNoteList.map((blob, index) => (
-                <div key={index}>
-                  {base64ToBlob(blob.file) ? (
-                    <Audio
-                      controls
-                      src={`data:audio/mpeg;base64,${blob.file}`}
-                    />
-                  ) : null}
-                </div>
-              ))}
-              {/* {audioNoteList.map((blob, index) => (
-                <div key={index}>
-                  {<Audio controls src={URL.createObjectURL(blob)} />}
-                </div>
-              ))} */}
+              </HistoryDiv>
             </div>
           )}
         </ModalBody>

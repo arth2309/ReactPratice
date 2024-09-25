@@ -230,4 +230,12 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.AudioNoteList = await _audioNoteService.GetNoteList(UserId);
         return userDetailDTO;
     }
+
+    public async Task<UserDTO> AddAboutMe(int UserId,string text)
+    {
+        var entity = await GetByIdAsync(UserId);
+        entity.AboutMe = text;
+        var entity1 = await _userRepository.UpdateAsync(entity);
+        return _mapper.Map<UserDTO>(entity1);
+    }
 }

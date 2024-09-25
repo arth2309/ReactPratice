@@ -237,10 +237,12 @@ export interface AudioNote {
   id: number;
   userId: number;
   file: string;
+  sendDate: Date;
 }
 
 export interface TextNote {
   id: number;
   userId: number;
   textNote: string;
+  sendDate: Date;
 }

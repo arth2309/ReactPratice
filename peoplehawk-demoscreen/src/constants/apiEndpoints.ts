@@ -84,4 +84,6 @@ export const API_ENDPOINTS = {
   WORK_EXPERIENCE: `candidate/work-experience`,
   AUDIO_NOTE: "candidate/audio-note",
   Text_NOTE: "candidate/text-note",
+  Text_NOTE_ID: (id: number) => `candidate/text-note?Id=${id}`,
+  AUDIO_NOTE_ID: (id: number) => `candidate/audio-note?Id=${id}`,
 };

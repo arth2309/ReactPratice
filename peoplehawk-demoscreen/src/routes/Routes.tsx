@@ -15,6 +15,7 @@ import Personalitytest from "../pages/PersonalityTest/Personalitytest";
 import { ROUTES } from "../constants/routes";
 import Memberanalytics from "../pages/MemberAnalytics/Memberanalytics";
 import { getToken } from "../utils/manageAccessToken";
+import Candidateprofile from "../pages/CandidateProfile/Candidateprofile";
 
 const Routes = () => {
   const authCtx = useContext(AuthContext);
@@ -31,7 +32,7 @@ const Routes = () => {
             ) : (
               <Navigate
                 to={
-                  authCtx.userData && authCtx.userData.RoleId == 1
+                  authCtx.userData && authCtx.userData.RoleId === 1
                     ? ROUTES.HOME
                     : ROUTES.MEMBER_ANALYTICS
                 }
@@ -43,7 +44,7 @@ const Routes = () => {
           path={ROUTES.HOME}
           element={
             authCtx.isLoggedIn ? (
-              authCtx.userData && authCtx.userData.RoleId == 1 ? (
+              authCtx.userData && authCtx.userData.RoleId === 1 ? (
                 <Dashboard />
               ) : (
                 <Memberanalytics />
@@ -99,6 +100,7 @@ const Routes = () => {
             )
           }
         ></Route>
+        <Route path={ROUTES.PROFILE} element={<Candidateprofile />}></Route>
       </Main>
     </BrowserRouter>
   );

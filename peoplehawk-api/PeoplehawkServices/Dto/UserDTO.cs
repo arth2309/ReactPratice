@@ -30,4 +30,6 @@ public class UserDTO
     [Required]
     public int? RoleId { get; set; }
 
+    public string? AboutMe { get; set; }
+
 }

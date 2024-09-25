@@ -9,4 +9,6 @@ public class TextNoteDto
     public int? UserId { get; set; }
 
     public string? textNote { get; set; }
+
+    public DateTime SendDate { get; set; }
 }

@@ -12,4 +12,6 @@ public class TextNote
     public User User { get; set; }
 
     public string? textNote { get; set; }
+
+    public DateTime SendDate { get; set; }
 }

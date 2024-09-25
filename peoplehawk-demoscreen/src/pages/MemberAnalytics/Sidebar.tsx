@@ -4,7 +4,6 @@ import { OptionTypes, CountryList } from "../../interface/Interface";
 import { useEffect, useState } from "react";
 import Input from "../../components/layout/form/Input";
 import { CountryList as CountryData } from "../../services/AuthService";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import BounceLoader from "react-spinners/BounceLoader";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -92,11 +91,11 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
     }));
   };
 
-  // eslint-disable-next-line
   useEffect(() => {
     setTimeout(() => {
       fetchCountryList();
     }, 2000);
+    // eslint-disable-next-line
   }, []);
 
   const fetchCountryList = async () => {

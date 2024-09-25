@@ -27,7 +27,6 @@ import documentEmpty from "../../assests/img/document-empty.svg";
 import DoneIcon from "@mui/icons-material/Done";
 import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 
 const defaults = {
@@ -314,7 +313,6 @@ const Memberanalytics = () => {
   const [totalPages, setTotalPages] = useState<number>(2);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
 
   const handleSwitchToggle = () => {
@@ -336,22 +334,22 @@ const Memberanalytics = () => {
     setPage(page1);
   };
 
-  const NavigationHandler = () => {
-    state.isInfographicResume = urlState.isInfographicResume;
-    state.isMemberResume = urlState.isMemberResume;
-    state.isPeopleHawkResume = urlState.isPeopleHawkResume;
-    state.isAll = urlState.isAll;
-    state.isProfilePhoto = urlState.isProfilePhoto;
-    state.orderedBy = urlState.orderedBy;
-    state.searchTerm = urlState.searchTerm;
-    state.countryId = urlState.countryId;
-    state.memberType = urlState.memberType;
-    state.sortOrder = urlState.sortOrder;
-    state.orderedBy = urlState.orderedBy;
-    state.sortBy = urlState.sortBy;
-    state.isOn = urlState.isOn;
-    state.page = urlState.page;
-  };
+  // const NavigationHandler = () => {
+  //   state.isInfographicResume = urlState.isInfographicResume;
+  //   state.isMemberResume = urlState.isMemberResume;
+  //   state.isPeopleHawkResume = urlState.isPeopleHawkResume;
+  //   state.isAll = urlState.isAll;
+  //   state.isProfilePhoto = urlState.isProfilePhoto;
+  //   state.orderedBy = urlState.orderedBy;
+  //   state.searchTerm = urlState.searchTerm;
+  //   state.countryId = urlState.countryId;
+  //   state.memberType = urlState.memberType;
+  //   state.sortOrder = urlState.sortOrder;
+  //   state.orderedBy = urlState.orderedBy;
+  //   state.sortBy = urlState.sortBy;
+  //   state.isOn = urlState.isOn;
+  //   state.page = urlState.page;
+  // };
 
   const searchHandler = (value: string) => {
     seturlState({ ...urlState, searchTerm: value, page: 1 });

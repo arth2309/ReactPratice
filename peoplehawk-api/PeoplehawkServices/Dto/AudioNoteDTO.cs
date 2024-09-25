@@ -9,4 +9,6 @@ public class AudioNoteDTO
     public int? UserId { get; set; }
 
     public string? file { get; set; }
+
+    public DateTime SendDate { get; set; }
 }

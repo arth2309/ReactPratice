@@ -10,3 +10,12 @@ export const addTextNote = async (data: TextNote): Promise<TextNote | null> => {
     return null;
   }
 };
+
+export const deleteNote = async (id: number): Promise<TextNote | null> => {
+  try {
+    const response = await apiClient.delete(API_ENDPOINTS.Text_NOTE_ID(id));
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};

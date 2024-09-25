@@ -26,4 +26,10 @@ public class AudioNoteService : GenericService<AudioNote>, IAudioNoteService
        var entities = await _audioNoteRepository.GetByCriteriaAsync(filter : x => x.UserId == UserId);
         return entities.ToDtoList();
     }
+
+    public async Task<AudioNoteDTO> DeleteNote(int Id)
+    {
+        var entity = await DeleteAsync(x => x.Id == Id);
+        return entity.ToDto();
+    }
 }

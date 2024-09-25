@@ -15,4 +15,5 @@ public class AudioNote
 
     public string? filePath { get; set; }
 
+    public DateTime SendDate { get; set; }
 }

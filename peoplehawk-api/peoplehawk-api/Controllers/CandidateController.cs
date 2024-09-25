@@ -260,10 +260,28 @@ public class CandidateController : BaseController
         return await _audioNoteService.AddNote(audioNotePostDto);   
     }
 
-    [HttpPost("text-note")]
+    [HttpDelete("audio-note")]
+    public async Task<AudioNoteDTO> DeleteAudioNote(int Id)
+    {
+        return await _audioNoteService.DeleteNote(Id);
+    }
 
+    [HttpPost("text-note")]
     public async Task<TextNoteDto> TextNote(TextNoteDto textNoteDto)
     {
         return await _textNoteService.AddNote(textNoteDto);
+    }
+
+    [HttpDelete("text-note")]
+    public async Task<TextNoteDto> DeleteTextNote(int Id)
+    {
+        return await _textNoteService.DeleteNote(Id);
+    }
+
+    [HttpPost("about-me")]
+
+    public async Task<UserDTO> AddAboutMe([FromBody]int UserId,string text)
+    {
+        return await _userService.AddAboutMe(UserId, text);
     }
 }

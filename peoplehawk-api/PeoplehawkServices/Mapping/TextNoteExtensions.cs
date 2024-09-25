@@ -11,7 +11,8 @@ public static class TextNoteExtensions
         {
             Id = textNote.Id,
             UserId = textNote.UserId,
-            textNote = textNote.textNote   
+            textNote = textNote.textNote,
+            SendDate = textNote.SendDate
         };
     }
 
@@ -21,7 +22,8 @@ public static class TextNoteExtensions
         {
              Id= 0,
              UserId= textNoteDto.UserId,
-             textNote = textNoteDto.textNote
+             textNote = textNoteDto.textNote,
+             SendDate = textNoteDto.SendDate
         };
     }
 

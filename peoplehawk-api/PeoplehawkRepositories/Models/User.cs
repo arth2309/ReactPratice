@@ -24,4 +24,6 @@ public class User
     public Country Country { get; set; }
     public Role Role { get; set; }
 
+    public string? AboutMe { get; set; }
+
 }

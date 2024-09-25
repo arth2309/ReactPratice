@@ -16,7 +16,17 @@ export const uploadAudioNote = async (
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const deleteAudioNote = async (
+  id: number
+): Promise<AudioNote | null> => {
+  try {
+    const response = await apiClient.delete(API_ENDPOINTS.AUDIO_NOTE_ID(id));
     return response.data;
   } catch (error) {
     return null;

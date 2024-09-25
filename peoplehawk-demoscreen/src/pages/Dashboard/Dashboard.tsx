@@ -33,10 +33,7 @@ import { ClipLoader } from "react-spinners";
 import Addeducation from "../../modals/Addeducation";
 import Updateeducation from "../../modals/Updateeducation";
 import Addassignment from "../../modals/Addassignment";
-import queryString from "query-string";
-import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { DeleteData, UpdateData } from "../../services/EducationDetailService";
-import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
 import Addworkexperience from "../../modals/Addworkexperience";
 import { EducationList } from "../../components/layout/List/EducationList";
 import { DeleteData as DeleteAssigment } from "../../services/AssignmentService";
@@ -54,22 +51,6 @@ interface TrophyProps {
 interface BorderBottomProps {
   bw: string;
 }
-
-const defaults = {
-  page: 1,
-  isInfographicResume: false,
-  isMemberResume: false,
-  isPeopleHawkResume: false,
-  isAll: false,
-  sortOrder: "asc",
-  orderedBy: 1,
-  isProfilePhoto: false,
-  sortBy: "Last Updated",
-  isOn: false,
-  searchTerm: "",
-  countryId: 0,
-  memberType: "",
-};
 
 const Container = styled.div({
   display: "flex",
@@ -366,7 +347,6 @@ const Dashboard = () => {
   const authctx = useContext(AuthContext);
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const { state } = useMemberAnalytics();
   const ctx = useApi();
 
   const handleAddData = (data: EducationDetail[]) => {
@@ -392,7 +372,6 @@ const Dashboard = () => {
       if (response) {
         response &&
           ctx.dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
-        console.log(ctx);
         response.profilePhoto &&
           setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
         const list = resultMaker(response.quizDetail.quizResponse);

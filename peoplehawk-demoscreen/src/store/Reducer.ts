@@ -38,7 +38,9 @@ export type Action =
   | { type: "POST_PERSONALITY_REPORT"; payload: QuizStatus }
   | { type: "POST_QUIZ_QUESTION"; payload: Quiz }
   | { type: "POST_AUDIO_NOTE"; payload: AudioNote }
-  | { type: "POST_TEXT_NOTE"; payload: TextNote };
+  | { type: "POST_TEXT_NOTE"; payload: TextNote }
+  | { type: "DELETE_TEXT_NOTE"; payload: number }
+  | { type: "DELETE_AUDIO_NOTE"; payload: number };
 
 export const base64ToBlob = (base64String: string | null): string | null => {
   if (base64String == null) {
@@ -206,6 +208,20 @@ export const apiReducer = (
       return {
         ...state,
         textNoteList: [...state.textNoteList, action.payload],
+      };
+    case "DELETE_TEXT_NOTE":
+      return {
+        ...state,
+        textNoteList: state.textNoteList.filter(
+          (item) => item.id !== action.payload
+        ),
+      };
+    case "DELETE_AUDIO_NOTE":
+      return {
+        ...state,
+        audioNoteList: state.audioNoteList.filter(
+          (item) => item.id !== action.payload
+        ),
       };
     default:
       return state;

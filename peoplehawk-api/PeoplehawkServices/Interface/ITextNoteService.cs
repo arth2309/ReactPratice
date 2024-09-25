@@ -8,5 +8,7 @@ namespace PeoplehawkServices.Interface
         Task<TextNoteDto> AddNote(TextNoteDto textNoteDto);
 
         Task<List<TextNoteDto>> GetNoteList(int UserId);
+
+        Task<TextNoteDto> DeleteNote(int Id);
     }
 }

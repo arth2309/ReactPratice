@@ -11,7 +11,6 @@ import {
   QuizResponse,
   QuizEligible,
 } from "../../services/PersonalityTestService";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ROUTES } from "../../constants/routes";
@@ -201,7 +200,6 @@ export const resultMaker = (
     return null;
   } else {
     let index = 0;
-    console.log(index);
     let value = 0;
     let array: number[] = [];
     for (let i = 0; i < 5; i++) {
@@ -214,7 +212,6 @@ export const resultMaker = (
         index = i;
       }
     }
-    console.log(index);
     return { array: array, index: index };
   }
 };
