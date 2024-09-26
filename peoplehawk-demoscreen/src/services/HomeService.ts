@@ -4,6 +4,7 @@ import {
   Competency,
   UserCompetency,
   CandidateDetail,
+  AboutMeDetail,
 } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
@@ -91,6 +92,17 @@ export const getUserCompentencies = async (): Promise<
 > => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.USER_COMPENTENCIES_LIST);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const postAboutMeDetail = async (
+  data: AboutMeDetail
+): Promise<AboutMeDetail | null> => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.ABOUT_ME_DETAIL, data);
     return response.data;
   } catch (error) {
     return null;

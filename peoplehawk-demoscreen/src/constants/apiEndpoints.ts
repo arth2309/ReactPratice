@@ -86,4 +86,5 @@ export const API_ENDPOINTS = {
   Text_NOTE: "candidate/text-note",
   Text_NOTE_ID: (id: number) => `candidate/text-note?Id=${id}`,
   AUDIO_NOTE_ID: (id: number) => `candidate/audio-note?Id=${id}`,
+  ABOUT_ME_DETAIL: "candidate/about-me",
 };

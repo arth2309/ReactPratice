@@ -1,10 +1,22 @@
 ﻿namespace PeoplehawkServices.Dto;
 public class UserDetailDTO
 {
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }   
+
+    public string? Email { get; set; }  
     public string? ProfilePhoto { get; set; }
     public ProgressDTO? UserProgress { get; set;}
 
+    public string? MemberType { get; set; }
+
+    public string? CountryName { get; set; }
+
     public List<WorkExperienceDTO>? WorkExperiences { get; set; }
+
+    public string? AboutMe { get; set; }
 
     public List<AssignmentDTO>? Assignments { get; set; }
 

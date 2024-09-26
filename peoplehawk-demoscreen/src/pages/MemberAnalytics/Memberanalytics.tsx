@@ -28,6 +28,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import AuthContext from "../../store/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const defaults = {
   page: 1,
@@ -412,6 +413,12 @@ const Memberanalytics = () => {
     result1 && setTotalPages(Math.ceil(result1 / 6));
   };
 
+  const navigate = useNavigate();
+
+  const goToUser = (userId: number) => {
+    navigate(`/profile/${userId}`);
+  };
+
   return (
     <Container>
       <Sidebar
@@ -561,6 +568,9 @@ const Memberanalytics = () => {
                 isVisible={isVisible}
                 delay={index * 120}
                 key={item.userId}
+                onClick={() => {
+                  goToUser(item.userId);
+                }}
               >
                 <UpdatedDate>Updated : 28 August 2024</UpdatedDate>
                 <MemberMainCard>

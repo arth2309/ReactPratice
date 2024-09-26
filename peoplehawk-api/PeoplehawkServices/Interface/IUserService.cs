@@ -24,7 +24,7 @@ public interface IUserService : IGenericService<User>
         int? page = null,
         int? pageSize = null,
         params Expression<Func<User, object>>[]? includes);
-    Task<UserDTO> AddAboutMe(int UserId, string text);
+    Task<AboutMeDetailDTO> AddAboutMe(AboutMeDetailDTO aboutMeDetailDTO);
 }
 
 

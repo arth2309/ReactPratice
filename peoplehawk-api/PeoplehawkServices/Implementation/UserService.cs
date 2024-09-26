@@ -216,7 +216,13 @@ public class UserService : GenericService<User>,IUserService
             base64String = null;
         }
         userDetailDTO.ProfilePhoto = base64String;
+        userDetailDTO.FirstName = user.FirstName;
+        userDetailDTO.LastName = user.LastName;
+        userDetailDTO.CountryName = user.Country != null ? user.Country.CountryName : "";
+        userDetailDTO.MemberType = user.MemberType;
+        userDetailDTO.Email = user.Email;
         userDetailDTO.competencies = await _compentencyService.GetList();
+        userDetailDTO.AboutMe = user.AboutMe;
         userDetailDTO.userCompentencyDetails = await _userCompentencyDetailService.GetList();
         userDetailDTO.Educations =  await _educationDetailService.GetList(UserId) ;
         userDetailDTO.Assignments = await _assignmentService.GetList(UserId);
@@ -231,11 +237,11 @@ public class UserService : GenericService<User>,IUserService
         return userDetailDTO;
     }
 
-    public async Task<UserDTO> AddAboutMe(int UserId,string text)
+    public async Task<AboutMeDetailDTO> AddAboutMe(AboutMeDetailDTO aboutMeDetailDTO)
     {
-        var entity = await GetByIdAsync(UserId);
-        entity.AboutMe = text;
+        var entity = await GetByIdAsync(aboutMeDetailDTO.UserId);
+        entity.AboutMe = aboutMeDetailDTO.Text;
         var entity1 = await _userRepository.UpdateAsync(entity);
-        return _mapper.Map<UserDTO>(entity1);
+        return aboutMeDetailDTO;
     }
 }

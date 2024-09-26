@@ -40,7 +40,8 @@ export type Action =
   | { type: "POST_AUDIO_NOTE"; payload: AudioNote }
   | { type: "POST_TEXT_NOTE"; payload: TextNote }
   | { type: "DELETE_TEXT_NOTE"; payload: number }
-  | { type: "DELETE_AUDIO_NOTE"; payload: number };
+  | { type: "DELETE_AUDIO_NOTE"; payload: number }
+  | { type: "POST_ABOUT_ME"; payload: string };
 
 export const base64ToBlob = (base64String: string | null): string | null => {
   if (base64String == null) {
@@ -63,6 +64,11 @@ export const base64ToBlob = (base64String: string | null): string | null => {
 
 export const intialState: CandidateDetail = {
   profilePhoto: null,
+  firstName: "",
+  lastName: "",
+  email: "",
+  countryName: "",
+  memberType: "",
   navigate: false,
   userProgress: { isResumeUpload: false, progress: 0 },
   competencies: [],
@@ -77,6 +83,7 @@ export const intialState: CandidateDetail = {
   quizDetail: { isFirstTestGiven: false, testNo: 0, quizResponse: null },
   audioNoteList: [],
   textNoteList: [],
+  aboutMe: null,
 };
 
 export const apiReducer = (
@@ -222,6 +229,11 @@ export const apiReducer = (
         audioNoteList: state.audioNoteList.filter(
           (item) => item.id !== action.payload
         ),
+      };
+    case "POST_ABOUT_ME":
+      return {
+        ...state,
+        aboutMe: action.payload,
       };
     default:
       return state;

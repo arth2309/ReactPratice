@@ -279,9 +279,8 @@ public class CandidateController : BaseController
     }
 
     [HttpPost("about-me")]
-
-    public async Task<UserDTO> AddAboutMe([FromBody]int UserId,string text)
+    public async Task<AboutMeDetailDTO> AddAboutMe([FromBody] AboutMeDetailDTO aboutMeDetailDTO)
     {
-        return await _userService.AddAboutMe(UserId, text);
+        return await _userService.AddAboutMe(aboutMeDetailDTO);
     }
 }

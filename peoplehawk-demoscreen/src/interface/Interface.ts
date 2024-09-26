@@ -199,7 +199,13 @@ export interface Assignment {
 
 export interface CandidateDetail {
   profilePhoto: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryName: string;
+  memberType: string;
   navigate: boolean;
+  aboutMe: string | null;
   userProgress: CandidateProgress;
   competencies: Competency[];
   userCompentencyDetails: UserCompetency[];
@@ -245,4 +251,9 @@ export interface TextNote {
   userId: number;
   textNote: string;
   sendDate: Date;
+}
+
+export interface AboutMeDetail {
+  userId: number;
+  text: string;
 }

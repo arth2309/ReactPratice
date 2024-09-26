@@ -40,6 +40,7 @@ import { DeleteData as DeleteAssigment } from "../../services/AssignmentService"
 import { DeleteData as DeleteWorkExperience } from "../../services/WorkExperience";
 import { ExperiencedHiredList } from "../../components/layout/List/ExperienceHiredList";
 import { useApi } from "../../store/ReducerContext";
+import Aboutme from "../../modals/Aboutme";
 import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Note from "../../modals/Note";
 
@@ -428,6 +429,7 @@ const Dashboard = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
+  const [isAboutMeOpen, setIsAboutMeOpen] = useState<boolean>(false);
   const [isNoteOpen, setIsNoteOpen] = useState<boolean>(false);
   const [isWorkExperienceOpen, setWorkExperienceOpen] =
     useState<boolean>(false);
@@ -458,6 +460,9 @@ const Dashboard = () => {
   }, []);
   const closeNote = useCallback(() => {
     setIsNoteOpen(false);
+  }, []);
+  const closeAbouMe = useCallback(() => {
+    setIsAboutMeOpen(false);
   }, []);
   const closeUpdateProfile = useCallback(() => {
     setUpdateProfileOpen(false);
@@ -636,6 +641,9 @@ const Dashboard = () => {
           candidates={ctx.state.userCompentencyDetails}
         />
       )}
+      {isAboutMeOpen && (
+        <Aboutme onClose={closeAbouMe} note={ctx.state.aboutMe} />
+      )}
       {isNoteOpen && <Note onClose={closeNote} profileImg={imageSrc} />}
       {isProfileOpen && (
         <Addeducation onClose={closeProfile} onAddData={handleAddData} />
@@ -704,8 +712,12 @@ const Dashboard = () => {
           <LeftChildContainer>
             <LeftChildMainContainer>
               <Card1>
-                <Card1Item>
-                  <strong>View My Profile</strong>
+                <Card1Item
+                  onClick={() => {
+                    setIsAboutMeOpen(true);
+                  }}
+                >
+                  <strong>About Me</strong>
                 </Card1Item>
                 <Card1Item
                   onClick={() => {
