@@ -149,7 +149,6 @@ const Aboutme: React.FC<ModalProps> = ({ onClose, note }) => {
               text: "",
             }}
             onSubmit={async (values) => {
-              console.log(values);
               const response = await postAboutMeDetail(values);
               response &&
                 dispatch({ type: "POST_ABOUT_ME", payload: values.text });

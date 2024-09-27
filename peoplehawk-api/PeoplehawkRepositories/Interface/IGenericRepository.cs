@@ -7,6 +7,7 @@ public interface IGenericRepository<T> where T : class
 
     Task<List<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includeProperties);
 
+    Task<T> FirstOrDefaultWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
     Task<T> GetByIdAsync(int id);
 
     Task<T> AddAsync(T entity);

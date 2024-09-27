@@ -15,6 +15,7 @@ import { uploadAudioNote, deleteAudioNote } from "../services/AudioNoteService";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import moment from "moment";
+import Tooltip from "../components/layout/tooltip/Tooltip";
 
 interface ModalProps {
   onClose: () => void;
@@ -451,6 +452,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
               <ViewButton onClick={viewNote}>View History</ViewButton>
             </Container>
           )}
+          <Tooltip id="delete">Delete</Tooltip>
           {isViewHistory && (
             <div>
               <BackButton onClick={back}>
@@ -469,7 +471,10 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                           }}
                         >
                           <DeleteOutlineOutlinedIcon
+                            data-tooltip-id="delete"
+                            data-tooltip-content="Hello world!"
                             style={{ fontSize: "18px" }}
+                            color="error"
                           />
                         </div>
                         {moment(item.sendDate).format("lll")}

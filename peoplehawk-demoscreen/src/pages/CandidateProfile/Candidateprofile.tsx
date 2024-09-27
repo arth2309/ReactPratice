@@ -15,13 +15,31 @@ import Markdown from "react-markdown";
 import Profilephoto from "../../modals/Profilephoto";
 import ZoomInOutlinedIcon from "@mui/icons-material/ZoomInOutlined";
 import { useParams } from "react-router-dom";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import { ROUTES } from "../../constants/routes";
+import { useNavigate } from "react-router-dom";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Personalityresult from "../../modals/Personalityresult";
+import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
+import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
+import queryString from "query-string";
+import { MemberAnalyticsFilter } from "../../interface/Interface";
+
+const Header = styled.div({
+  backgroundColor: "#FFFFFF",
+  display: "flex",
+  justifyContent: "start",
+  paddingLeft: "10px",
+  alignItems: "center",
+  height: "60px",
+});
 
 const Container = styled.div({
   backgroundColor: "#394456",
   display: "flex",
   padding: "40px 20px",
   gap: "90px",
-  minHeight: "calc(100vh - 80px)",
+  minHeight: "calc(100vh - 140px)",
   height: "100%",
 });
 
@@ -127,10 +145,14 @@ const PrimaryButton = styled.button({
   borderRadius: "0px 20px 20px 0px",
   padding: "0px 10px 0px 60px",
   height: "60px",
+
+  "&:hover": {
+    border: "2px solid #F96332",
+  },
 });
 
-const IconDiv = styled.div({
-  backgroundColor: "#F96332",
+const IconDiv = styled.div<{ iconColor: string }>(({ iconColor }) => ({
+  backgroundColor: iconColor,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -138,7 +160,7 @@ const IconDiv = styled.div({
   width: "72px",
   height: "72px",
   zIndex: 2,
-});
+}));
 
 const PositionDiv = styled.div({
   position: "absolute",
@@ -157,14 +179,32 @@ const MainButtonDiv = styled.div({
   width: "100%",
 });
 
+const defaults = {
+  page: 1,
+  isInfographicResume: false,
+  isMemberResume: false,
+  isPeopleHawkResume: false,
+  isAll: false,
+  sortOrder: "asc",
+  orderedBy: 1,
+  isProfilePhoto: false,
+  sortBy: "Last Updated",
+  isOn: false,
+  searchTerm: "",
+  countryId: 0,
+  memberType: "",
+};
+
 const Candidateprofile = () => {
   const [isKeyInformationOpen, setIsKeyInformationOpen] =
     useState<boolean>(false);
   const { userId } = useParams();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [personalityIndex, setPersonalityIndex] = useState<number>(0);
+  const [personalityResult, setPersonalityResult] = useState<number[]>([]);
+  const [personalityIndex, setPersonalityIndex] = useState<number>(5);
   const [isZoom, setIsZoom] = useState<boolean>(false);
+  const [isResult, setIsResult] = useState<boolean>(false);
   const keyInformationCloseHandler = () => {
     setIsKeyInformationOpen(false);
   };
@@ -178,7 +218,28 @@ const Candidateprofile = () => {
     setIsZoom(false);
   };
 
+  const showResult = () => {
+    if (state.quizDetail.isFirstTestGiven) {
+      setIsResult(true);
+    }
+  };
+  const hideResult = () => {
+    setIsResult(false);
+  };
+
+  const BackButton = styled.button({
+    background: "transparent",
+    color: "#F96332",
+    display: "flex",
+    alignItems: "center",
+    padding: "0px",
+    fontSize: "16px",
+    fontWeight: 600,
+  });
+
   const { state, dispatch } = useApi();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchdata();
@@ -189,127 +250,155 @@ const Candidateprofile = () => {
       const response = await fetchUserDetail(parseInt(userId));
       if (response) {
         response && dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
+
         response.profilePhoto &&
           setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
         const list = resultMaker(response.quizDetail.quizResponse);
+        list && setPersonalityResult(list.array);
         list && setPersonalityIndex(list.index);
       }
     }
   };
 
-  const anchorRef = useRef<HTMLAnchorElement | null>(null);
-
   const handleClick = (file: string | null) => {
     if (file) {
-      // Create an anchor tag programmatically
-      // Replace with your file URL
       const anchor = document.createElement("a");
       anchor.href = file;
-      anchor.target = "_blank"; // Open in a new tab
-      // Append to the body and trigger click
+      anchor.target = "_blank";
       document.body.appendChild(anchor);
       anchor.click();
-
-      // Clean up
       document.body.removeChild(anchor);
     }
   };
 
+  const data = useMemberAnalytics();
+
   return (
-    <Container>
-      {isZoom && <Profilephoto onClose={stopZoom} profile={imageSrc} />}
-      {isKeyInformationOpen && (
-        <Keyinformation onClose={keyInformationCloseHandler} />
-      )}
-      <ProfileContainer
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <ZoomDiv onClick={startZoom} isHovered={isHovered}>
-          <ZoomInOutlinedIcon style={{ color: "#F96332", fontSize: "40px" }} />
-        </ZoomDiv>
-        <ProfilePhoto src={imageSrc || profile} alt="profile-photo" />
-      </ProfileContainer>
-      <InformationContainer>
-        <Heading>
-          <OrangeColor>Hi, I'm </OrangeColor>
-          {state.firstName + " " + state.lastName}.
-        </Heading>
-        <MailDiv>
-          <MailOutlineIcon />
-          <MailTo href={`mailto:${state.email}`}>{state.email}</MailTo>
-        </MailDiv>
-        <SectionContainer>
-          <DetailContainer>
-            <SectionHeading>About Me</SectionHeading>
-            <Markdown>{state.aboutMe}</Markdown>
-            {/* <FontSize>
-              I'm Nimesh, a 24-year-old student in Ireland with a background in
-              IT and Business Management. I previously worked as a Software
-              Engineer at 2 Sisters Food Group. My interests span from Fashion
-              Design Assistant to Aerospace Engineering Technician and even EFL
-              Teaching. I pride myself on my creative problem-solving and
-              analytical skills.
-            </FontSize>
-            <FontSize>
-              I'm practical, capable of seeing both the details and the bigger
-              picture, and collected, able to work independently or
-              collaboratively. I'm supportive, emotionally well-rounded, and
-              perceptive. My work style is adaptable; I can work solo or in a
-              team, stick to plans, and stay focused. I'm dependable, eager, and
-              bring a realistic approach to problem-solving. I aim to leverage
-              my diverse skills and interests in a fulfilling career.
-            </FontSize> */}
-          </DetailContainer>
-          <ButtonContainer>
-            <SectionHeading>Key Features</SectionHeading>
-            <Button
-              onClick={() => {
-                handleClick(state.resume);
-              }}
-            >
-              <PositionDiv>
-                <IconDiv>
-                  <NoteIcon style={{ fontSize: "40px" }} />
-                </IconDiv>
-              </PositionDiv>
-              <PrimaryButton>
-                <MainButtonDiv>
-                  View CV
-                  <ArrowCircleRightOutlinedIcon style={{ fontSize: "45px" }} />
-                </MainButtonDiv>
-              </PrimaryButton>
-            </Button>
-            <Button>
-              <PositionDiv>
-                <IconDiv>
-                  <PersonIcon style={{ fontSize: "40px" }} />
-                </IconDiv>
-              </PositionDiv>
-              <PrimaryButton>
-                <MainButtonDiv>
-                  View Personality Test Result
-                  <ArrowCircleRightOutlinedIcon style={{ fontSize: "45px" }} />
-                </MainButtonDiv>
-              </PrimaryButton>
-            </Button>
-            <Button>
-              <PositionDiv>
-                <IconDiv>
-                  <BusinessCenterIcon style={{ fontSize: "40px" }} />
-                </IconDiv>
-              </PositionDiv>
-              <PrimaryButton onClick={keyInformationOpenHandler}>
-                <MainButtonDiv>
-                  Key Information
-                  <ArrowCircleRightOutlinedIcon style={{ fontSize: "45px" }} />
-                </MainButtonDiv>
-              </PrimaryButton>
-            </Button>
-          </ButtonContainer>
-        </SectionContainer>
-      </InformationContainer>
-    </Container>
+    <div>
+      <Header>
+        <BackButton
+          onClick={() => {
+            navigate(
+              `${ROUTES.HOME}?${queryString.stringify(
+                overrideAndEncodeState(data.state, data.state, defaults)
+              )}`
+            );
+          }}
+        >
+          <KeyboardArrowLeftIcon />
+          Back
+        </BackButton>
+      </Header>
+      <Container>
+        {isZoom && <Profilephoto onClose={stopZoom} profile={imageSrc} />}
+        {isResult && (
+          <Personalityresult onClose={hideResult} result={personalityResult} />
+        )}
+        {isKeyInformationOpen && (
+          <Keyinformation
+            onClose={keyInformationCloseHandler}
+            index={personalityIndex}
+          />
+        )}
+        <ProfileContainer
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {imageSrc && (
+            <ZoomDiv onClick={startZoom} isHovered={isHovered}>
+              <ZoomInOutlinedIcon
+                style={{ color: "#F96332", fontSize: "40px" }}
+              />
+            </ZoomDiv>
+          )}
+          <ProfilePhoto src={imageSrc || profile} alt="profile-photo" />
+        </ProfileContainer>
+        <InformationContainer>
+          <Heading>
+            <OrangeColor>Hi, I'm </OrangeColor>
+            {state.firstName + " " + state.lastName}.
+          </Heading>
+          <MailDiv>
+            <MailOutlineIcon />
+            <MailTo href={`mailto:${state.email}`}>{state.email}</MailTo>
+          </MailDiv>
+          <SectionContainer>
+            <DetailContainer>
+              <SectionHeading>About Me</SectionHeading>
+              <Markdown>{state.aboutMe}</Markdown>
+            </DetailContainer>
+            <ButtonContainer>
+              <SectionHeading>Key Features</SectionHeading>
+              <Button
+                onClick={() => {
+                  handleClick(state.resume);
+                }}
+              >
+                <PositionDiv>
+                  <IconDiv iconColor={state.resume ? "#F96332" : "black"}>
+                    <NoteIcon style={{ fontSize: "40px" }} />
+                  </IconDiv>
+                </PositionDiv>
+                <PrimaryButton>
+                  <MainButtonDiv>
+                    View CV
+                    {!state.resume ? (
+                      <ArrowCircleRightOutlinedIcon
+                        style={{ fontSize: "45px" }}
+                      />
+                    ) : (
+                      <CheckCircleIcon
+                        style={{ fontSize: "45px", color: "green" }}
+                      />
+                    )}
+                  </MainButtonDiv>
+                </PrimaryButton>
+              </Button>
+              <Button onClick={showResult}>
+                <PositionDiv>
+                  <IconDiv
+                    iconColor={
+                      state.quizDetail.isFirstTestGiven ? "#F96332" : "black"
+                    }
+                  >
+                    <PersonIcon style={{ fontSize: "40px" }} />
+                  </IconDiv>
+                </PositionDiv>
+                <PrimaryButton>
+                  <MainButtonDiv>
+                    View Personality Test Result
+                    {!state.quizDetail.isFirstTestGiven ? (
+                      <ArrowCircleRightOutlinedIcon
+                        style={{ fontSize: "45px" }}
+                      />
+                    ) : (
+                      <CheckCircleIcon
+                        style={{ fontSize: "45px", color: "green" }}
+                      />
+                    )}
+                  </MainButtonDiv>
+                </PrimaryButton>
+              </Button>
+              <Button>
+                <PositionDiv>
+                  <IconDiv iconColor="#F96332">
+                    <BusinessCenterIcon style={{ fontSize: "40px" }} />
+                  </IconDiv>
+                </PositionDiv>
+                <PrimaryButton onClick={keyInformationOpenHandler}>
+                  <MainButtonDiv>
+                    Key Information
+                    <CheckCircleIcon
+                      style={{ fontSize: "45px", color: "green" }}
+                    />
+                  </MainButtonDiv>
+                </PrimaryButton>
+              </Button>
+            </ButtonContainer>
+          </SectionContainer>
+        </InformationContainer>
+      </Container>
+    </div>
   );
 };
 

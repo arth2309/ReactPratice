@@ -2,9 +2,11 @@ import styled, { css, keyframes } from "styled-components";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { useApi } from "../store/ReducerContext";
 import "../stylesheets/obviously-font.css";
+import { useParams } from "react-router-dom";
 
 interface ModalProps {
   onClose: () => void;
+  index: number;
 }
 
 const fadeIn = keyframes`
@@ -101,8 +103,17 @@ const CardTitle = styled.div({
   color: "#394456",
 });
 
-const Keyinformation: React.FC<ModalProps> = ({ onClose }) => {
+const Keyinformation: React.FC<ModalProps> = ({ onClose, index }) => {
   const { state } = useApi();
+  const { userId } = useParams();
+  const typeArray = [
+    "Pioneer",
+    "Broker",
+    "Achiever",
+    "Director",
+    "Anchor",
+    "None",
+  ];
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -110,7 +121,7 @@ const Keyinformation: React.FC<ModalProps> = ({ onClose }) => {
           <ModalClose onClick={onClose}>
             <HighlightOffOutlinedIcon fontSize="large" />
           </ModalClose>
-          <Title>Key Informatiom</Title>
+          <Title>Key Information</Title>
         </ModalHeader>
         <ModalBody>
           <DetailContainer>
@@ -120,7 +131,7 @@ const Keyinformation: React.FC<ModalProps> = ({ onClose }) => {
             </DetailCard>
             <DetailCard>
               <CardTitle>PersonalityType :</CardTitle>
-              <div>None</div>
+              <div>{typeArray[index]}</div>
             </DetailCard>
           </DetailContainer>
           <DetailContainer>
@@ -130,7 +141,7 @@ const Keyinformation: React.FC<ModalProps> = ({ onClose }) => {
             </DetailCard>
             <DetailCard>
               <CardTitle>MemberId :</CardTitle>
-              <div>1</div>
+              <div>{userId}</div>
             </DetailCard>
           </DetailContainer>
         </ModalBody>

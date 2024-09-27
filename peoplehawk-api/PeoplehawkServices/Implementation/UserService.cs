@@ -201,7 +201,7 @@ public class UserService : GenericService<User>,IUserService
             Progress = x
     };
 
-        User user = await FirstorDefaultAsync(x => x.Id == UserId);
+        User user = await _userRepository.FirstOrDefaultWithIncludesAsync(x => x.Id == UserId,a => a.Country);
         string? base64String;
         if (user.ProfilePhoto != null)
         {
