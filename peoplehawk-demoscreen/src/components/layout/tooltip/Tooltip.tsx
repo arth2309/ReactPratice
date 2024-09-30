@@ -23,6 +23,7 @@ interface CustomTooltipProps {
   color?: string;
   backgroundColor?: string;
   children: React.ReactNode;
+  className?: string;
 }
 
 const Tooltip: React.FC<CustomTooltipProps> = ({
@@ -30,16 +31,22 @@ const Tooltip: React.FC<CustomTooltipProps> = ({
   place = "bottom",
   color = "white",
   variant = "light",
-  backgroundColor = "black",
+  backgroundColor = "red",
   children,
+  className,
 }) => {
   return (
     <>
-      <ReactTooltip id={id} place={place} variant={variant}>
+      <ReactTooltip
+        id={id}
+        place={place}
+        variant={variant}
+        className={className}
+      >
         <div
           style={{
-            color,
-            backgroundColor,
+            backgroundColor: "red",
+            color: "#394456",
             padding: "10px",
             borderRadius: "5px",
           }}

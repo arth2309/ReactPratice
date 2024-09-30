@@ -37,9 +37,10 @@ public class UserService : GenericService<User>,IUserService
     private readonly ITextNoteService _textNoteService;
     private readonly IAudioNoteService _audioNoteService;
     private readonly ICompletionRepository _completionRepository;
+    private readonly IRequestService _requestService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService,IRequestService requestService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -58,6 +59,7 @@ public class UserService : GenericService<User>,IUserService
         _textNoteService = textNoteService;
         _completionRepository  = completionRepository;  
         _memberAnalyticsService = memberAnalyticsService;
+        _requestService = requestService;
 
     }
 
@@ -215,6 +217,10 @@ public class UserService : GenericService<User>,IUserService
         {
             base64String = null;
         }
+
+        
+
+
         userDetailDTO.ProfilePhoto = base64String;
         userDetailDTO.FirstName = user.FirstName;
         userDetailDTO.LastName = user.LastName;
@@ -234,6 +240,7 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.Resume = userDetailDTO.UserProgress.isResumeUpload ? await _resumeFileService.GetFileString(UserId) : null;
         userDetailDTO.TextNoteList = await _textNoteService.GetNoteList(UserId);
         userDetailDTO.AudioNoteList = await _audioNoteService.GetNoteList(UserId);
+        userDetailDTO.Request = await _requestService.GetRequest(UserId);
         return userDetailDTO;
     }
 

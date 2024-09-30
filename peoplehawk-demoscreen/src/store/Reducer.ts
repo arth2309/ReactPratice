@@ -1,3 +1,4 @@
+import { Cases } from "@mui/icons-material";
 import {
   CandidateDetail,
   CourseInterest,
@@ -6,6 +7,7 @@ import {
   Assignment,
   EducationDetail,
   QuizStatus,
+  Request,
   Quiz,
   TextNote,
   AudioNote,
@@ -41,6 +43,7 @@ export type Action =
   | { type: "POST_TEXT_NOTE"; payload: TextNote }
   | { type: "DELETE_TEXT_NOTE"; payload: number }
   | { type: "DELETE_AUDIO_NOTE"; payload: number }
+  | { type: "REQUEST"; payload: Request }
   | { type: "POST_ABOUT_ME"; payload: string };
 
 export const base64ToBlob = (base64String: string | null): string | null => {
@@ -84,6 +87,7 @@ export const intialState: CandidateDetail = {
   audioNoteList: [],
   textNoteList: [],
   aboutMe: null,
+  request: null,
 };
 
 export const apiReducer = (
@@ -234,6 +238,11 @@ export const apiReducer = (
       return {
         ...state,
         aboutMe: action.payload,
+      };
+    case "REQUEST":
+      return {
+        ...state,
+        request: action.payload,
       };
     default:
       return state;

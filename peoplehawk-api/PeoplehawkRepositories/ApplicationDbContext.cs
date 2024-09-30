@@ -43,4 +43,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<AudioNote> AudioNotes { get; set; }
 
     public DbSet<TextNote> TextNotes { get; set; }
+
+    public DbSet<Request> requests { get; set; }
 }

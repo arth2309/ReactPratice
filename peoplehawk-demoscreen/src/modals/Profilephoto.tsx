@@ -1,6 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
-import "../stylesheets/obviously-font.css";
 
 interface ModalProps {
   onClose: () => void;

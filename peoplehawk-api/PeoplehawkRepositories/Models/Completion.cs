@@ -15,11 +15,7 @@
 
     public bool IsDocumentGiven { get; set;}
 
-    public bool PeopleHawkCV { get; set;}
+    public bool IsCVUploaded { get; set;}
 
-    public bool MemberCV { get; set;}
-
-    public bool InfographicCV { get; set;}
-
-    public bool SimpleCV { get; set;}
+    
 }

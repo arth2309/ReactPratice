@@ -19,9 +19,9 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
 
     public async Task<List<MemberAnalyticsDTO>> GetList(
         int page,
-        bool isInfographicResume = false,
-        bool isMemberResume = false, bool isPeopleHawkResume = false,
-        bool isAll = false, string sortOrder = "asc", int orderedBy = 0,
+          bool isResume = false,
+          bool isPersonalityTest = false,
+       string sortOrder = "asc", int orderedBy = 0,
         bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
@@ -30,10 +30,8 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
         (memberType == null || a.user.MemberType == memberType) &&
         (!isProfilePhoto || a.user.ProfilePhoto != null) &&
-        (!isInfographicResume || a.completion.InfographicCV) &&
-        (!isMemberResume || a.completion.MemberCV) &&
-        (!isPeopleHawkResume || a.completion.PeopleHawkCV) &&
-        (!isAll || a.completion.SimpleCV);
+        (!isResume || a.completion.IsCVUploaded) &&
+        (!isPersonalityTest || a.completion.IsPersonalityQuizGiven);
 
         Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
 
@@ -61,9 +59,9 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         return memberAnalytics.ToDtoList();
     }
     public async Task<int> GetCount(
-        bool isInfographicResume = false,
-        bool isMemberResume = false, bool isPeopleHawkResume = false,
-        bool isAll = false, string sortOrder = "asc", int orderedBy = 0,
+        bool isResume = false,
+         bool isPersonalityTest = false,
+        string sortOrder = "asc", int orderedBy = 0,
         bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
@@ -72,10 +70,9 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
         (memberType == null || a.user.MemberType == memberType) &&
         (!isProfilePhoto || a.user.ProfilePhoto != null) &&
-        (!isInfographicResume || a.completion.InfographicCV) &&
-        (!isMemberResume || a.completion.MemberCV) &&
-        (!isPeopleHawkResume || a.completion.PeopleHawkCV) &&
-        (!isAll || a.completion.SimpleCV);
+        (!isResume || a.completion.IsCVUploaded)&&
+        (!isPersonalityTest || a.completion.IsPersonalityQuizGiven); ;
+        
 
         Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
 

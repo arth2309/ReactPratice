@@ -5,11 +5,13 @@ import { CategoryScale } from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import "../stylesheets/obviously-font.css";
 import { CourseInterestData } from "../IdealCourseInterests";
+import { useApi } from "../store/ReducerContext";
 Chart.register(CategoryScale);
 
 interface ModalProps {
   onClose: () => void;
   result: number[];
+  index: number;
 }
 
 const fadeIn = keyframes`
@@ -84,7 +86,9 @@ const ModalClose = styled.div`
 
 const ProfileContainer = styled.div({
   display: "flex",
+  flexDirection: "column",
   justifyContent: "center",
+  alignItems: "center",
   width: "100%",
 });
 
@@ -96,7 +100,20 @@ const Container = styled.div({
   backgroundColor: "white",
 });
 
-const Personalityresult: React.FC<ModalProps> = ({ onClose, result }) => {
+const Personalityresult: React.FC<ModalProps> = ({
+  onClose,
+  result,
+  index,
+}) => {
+  const typeArray = [
+    "Pioneer",
+    "Broker",
+    "Achiever",
+    "Director",
+    "Anchor",
+    "None",
+  ];
+
   const options: any = {
     responsive: true,
     maintainAspectRatio: false,
@@ -141,6 +158,7 @@ const Personalityresult: React.FC<ModalProps> = ({ onClose, result }) => {
     ],
   };
 
+  const { state } = useApi();
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -148,9 +166,12 @@ const Personalityresult: React.FC<ModalProps> = ({ onClose, result }) => {
           <ModalClose onClick={onClose}>
             <HighlightOffOutlinedIcon fontSize="large" />
           </ModalClose>
-          <Title>Your Personality Result</Title>
+          <Title>{state.firstName}'s Personality Result</Title>
         </ModalHeader>
         <ProfileContainer>
+          <h4>
+            {state.firstName}'s Personality Type is : {typeArray[index]}{" "}
+          </h4>
           <Container>
             <Pie data={data} options={options} />
           </Container>

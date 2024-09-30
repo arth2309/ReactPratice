@@ -25,8 +25,9 @@ public class CandidateController : BaseController
     private readonly IAssignmentService _assignmentService;
     private readonly ITextNoteService _textNoteService;
     private readonly IAudioNoteService _audioNoteService;
+    private readonly IRequestService _requestService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -42,6 +43,7 @@ public class CandidateController : BaseController
         _workExperienceService = workExperienceService;
         _textNoteService = textNoteService;
         _audioNoteService = audioNoteService;
+        _requestService = requestService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -164,17 +166,15 @@ public class CandidateController : BaseController
     }
 
     [HttpGet("member-analytics")]
-    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isInfographicResume = false,
-          bool isMemberResume = false, bool isPeopleHawkResume = false,
-          bool isAll = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
+    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isResume = false, bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
     {
-        return await _memberAnalyticsService.GetList(page,isInfographicResume,isMemberResume,isPeopleHawkResume,isAll, sortOrder,orderedBy, isProfilePhoto, searchTerm,countryId,memberType);
+        return await _memberAnalyticsService.GetList(page,isResume,isPersonalityTest, sortOrder,orderedBy, isProfilePhoto, searchTerm,countryId,memberType);
     }
 
     [HttpGet("member-analytics-count")]
-    public async Task<ActionResult<int>> MemberAnalyticsCount(bool isInfographicResume = false, bool isMemberResume = false, bool isPeopleHawkResume = false, bool isAll = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+    public async Task<ActionResult<int>> MemberAnalyticsCount(bool isResume = false,bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
-        return await _memberAnalyticsService.GetCount(isInfographicResume, isMemberResume, isPeopleHawkResume, isAll, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
+        return await _memberAnalyticsService.GetCount(isResume ,isPersonalityTest, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
     }
 
     [HttpPost("education-detail")]
@@ -267,7 +267,7 @@ public class CandidateController : BaseController
     }
 
     [HttpPost("text-note")]
-    public async Task<TextNoteDto> TextNote(TextNoteDto textNoteDto)
+    public async Task<TextNoteDto> TextNote([FromBody]TextNoteDto textNoteDto)
     {
         return await _textNoteService.AddNote(textNoteDto);
     }
@@ -282,5 +282,11 @@ public class CandidateController : BaseController
     public async Task<AboutMeDetailDTO> AddAboutMe([FromBody] AboutMeDetailDTO aboutMeDetailDTO)
     {
         return await _userService.AddAboutMe(aboutMeDetailDTO);
+    }
+
+    [HttpPost("request")]
+    public async Task<RequestDTO> Req([FromBody] RequestDTO requestDTO)
+    {
+        return await _requestService.UpsertRequest(requestDTO);
     }
 }

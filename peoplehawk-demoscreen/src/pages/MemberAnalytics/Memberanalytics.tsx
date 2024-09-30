@@ -32,10 +32,8 @@ import { useNavigate } from "react-router-dom";
 
 const defaults = {
   page: 1,
-  isInfographicResume: false,
-  isMemberResume: false,
-  isPeopleHawkResume: false,
-  isAll: false,
+  isResume: false,
+  isPersonalityTest: false,
   sortOrder: "asc",
   orderedBy: 1,
   isProfilePhoto: false,
@@ -335,23 +333,6 @@ const Memberanalytics = () => {
     setPage(page1);
   };
 
-  // const NavigationHandler = () => {
-  //   state.isInfographicResume = urlState.isInfographicResume;
-  //   state.isMemberResume = urlState.isMemberResume;
-  //   state.isPeopleHawkResume = urlState.isPeopleHawkResume;
-  //   state.isAll = urlState.isAll;
-  //   state.isProfilePhoto = urlState.isProfilePhoto;
-  //   state.orderedBy = urlState.orderedBy;
-  //   state.searchTerm = urlState.searchTerm;
-  //   state.countryId = urlState.countryId;
-  //   state.memberType = urlState.memberType;
-  //   state.sortOrder = urlState.sortOrder;
-  //   state.orderedBy = urlState.orderedBy;
-  //   state.sortBy = urlState.sortBy;
-  //   state.isOn = urlState.isOn;
-  //   state.page = urlState.page;
-  // };
-
   const searchHandler = (value: string) => {
     seturlState({ ...urlState, searchTerm: value, page: 1 });
     state.searchTerm = value;
@@ -381,10 +362,8 @@ const Memberanalytics = () => {
   const fetchData = async () => {
     const result = await MemberAnalyticsList(
       urlState.page,
-      urlState.isInfographicResume,
-      urlState.isMemberResume,
-      urlState.isPeopleHawkResume,
-      urlState.isAll,
+      urlState.isResume,
+      urlState.isPersonalityTest,
       urlState.sortOrder,
       urlState.isProfilePhoto,
       urlState.orderedBy,
@@ -394,10 +373,8 @@ const Memberanalytics = () => {
     );
     result && setFilterData(result);
     const result1 = await MemberAnalyticsCount(
-      urlState.isInfographicResume,
-      urlState.isMemberResume,
-      urlState.isPeopleHawkResume,
-      urlState.isAll,
+      urlState.isResume,
+      urlState.isPersonalityTest,
       urlState.sortOrder,
       urlState.isProfilePhoto,
       urlState.orderedBy,
@@ -416,6 +393,18 @@ const Memberanalytics = () => {
   const navigate = useNavigate();
 
   const goToUser = (userId: number) => {
+    state.isResume = urlState.isResume;
+    state.isPersonalityTest = urlState.isPersonalityTest;
+    state.isProfilePhoto = urlState.isProfilePhoto;
+    state.orderedBy = urlState.orderedBy;
+    state.searchTerm = urlState.searchTerm;
+    state.countryId = urlState.countryId;
+    state.memberType = urlState.memberType;
+    state.sortOrder = urlState.sortOrder;
+    state.orderedBy = urlState.orderedBy;
+    state.sortBy = urlState.sortBy;
+    state.isOn = urlState.isOn;
+    state.page = urlState.page;
     navigate(`/profile/${userId}`);
   };
 
@@ -449,64 +438,27 @@ const Memberanalytics = () => {
                 </ItemCard>
                 <BorderStraight />
                 <ItemCard
-                  color={urlState.isInfographicResume ? "#172C4C" : "#0097a2"}
+                  color={urlState.isPersonalityTest ? "#172C4C" : "#0097a2"}
                   onClick={() => {
                     seturlState({
                       ...urlState,
-                      isInfographicResume: !urlState.isInfographicResume,
-                      isMemberResume: false,
-                      isPeopleHawkResume: false,
-                      isAll: false,
-                      page: 1,
+                      isPersonalityTest: !urlState.isPersonalityTest,
                     });
                   }}
                 >
-                  Infographic Resume
+                  Personality Test
                 </ItemCard>
+                <BorderStraight />
                 <ItemCard
-                  color={urlState.isPeopleHawkResume ? "#172C4C" : "#0097a2"}
+                  color={urlState.isResume ? "#172C4C" : "#0097a2"}
                   onClick={() => {
                     seturlState({
                       ...urlState,
-                      isInfographicResume: false,
-                      isMemberResume: false,
-                      isPeopleHawkResume: !urlState.isPeopleHawkResume,
-                      isAll: false,
-                      page: 1,
+                      isResume: !urlState.isResume,
                     });
                   }}
                 >
-                  PeopleHawk CV
-                </ItemCard>
-                <ItemCard
-                  color={urlState.isMemberResume ? "#172C4C" : "#0097a2"}
-                  onClick={() => {
-                    seturlState({
-                      ...urlState,
-                      isInfographicResume: false,
-                      isMemberResume: !urlState.isMemberResume,
-                      isPeopleHawkResume: false,
-                      isAll: false,
-                      page: 1,
-                    });
-                  }}
-                >
-                  Member CV
-                </ItemCard>
-                <ItemCard
-                  color={urlState.isAll ? "#172C4C" : "#0097a2"}
-                  onClick={() => {
-                    seturlState({
-                      ...urlState,
-                      isInfographicResume: false,
-                      isMemberResume: false,
-                      isPeopleHawkResume: false,
-                      isAll: !urlState.isAll,
-                      page: 1,
-                    });
-                  }}
-                >
-                  Any CV/ Resume
+                  CV / Resume
                 </ItemCard>
               </ItemContainer>
             </UpperHeader>

@@ -1,34 +1,34 @@
-import React, { createContext, ReactNode, useState, useContext} from 'react';
-import { MemberAnalyticsFilter } from '../interface/Interface';
+import React, { createContext, ReactNode, useState, useContext } from "react";
+import { MemberAnalyticsFilter } from "../interface/Interface";
 
 type MemberAnalyticsProviderProps = {
   children: ReactNode;
 };
 
-
-
 const defaultState: MemberAnalyticsFilter = {
   page: 1,
-  isInfographicResume: false,
-  isMemberResume: false,
-  isPeopleHawkResume: false,
-  isAll: false,
-  sortOrder: 'asc',
+  isResume: false,
+  isPersonalityTest: false,
+  sortOrder: "asc",
   orderedBy: 1,
   isProfilePhoto: false,
-  sortBy : 'Last Updated',
-  isOn : false,
-  searchTerm : '',
-  countryId : 0,
-  memberType: '',
+  sortBy: "Last Updated",
+  isOn: false,
+  searchTerm: "",
+  countryId: 0,
+  memberType: "",
 };
 
-const MemberAnalyticsContext = createContext<{
-  state: MemberAnalyticsFilter;
+const MemberAnalyticsContext = createContext<
+  | {
+      state: MemberAnalyticsFilter;
+    }
+  | undefined
+>(undefined);
 
-} | undefined>(undefined);
-
-export const MemberAnalyticsProvider: React.FC<MemberAnalyticsProviderProps> = ({ children }) => {
+export const MemberAnalyticsProvider: React.FC<
+  MemberAnalyticsProviderProps
+> = ({ children }) => {
   const [state] = useState<MemberAnalyticsFilter>(defaultState);
 
   return (
@@ -41,7 +41,9 @@ export const MemberAnalyticsProvider: React.FC<MemberAnalyticsProviderProps> = (
 export const useMemberAnalytics = () => {
   const context = useContext(MemberAnalyticsContext);
   if (!context) {
-    throw new Error('useMemberAnalytics must be used within a MemberAnalyticsProvider');
+    throw new Error(
+      "useMemberAnalytics must be used within a MemberAnalyticsProvider"
+    );
   }
   return context;
 };

@@ -27,7 +27,7 @@ const Right = styled.div`
   background-color: #dbeffa;
   width: 70%;
   height: 100vh;
-
+  min-height: 100%;
   @media (max-width: 1298px) {
     width: 60%;
   }

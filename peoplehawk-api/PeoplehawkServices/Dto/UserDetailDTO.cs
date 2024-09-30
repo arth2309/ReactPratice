@@ -1,4 +1,6 @@
-﻿namespace PeoplehawkServices.Dto;
+﻿using PeoplehawkRepositories.Models;
+
+namespace PeoplehawkServices.Dto;
 public class UserDetailDTO
 {
 
@@ -39,4 +41,6 @@ public class UserDetailDTO
     public List<TextNoteDto>? TextNoteList { get; set; }
 
     public List<AudioNoteDTO>? AudioNoteList { get; set; }  
+
+    public RequestDTO? Request { get; set; }
 }

@@ -141,10 +141,8 @@ export interface KeyValue {
 
 export interface MemberAnalyticsFilter {
   page: number;
-  isInfographicResume: boolean;
-  isMemberResume: boolean;
-  isPeopleHawkResume: boolean;
-  isAll: boolean;
+  isResume: boolean;
+  isPersonalityTest: boolean;
   sortOrder: string;
   orderedBy: number;
   isProfilePhoto: boolean;
@@ -216,6 +214,7 @@ export interface CandidateDetail {
   chartDetail: ChartData | null;
   resume: string | null;
   quizDetail: QuizStatus;
+  request: Request | null;
   quizQuestion: Quiz | null;
   audioNoteList: AudioNote[];
   textNoteList: TextNote[];
@@ -256,4 +255,11 @@ export interface TextNote {
 export interface AboutMeDetail {
   userId: number;
   text: string;
+}
+
+export interface Request {
+  id: number;
+  userId: number;
+  isPersonalityTestRequest: boolean;
+  isResumeUploadRequest: boolean;
 }

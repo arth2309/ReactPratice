@@ -243,6 +243,9 @@ const SaveButton = styled.button({
 
 const ModalBody = styled.div`
   height: 415px;
+
+  .tooltip {
+  }
 `;
 
 const HistoryDiv = styled.div`
@@ -452,7 +455,9 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
               <ViewButton onClick={viewNote}>View History</ViewButton>
             </Container>
           )}
-          <Tooltip id="delete">Delete</Tooltip>
+          <Tooltip id="delete" variant="dark" place="left" className="tooltip">
+            Delete
+          </Tooltip>
           {isViewHistory && (
             <div>
               <BackButton onClick={back}>
@@ -465,6 +470,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                     <NotesCard key={index}>
                       <NotesContent>{item.textNote}</NotesContent>
                       <NotesDate>
+                        {moment(item.sendDate).format("lll")}
                         <div
                           onClick={() => {
                             deleteTextNote(item.id);
@@ -472,12 +478,11 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                         >
                           <DeleteOutlineOutlinedIcon
                             data-tooltip-id="delete"
-                            data-tooltip-content="Hello world!"
-                            style={{ fontSize: "18px" }}
+                            // data-tooltip-content="Delete"
+                            // style={{ fontSize: "18px", cursor: "pointer" }}
                             color="error"
                           />
                         </div>
-                        {moment(item.sendDate).format("lll")}
                       </NotesDate>
                     </NotesCard>
                   ))}
@@ -493,6 +498,7 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                           />
                         </NotesContent>
                         <NotesDate>
+                          {moment(blob.sendDate).format("lll")}
                           <div
                             onClick={() => {
                               deleteAudio(blob.id);
@@ -502,7 +508,6 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                               style={{ fontSize: "18px" }}
                             />
                           </div>
-                          {moment(blob.sendDate).format("lll")}
                         </NotesDate>
                       </NotesCard>
                     ) : null}

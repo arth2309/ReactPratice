@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import profile from "../../assests/img/profile_placeholder-3x.png";
 import "../../stylesheets/obviously-font.css";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -23,7 +23,8 @@ import Personalityresult from "../../modals/Personalityresult";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
 import queryString from "query-string";
-import { MemberAnalyticsFilter } from "../../interface/Interface";
+import Request from "../../modals/Request";
+import { Request as RequestProps } from "../../interface/Interface";
 
 const Header = styled.div({
   backgroundColor: "#FFFFFF",
@@ -127,11 +128,6 @@ const SectionHeading = styled.div({
   fontWeight: 500,
 });
 
-// const FontSize = styled.div({
-//   fontSize: "21.5px",
-//   fontFamily: "cursive",
-// });
-
 const PrimaryButton = styled.button({
   cursor: "pointer",
   backgroundColor: "white",
@@ -181,10 +177,8 @@ const MainButtonDiv = styled.div({
 
 const defaults = {
   page: 1,
-  isInfographicResume: false,
-  isMemberResume: false,
-  isPeopleHawkResume: false,
-  isAll: false,
+  isResume: false,
+  isPersonalityTest: false,
   sortOrder: "asc",
   orderedBy: 1,
   isProfilePhoto: false,
@@ -205,6 +199,20 @@ const Candidateprofile = () => {
   const [personalityIndex, setPersonalityIndex] = useState<number>(5);
   const [isZoom, setIsZoom] = useState<boolean>(false);
   const [isResult, setIsResult] = useState<boolean>(false);
+  const [isRequest, setIsRequest] = useState<boolean>(false);
+  const [requestData, setRequestData] = useState<{
+    content: string;
+    data: RequestProps;
+  }>({
+    content: "",
+    data: {
+      id: 0,
+      userId: 0,
+      isPersonalityTestRequest: false,
+      isResumeUploadRequest: false,
+    },
+  });
+  const [requestTitle, setRequestTitle] = useState<string>("");
   const keyInformationCloseHandler = () => {
     setIsKeyInformationOpen(false);
   };
@@ -217,10 +225,20 @@ const Candidateprofile = () => {
   const stopZoom = () => {
     setIsZoom(false);
   };
+  const requestModalOpenHandler = (content: string, index: number) => {
+    setIsRequest(true);
+  };
+  const requestModalCloseHandler = () => {
+    setIsRequest(false);
+  };
+
+  const requestModalConfirmHandler = (data: RequestProps) => {};
 
   const showResult = () => {
     if (state.quizDetail.isFirstTestGiven) {
       setIsResult(true);
+    } else {
+      requestModalOpenHandler("You can make request to Candidate", 2);
     }
   };
   const hideResult = () => {
@@ -291,8 +309,15 @@ const Candidateprofile = () => {
       </Header>
       <Container>
         {isZoom && <Profilephoto onClose={stopZoom} profile={imageSrc} />}
+        {isRequest && (
+          <Request onClose={requestModalCloseHandler} request={requestData} />
+        )}
         {isResult && (
-          <Personalityresult onClose={hideResult} result={personalityResult} />
+          <Personalityresult
+            onClose={hideResult}
+            result={personalityResult}
+            index={personalityIndex}
+          />
         )}
         {isKeyInformationOpen && (
           <Keyinformation

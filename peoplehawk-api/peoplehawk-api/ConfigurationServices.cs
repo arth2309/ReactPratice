@@ -41,7 +41,6 @@ public static class ConfigurationServices
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
-
         });
     }
 

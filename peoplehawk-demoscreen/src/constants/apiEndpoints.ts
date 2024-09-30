@@ -19,10 +19,8 @@ export const API_ENDPOINTS = {
   CRUD_FILE: (UserId: number) => `candidate/files/${UserId}`,
   MEMBER_ANALYTICS: (
     page: number,
-    isInfographicResume: boolean,
-    isMemberResume: boolean,
-    isPeopleHawkResume: boolean,
-    isAll: boolean,
+    isResume: boolean,
+    isPersonalityTest: boolean,
     sortOrder: string,
     orderedBy: number,
     isProfilePhoto: boolean,
@@ -30,7 +28,7 @@ export const API_ENDPOINTS = {
     countryId?: number,
     memberType?: string
   ) => {
-    let url = `candidate/member-analytics?page=${page}&isInfographicResume=${isInfographicResume}&isMemberResume=${isMemberResume}&isPeopleHawkResume=${isPeopleHawkResume}&isAll=${isAll}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
+    let url = `candidate/member-analytics?page=${page}&isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
 
     if (searchTerm) {
       url += `&searchTerm=${searchTerm}`;
@@ -46,10 +44,8 @@ export const API_ENDPOINTS = {
     return url;
   },
   MEMBER_ANALYTICS_COUNT: (
-    isInfographicResume: boolean,
-    isMemberResume: boolean,
-    isPeopleHawkResume: boolean,
-    isAll: boolean,
+    isResume: boolean,
+    isPersonalityTest: boolean,
     sortOrder: string,
     orderedBy: number,
     isProfilePhoto: boolean,
@@ -57,7 +53,7 @@ export const API_ENDPOINTS = {
     countryId?: number,
     memberType?: string
   ) => {
-    let url = `candidate/member-analytics-count?isInfographicResume=${isInfographicResume}&isMemberResume=${isMemberResume}&isPeopleHawkResume=${isPeopleHawkResume}&isAll=${isAll}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
+    let url = `candidate/member-analytics-count?isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
 
     if (searchTerm) {
       url += `&searchTerm=${searchTerm}`;
@@ -87,4 +83,5 @@ export const API_ENDPOINTS = {
   Text_NOTE_ID: (id: number) => `candidate/text-note?Id=${id}`,
   AUDIO_NOTE_ID: (id: number) => `candidate/audio-note?Id=${id}`,
   ABOUT_ME_DETAIL: "candidate/about-me",
+  REQUEST: "candidate/request",
 };

@@ -156,10 +156,10 @@ namespace PeoplehawkRepositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("InfographicCV")
+                    b.Property<bool>("IsCVOptimized")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsCVOptimized")
+                    b.Property<bool>("IsCVUploaded")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsCompentencyQuizGiven")
@@ -175,15 +175,6 @@ namespace PeoplehawkRepositories.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsVideoInterview")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("MemberCV")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("PeopleHawkCV")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("SimpleCV")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
@@ -377,6 +368,30 @@ namespace PeoplehawkRepositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Quizes");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsPersonalityTestRequest")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsResumeUploadRequest")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("requests");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.ResumeFile", b =>
@@ -636,6 +651,17 @@ namespace PeoplehawkRepositories.Migrations
                     b.Navigation("quiz");
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.Request", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.ResumeFile", b =>
