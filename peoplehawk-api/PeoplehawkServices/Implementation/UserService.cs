@@ -102,6 +102,7 @@ public class UserService : GenericService<User>,IUserService
         var entity = await AddAsync(_mapper.Map<User>(userDTO));
 
         Completion completion = new Completion();
+        completion.UserId = entity.Id;
         var entity1 = await _completionRepository.AddAsync(completion);
 
         MemberAnalytics memberAnalytics = new MemberAnalytics();
@@ -145,7 +146,7 @@ public class UserService : GenericService<User>,IUserService
 
     public async Task<UserDTO> UpdateFile(IFormFile file, int UserId)
     {
-        User user = await FirstorDefaultAsync(x => x.Id == UserId);
+        User user = await FirstorDefaultAsync(x => x.Id == UserId); 
         string uploadsFolder = Path.Combine("Files");
         string filePath = Path.Combine(uploadsFolder, file.FileName);
         using (var stream = new FileStream(filePath, FileMode.Create))

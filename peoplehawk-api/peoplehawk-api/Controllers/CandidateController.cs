@@ -26,8 +26,9 @@ public class CandidateController : BaseController
     private readonly ITextNoteService _textNoteService;
     private readonly IAudioNoteService _audioNoteService;
     private readonly IRequestService _requestService;
+    private readonly ICompletionService _completionService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService,ICompletionService completionService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -44,6 +45,7 @@ public class CandidateController : BaseController
         _textNoteService = textNoteService;
         _audioNoteService = audioNoteService;
         _requestService = requestService;
+        _completionService = completionService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -74,10 +76,10 @@ public class CandidateController : BaseController
     }
 
     [HttpDelete("files/{UserId:int}")]
-    public async Task<ResumeFile> DeleteFile(int UserId)
+    public async Task<ResumeFileDTO> DeleteFile(int UserId)
     {
         ValidateId(UserId);
-        return await _resumeFileService.DeleteAsync(a => a.UserId == UserId);
+        return await _resumeFileService.DeleteFile(UserId);
     }
 
     [HttpPut("files/{UserId:int}")]
@@ -282,6 +284,12 @@ public class CandidateController : BaseController
     public async Task<AboutMeDetailDTO> AddAboutMe([FromBody] AboutMeDetailDTO aboutMeDetailDTO)
     {
         return await _userService.AddAboutMe(aboutMeDetailDTO);
+    }
+
+    [HttpPost("manage-note")]
+    public async Task<bool> Note(int UserId,bool isNote)
+    {
+        return await _completionService.ManageNotes(UserId, isNote);
     }
 
     [HttpPost("request")]

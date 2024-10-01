@@ -29,6 +29,7 @@ import { useUrlSearchState } from "../../customhooks/useUrlSearchState";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Tooltip from "../../components/layout/tooltip/Tooltip";
 
 const defaults = {
   page: 1,
@@ -524,6 +525,36 @@ const Memberanalytics = () => {
                   goToUser(item.userId);
                 }}
               >
+                <Tooltip id={`personality-${index}`} place="right-start">
+                  {item.completion.isPersonalityQuizGiven
+                    ? "Completed Personality Test"
+                    : "Not Completed Personality Test"}
+                </Tooltip>
+                <Tooltip id={`games-${index}`} place="bottom">
+                  {item.completion.isGames
+                    ? "Completed Cognition Abilities"
+                    : "Not Completed Cognition Abilities"}
+                </Tooltip>
+                <Tooltip id={`photo-${index}`} place="bottom">
+                  {item.photoContent
+                    ? "Uploaded Profile Photo"
+                    : "Not Uploaded Profile Photo"}
+                </Tooltip>
+                <Tooltip id={`resume-${index}`} place="bottom">
+                  {item.completion.isCVUploaded
+                    ? "Uploaded Resume"
+                    : "Not Uploaded Resume"}
+                </Tooltip>
+                <Tooltip id={`compentency-${index}`} place="bottom">
+                  {item.completion.isCompentencyQuizGiven
+                    ? "Completed Compentency Quiz"
+                    : "Not Completed Compentency Quiz"}
+                </Tooltip>
+                <Tooltip id={`note-${index}`} place="bottom">
+                  {item.completion.isDocumentGiven
+                    ? "Added Notes"
+                    : "Not Added Notes"}
+                </Tooltip>
                 <UpdatedDate>Updated : 28 August 2024</UpdatedDate>
                 <MemberMainCard>
                   <MemberLeftCard>
@@ -538,6 +569,7 @@ const Memberanalytics = () => {
                     <CompletionCont>
                       <CompletionCard>
                         <CompletionImg
+                          data-tooltip-id={`personality-${index}`}
                           src={
                             item.completion.isPersonalityQuizGiven
                               ? personalityQuizCompleted
@@ -546,6 +578,7 @@ const Memberanalytics = () => {
                           alt="personality-quiz"
                         />
                         <CompletionImg
+                          data-tooltip-id={`games-${index}`}
                           src={
                             item.completion.isGames
                               ? gamesCompleted
@@ -554,24 +587,23 @@ const Memberanalytics = () => {
                           alt="games"
                         />
                         <CompletionImg
-                          src={
-                            item.completion.isVideoInterview
-                              ? videoCompleted
-                              : videoEmpty
-                          }
+                          data-tooltip-id={`photo-${index}`}
+                          src={item.photoContent ? videoCompleted : videoEmpty}
                           alt="video"
                         />
                       </CompletionCard>
                       <CompletionCard>
                         <CompletionImg
+                          data-tooltip-id={`resume-${index}`}
                           src={
-                            item.completion.isCVOptimized
+                            item.completion.isCVUploaded
                               ? cvOptimizedCompleted
                               : cvOptimizedEmpty
                           }
                           alt="cv-optimizer"
                         />
                         <CompletionImg
+                          data-tooltip-id={`compentency-${index}`}
                           src={
                             item.completion.isCompentencyQuizGiven
                               ? cvGeneratedCompleted
@@ -580,6 +612,7 @@ const Memberanalytics = () => {
                           alt="cv-generated"
                         />
                         <CompletionImg
+                          data-tooltip-id={`note-${index}`}
                           src={
                             item.completion.isDocumentGiven
                               ? documentCompleted

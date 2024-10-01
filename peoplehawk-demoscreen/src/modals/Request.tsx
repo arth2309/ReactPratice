@@ -1,9 +1,10 @@
 import styled, { css, keyframes } from "styled-components";
+import { Request as RequestProps } from "../interface/Interface";
 
 interface ModalProps {
   onClose: () => void;
-  onConfirm?: () => void;
-  content: string;
+  onConfirm: (data: RequestProps) => void;
+  request: { content: string; data: RequestProps; isAlreadyRequested: boolean };
 }
 
 const fadeIn = keyframes`
@@ -100,16 +101,30 @@ const CancelButton = styled.button({
   },
 });
 
-const Request: React.FC<ModalProps> = ({ onClose, onConfirm, content }) => {
+const Request: React.FC<ModalProps> = ({ onClose, onConfirm, request }) => {
   return (
     <ModalOverlay>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>Request</ModalHeader>
         <ModalBody>
-          <div>{content}</div>
+          <div>
+            {request.isAlreadyRequested
+              ? "Already Requested!"
+              : request.content}
+          </div>
           <ButtonDiv>
-            <CancelButton onClick={onClose}>Cancel</CancelButton>
-            <ConfirmButton onClick={onConfirm}>Confirm</ConfirmButton>
+            <CancelButton onClick={onClose}>
+              {request.isAlreadyRequested ? "Close" : "Cancel"}
+            </CancelButton>
+            {!request.isAlreadyRequested && (
+              <ConfirmButton
+                onClick={() => {
+                  onConfirm(request.data);
+                }}
+              >
+                Confirm
+              </ConfirmButton>
+            )}
           </ButtonDiv>
         </ModalBody>
       </ModalContent>

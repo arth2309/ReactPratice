@@ -1,7 +1,14 @@
-﻿namespace PeoplehawkRepositories.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PeoplehawkRepositories.Models;
   public class Completion
 {
     public int Id { get; set; }
+
+    [ForeignKey("User")]
+    public int? UserId { get; set; }
+
+    public User User { get; set; }
 
     public bool IsPersonalityQuizGiven { get; set;}
 
@@ -17,5 +24,4 @@
 
     public bool IsCVUploaded { get; set;}
 
-    
 }

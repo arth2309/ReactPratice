@@ -220,16 +220,21 @@ const PrimaryButton = styled.button({
   justifyContent: "center",
   borderRadius: "20px",
   marginTop: "10px",
+  marginBottom: "10px",
+  position: "relative",
 });
 
 const OutlineButton = styled.button({
   cursor: "pointer",
+  position: "relative",
   background: "transparent",
   border: "1px solid #F96332",
   width: "300px",
   fontSize: "16px",
   fontWeight: "600",
   display: "flex",
+  marginTop: "10px",
+  marginBottom: "10px",
   justifyContent: "center",
   borderRadius: "20px",
   color: "#394456",
@@ -274,6 +279,21 @@ const MobileCard2 = styled.div({
   "@media (max-width : 768px)": {
     width: "70%",
   },
+});
+
+const RequestedDiv = styled.div({
+  position: "absolute",
+  backgroundColor: "#009702",
+  width: "fit-content",
+  padding: "0px 16px",
+  color: "white",
+  borderRadius: "8px",
+  right: "16px",
+  top: "-15px",
+  display: "flex",
+  height: "24px",
+  alignItems: "center",
+  fontSize: "14px",
 });
 
 const Obviously = styled.div({
@@ -814,6 +834,10 @@ const Dashboard = () => {
                   navigate(ROUTES.RESUME);
                 }}
               >
+                {ctx.state.request &&
+                  ctx.state.request.isResumeUploadRequest && (
+                    <RequestedDiv>Requested</RequestedDiv>
+                  )}
                 {ctx.state.userProgress?.isResumeUpload ? "View " : "Upload "}{" "}
                 Your Resume
               </OutlineButton>
@@ -822,21 +846,14 @@ const Dashboard = () => {
                   navigate(ROUTES.PERSONALITY_TEST);
                 }}
               >
+                {ctx.state.request &&
+                  ctx.state.request.isPersonalityTestRequest && (
+                    <RequestedDiv>Requested</RequestedDiv>
+                  )}
                 {ctx.state.quizDetail.testNo > 0
                   ? "View Your Personality Result"
                   : "Take Your Personality Test"}
               </PrimaryButton>
-              {/* <OutlineButton
-                onClick={() => {
-                  navigate(
-                    `/member-analytics?${queryString.stringify(
-                      overrideAndEncodeState(state, state, defaults)
-                    )}`
-                  );
-                }}
-              >
-                Member Analytics
-              </OutlineButton> */}
             </LeftChildMainContainer>
           </LeftChildContainer>
           <BorderBottom bw="350px" />

@@ -14,10 +14,12 @@ public class ResumeFileService : GenericService<ResumeFile>, IResumeFileService
 {
     private readonly IResumeFileRepository _resumeFileRepository;
     private readonly IMapper _mapper;
-    public ResumeFileService(IResumeFileRepository resumeFileRepository, IMapper mapper) : base(resumeFileRepository)
+    private readonly ICompletionRepository _completionRepository;
+    public ResumeFileService(IResumeFileRepository resumeFileRepository, IMapper mapper, ICompletionRepository completionRepository) : base(resumeFileRepository)
     {
         _resumeFileRepository = resumeFileRepository;
         _mapper = mapper;
+        _completionRepository = completionRepository;
     }
 
     public async Task<ResumeFileDTO> UploadFile(IFormFile file, int UserId)
@@ -43,8 +45,26 @@ public class ResumeFileService : GenericService<ResumeFile>, IResumeFileService
         };
 
         var Resume = await AddAsync(resumeFile);
+        Completion completion = await _completionRepository.FirstOrDefaultAsync(x => x.UserId == UserId);   
+        if (completion != null) 
+        {
+            completion.IsCVUploaded = true; 
+            await _completionRepository.UpdateAsync(completion);
+        }
         return resumeFile.ToDto();
 
+    }
+
+    public async Task<ResumeFileDTO> DeleteFile(int UserId)
+    {
+        var entity = await DeleteAsync(a => a.UserId == UserId);
+        Completion completion = await _completionRepository.FirstOrDefaultAsync(x => x.UserId == UserId);
+        if (completion != null)
+        {
+            completion.IsCVUploaded = false;
+            await _completionRepository.UpdateAsync(completion);
+        }
+        return entity.ToDto();  
     }
 
     public async Task<(byte[], string)> GetFile(int UserId)

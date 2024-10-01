@@ -98,6 +98,7 @@ export interface Completion {
   isCVOptimized: boolean;
   isCompentencyQuizGiven: boolean;
   isDocumentGiven: boolean;
+  isCVUploaded: boolean;
 }
 
 export interface MemberAnalytics {

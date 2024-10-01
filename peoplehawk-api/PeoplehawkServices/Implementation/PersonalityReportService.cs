@@ -11,19 +11,32 @@ public class PersonalityReportService : GenericService<PersonalityReport>, IPers
 {
     private readonly IPersonalityReportRepository _personalityReportRepository;
     private readonly IQuizRepository _quizRepository;
+    private readonly ICompletionRepository _completionRepository;
     private readonly IMapper _mapper;
-    public PersonalityReportService(IPersonalityReportRepository personalityReportRepository,IMapper mapper,IQuizRepository quizRepository) : base(personalityReportRepository)
+    public PersonalityReportService(IPersonalityReportRepository personalityReportRepository,IMapper mapper,IQuizRepository quizRepository,ICompletionRepository completionRepository) : base(personalityReportRepository)
     {
         _personalityReportRepository = personalityReportRepository;
         _mapper = mapper;
         _quizRepository = quizRepository;
+        _completionRepository = completionRepository;
     }
 
     public async Task<List<PersonalityReportDTO>> AddQuizResult(List<PersonalityReportDTO> personalityReportDTOs)
     {
+
         foreach(var personalityReportDTO in personalityReportDTOs)
         {
             var result = await AddAsync(personalityReportDTO.FromDto());
+        }
+
+        if (personalityReportDTOs.Count > 0 && personalityReportDTOs[0].TestNo == 1)
+        {
+            Completion completion = await _completionRepository.FirstOrDefaultAsync(x => x.UserId == personalityReportDTOs[0].UserId);
+            if (completion != null)
+            {
+                completion.IsPersonalityQuizGiven = true;
+                await _completionRepository.UpdateAsync(completion);
+            }
         }
 
         return personalityReportDTOs;

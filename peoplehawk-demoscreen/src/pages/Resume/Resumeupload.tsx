@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect,useContext} from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import Header from "../../components/layout/header/Header";
 import "./Resumeupload.css";
 import { ReactComponent as Arrow } from "../../assests/img/arrow-dropdown.svg";
@@ -8,93 +8,104 @@ import {
   deleteFile,
   updateFile,
 } from "../../services/ResumeService";
+import { upsertRequest } from "../../services/RequestService";
 import { generatePath, useNavigate } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
 import { ToastComponent } from "../../components/layout/ToastComponent/Toastcomponent";
-import {styled} from 'styled-components';
+import { styled } from "styled-components";
 import { OptionTypes } from "../../interface/Interface";
 import { ReactSelect } from "../../components/layout/form/Select";
 import { ROUTES } from "../../constants/routes";
 import { useApi } from "../../store/ReducerContext";
 
-
 const Container = styled.div`
-  background-color : #DBEFFA;
-  height : 100%;
-  min-height : 100vh;
-`
+  background-color: #dbeffa;
+  height: 100%;
+  min-height: 100vh;
+`;
 const NavigateContainer = styled.div`
-display : flex;
-justify-content : space-between;
-padding : 0px 12px;
-margin : 20px 0px 0px 0px;`
-
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 12px;
+  margin: 20px 0px 0px 0px;
+`;
 
 const BackButton = styled.div`
-display : flex;
-align-items : center;
-color : #F96332;
-cursor : pointer;
-svg{
+  display: flex;
+  align-items: center;
+  color: #f96332;
+  cursor: pointer;
+  svg {
     path {
-      fill: #F96332! important;
+      fill: #f96332 !important;
     }
-   
   }
-`
+`;
 const UploadButton = styled.button`
-   background-color: #F96332;
-    border: none;
-    color: white;
-    padding: 12px 33px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
-    width: -moz-fit-content;
-    width: fit-content;
-    cursor: pointer;
-    border-radius: 16px;
-    margin-top : 45px`
+  background-color: #f96332;
+  border: none;
+  color: white;
+  padding: 12px 33px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: -moz-fit-content;
+  width: fit-content;
+  cursor: pointer;
+  border-radius: 16px;
+  margin-top: 45px;
+`;
 
 const Resumeupload = () => {
-
-
-
-  const {state,dispatch} = useApi();
-  const option : OptionTypes[] = [{label : 'Update',value : 'update', isDisabled : !state.userProgress.isResumeUpload},{label :'Download', value :'download',isDisabled :!state.userProgress.isResumeUpload },{label : 'Delete',value : 'delete',isDisabled : !state.userProgress.isResumeUpload}]
-  const [selectedOption, setSelectedOption] = useState<OptionTypes | null>(null);
+  const { state, dispatch } = useApi();
+  const option: OptionTypes[] = [
+    {
+      label: "Update",
+      value: "update",
+      isDisabled: !state.userProgress.isResumeUpload,
+    },
+    {
+      label: "Download",
+      value: "download",
+      isDisabled: !state.userProgress.isResumeUpload,
+    },
+    {
+      label: "Delete",
+      value: "delete",
+      isDisabled: !state.userProgress.isResumeUpload,
+    },
+  ];
+  const [selectedOption, setSelectedOption] = useState<OptionTypes | null>(
+    null
+  );
   const authCtx = useContext(AuthContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    if(!state.navigate)
-    {
+    if (!state.navigate) {
       fetchData();
     }
-   // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
   const fetchData = async () => {
-    if(authCtx.userData)
-    {
+    if (authCtx.userData) {
       const result = await fetchFile(authCtx.userData.Id);
       if (result) {
-       dispatch({type : 'GET_RESUME_DATA',payload : result});
+        dispatch({ type: "GET_RESUME_DATA", payload: result });
       }
     }
   };
 
   const deleteResume = async () => {
-    if(authCtx.userData)
-      {
-    const result = await deleteFile(authCtx.userData.Id);
-    if (result) {
-     dispatch({type : 'DELETE_RESUME_DATA'});
+    if (authCtx.userData) {
+      const result = await deleteFile(authCtx.userData.Id);
+      if (result) {
+        dispatch({ type: "DELETE_RESUME_DATA" });
+      }
     }
-  }
   };
 
   const handleSelectOption = (field: string, value: any) => {
@@ -119,9 +130,8 @@ const Resumeupload = () => {
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
-      
-        fileInputRef.current?.click();
-      }
+      fileInputRef.current?.click();
+    }
   };
 
   const updateResume = () => {
@@ -136,20 +146,28 @@ const Resumeupload = () => {
     if (file && authCtx.userData) {
       if (state.resume) {
         const result = await updateFile(authCtx.userData.Id, { file });
-        dispatch({type : 'UPDATE_RESUME_DATA',payload : result});
-      }
-       else 
-      {
-        await uploadFile({ file },authCtx.userData.Id);
-        dispatch({type : 'POST_RESUME_DATA',payload : URL.createObjectURL(file)});
+        dispatch({ type: "UPDATE_RESUME_DATA", payload: result });
+      } else {
+        await uploadFile({ file }, authCtx.userData.Id);
+        if (state.request && state.request.isResumeUploadRequest) {
+          const response = await upsertRequest({
+            ...state.request,
+            isResumeUploadRequest: false,
+          });
+          response && dispatch({ type: "REQUEST", payload: response });
+        }
+
+        dispatch({
+          type: "POST_RESUME_DATA",
+          payload: URL.createObjectURL(file),
+        });
       }
     }
   };
- 
+
   return (
-    <Container
-    >
-     <ToastComponent />
+    <Container>
+      <ToastComponent />
       <Header />
       <input
         type="file"
@@ -158,23 +176,22 @@ const Resumeupload = () => {
         onChange={handleFileChange}
       />
       <NavigateContainer>
-        <BackButton onClick={() => navigate(generatePath(ROUTES.HOME,{userId: 2}))}>
-          <Arrow
-            className="arrow"
-          />
+        <BackButton
+          onClick={() => navigate(generatePath(ROUTES.HOME, { userId: 2 }))}
+        >
+          <Arrow className="arrow" />
           <div>
             <strong>Back</strong>
           </div>
         </BackButton>
         <div>
-
           <ReactSelect
-              value={selectedOption}
-              options={option}
-              isSearchable = {false}
-              name="test"
-              placeholder="Manage Your Resume/CV"
-              onChange={handleSelectOption}
+            value={selectedOption}
+            options={option}
+            isSearchable={false}
+            name="test"
+            placeholder="Manage Your Resume/CV"
+            onChange={handleSelectOption}
           />
         </div>
       </NavigateContainer>
@@ -191,7 +208,7 @@ const Resumeupload = () => {
               the file must be pdf and less than 10MB
             </div>
             <UploadButton onClick={handleButtonClick}>
-                <strong>Upload Resume/CV</strong>
+              <strong>Upload Resume/CV</strong>
             </UploadButton>
           </div>
         ) : (
@@ -206,8 +223,12 @@ const Resumeupload = () => {
             {state.resume !== null && (
               <div>
                 {/* eslint-disable-next-line */}
-                <a href={state.resume} target="_blank" rel="noopener noreferrer">
-                Problem in Viewing PDF ? View in another Tab
+                <a
+                  href={state.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Problem in Viewing PDF ? View in another Tab
                 </a>
                 <embed
                   src={state.resume}

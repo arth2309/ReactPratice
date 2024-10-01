@@ -108,3 +108,15 @@ export const postAboutMeDetail = async (
     return null;
   }
 };
+
+export const manageNote = async (
+  userId: number,
+  isNote: boolean
+): Promise<boolean> => {
+  try {
+    await apiClient.post(API_ENDPOINTS.MANAGE_NOTE(userId, isNote));
+    return true;
+  } catch {
+    return false;
+  }
+};

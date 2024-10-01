@@ -84,4 +84,6 @@ export const API_ENDPOINTS = {
   AUDIO_NOTE_ID: (id: number) => `candidate/audio-note?Id=${id}`,
   ABOUT_ME_DETAIL: "candidate/about-me",
   REQUEST: "candidate/request",
+  MANAGE_NOTE: (userId: number, isNote: boolean) =>
+    `candidate/manage-note?UserId=${userId}&isNote=${isNote}`,
 };

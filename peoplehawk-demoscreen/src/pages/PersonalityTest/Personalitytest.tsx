@@ -20,6 +20,8 @@ import broker from "../../assests/img/broker.png";
 import achiever from "../../assests/img/Achiever.png";
 import director from "../../assests/img/Director.png";
 import anchor from "../../assests/img/Anchor.png";
+import { useApi } from "../../store/ReducerContext";
+import { upsertRequest } from "../../services/RequestService";
 
 const Container = styled.div({
   backgroundColor: "#DBEFFA",
@@ -262,6 +264,7 @@ const Personalitytest: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = React.useState<number>(0);
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const { state, dispatch } = useApi();
 
   const handleSlideChange = (value: number) => {
     if (quizBank) {
@@ -290,6 +293,17 @@ const Personalitytest: React.FC = () => {
       const result = resultMaker(quiz);
       result && setQuizResult(result.array);
       result && setImageIndex(result.index);
+    }
+    if (
+      testCount === 0 &&
+      state.request &&
+      state.request.isPersonalityTestRequest
+    ) {
+      const response = await upsertRequest({
+        ...state.request,
+        isPersonalityTestRequest: false,
+      });
+      response && dispatch({ type: "REQUEST", payload: response });
     }
   };
 

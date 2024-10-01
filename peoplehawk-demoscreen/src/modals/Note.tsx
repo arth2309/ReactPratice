@@ -16,6 +16,7 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import moment from "moment";
 import Tooltip from "../components/layout/tooltip/Tooltip";
+import { manageNote } from "../services/HomeService";
 
 interface ModalProps {
   onClose: () => void;
@@ -264,6 +265,13 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const fetchAudio = async (recording: Blob, userId: number) => {
     const response = await uploadAudioNote(userId, recording);
     response && dispatch({ type: "POST_AUDIO_NOTE", payload: response });
+    if (
+      response &&
+      state.audioNoteList.length === 0 &&
+      state.textNoteList.length === 0
+    ) {
+      userData && (await manageNote(userData.Id, true));
+    }
   };
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -315,11 +323,17 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
   const deleteTextNote = async (id: number) => {
     await deleteNote(id);
     dispatch({ type: "DELETE_TEXT_NOTE", payload: id });
+    if (state.audioNoteList.length === 0 && state.textNoteList.length === 1) {
+      userData && (await manageNote(userData.Id, false));
+    }
   };
 
   const deleteAudio = async (id: number) => {
     await deleteAudioNote(id);
     dispatch({ type: "DELETE_AUDIO_NOTE", payload: id });
+    if (state.audioNoteList.length === 1 && state.textNoteList.length === 0) {
+      userData && (await manageNote(userData.Id, false));
+    }
   };
 
   return (
@@ -374,6 +388,13 @@ const Note: React.FC<ModalProps> = ({ onClose, profileImg }) => {
                 const response = await addTextNote(values);
                 response &&
                   dispatch({ type: "POST_TEXT_NOTE", payload: response });
+                if (
+                  response &&
+                  state.textNoteList.length === 0 &&
+                  state.audioNoteList.length === 0
+                ) {
+                  userData && (await manageNote(userData.Id, true));
+                }
                 back();
               }}
             >

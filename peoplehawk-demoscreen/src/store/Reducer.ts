@@ -1,4 +1,3 @@
-import { Cases } from "@mui/icons-material";
 import {
   CandidateDetail,
   CourseInterest,

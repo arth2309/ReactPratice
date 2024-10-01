@@ -25,6 +25,7 @@ import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
 import queryString from "query-string";
 import Request from "../../modals/Request";
 import { Request as RequestProps } from "../../interface/Interface";
+import { upsertRequest } from "../../services/RequestService";
 
 const Header = styled.div({
   backgroundColor: "#FFFFFF",
@@ -203,6 +204,7 @@ const Candidateprofile = () => {
   const [requestData, setRequestData] = useState<{
     content: string;
     data: RequestProps;
+    isAlreadyRequested: boolean;
   }>({
     content: "",
     data: {
@@ -211,8 +213,8 @@ const Candidateprofile = () => {
       isPersonalityTestRequest: false,
       isResumeUploadRequest: false,
     },
+    isAlreadyRequested: false,
   });
-  const [requestTitle, setRequestTitle] = useState<string>("");
   const keyInformationCloseHandler = () => {
     setIsKeyInformationOpen(false);
   };
@@ -226,13 +228,43 @@ const Candidateprofile = () => {
     setIsZoom(false);
   };
   const requestModalOpenHandler = (content: string, index: number) => {
+    state.request === null
+      ? setRequestData({
+          content: content,
+          data: {
+            id: 0,
+            userId: userId ? parseInt(userId) : 0,
+            isPersonalityTestRequest: index === 2 ? true : false,
+            isResumeUploadRequest: index === 1 ? true : false,
+          },
+          isAlreadyRequested: false,
+        })
+      : setRequestData({
+          content: content,
+          data: {
+            ...state.request,
+            isPersonalityTestRequest:
+              index === 2 ? true : state.request.isPersonalityTestRequest,
+            isResumeUploadRequest:
+              index === 1 ? true : state.request.isResumeUploadRequest,
+          },
+          isAlreadyRequested:
+            (index === 1 && state.request.isResumeUploadRequest) ||
+            (index === 2 && state.request.isPersonalityTestRequest)
+              ? true
+              : false,
+        });
     setIsRequest(true);
   };
   const requestModalCloseHandler = () => {
     setIsRequest(false);
   };
 
-  const requestModalConfirmHandler = (data: RequestProps) => {};
+  const requestModalConfirmHandler = async (data: RequestProps) => {
+    const response = await upsertRequest(data);
+    response && dispatch({ type: "REQUEST", payload: response });
+    setIsRequest(false);
+  };
 
   const showResult = () => {
     if (state.quizDetail.isFirstTestGiven) {
@@ -261,6 +293,7 @@ const Candidateprofile = () => {
 
   useEffect(() => {
     fetchdata();
+    // eslint-disable-next-line
   }, []);
 
   const fetchdata = async () => {
@@ -286,6 +319,8 @@ const Candidateprofile = () => {
       document.body.appendChild(anchor);
       anchor.click();
       document.body.removeChild(anchor);
+    } else {
+      requestModalOpenHandler("You can make request to Candidate", 1);
     }
   };
 
@@ -310,7 +345,11 @@ const Candidateprofile = () => {
       <Container>
         {isZoom && <Profilephoto onClose={stopZoom} profile={imageSrc} />}
         {isRequest && (
-          <Request onClose={requestModalCloseHandler} request={requestData} />
+          <Request
+            onClose={requestModalCloseHandler}
+            onConfirm={requestModalConfirmHandler}
+            request={requestData}
+          />
         )}
         {isResult && (
           <Personalityresult
