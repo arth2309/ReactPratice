@@ -30,6 +30,7 @@ import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "../../components/layout/tooltip/Tooltip";
+import Shortlist from "../../modals/Shortlist";
 
 const defaults = {
   page: 1,
@@ -113,7 +114,7 @@ const Member = styled.div({
   paddingTop: "10px",
 });
 
-const Shortlist = styled.div({
+const ShortlistDiv = styled.div({
   display: "flex",
   gap: "40px",
 });
@@ -251,7 +252,7 @@ const MembarCard = styled.div<TransistionProps>(({ isVisible, delay }) => ({
     transform: `translateX(${isVisible ? "0" : "100vw"}) scale(1.05)`,
     boxShadow:
       "0 .25rem .5rem rgba(0, 0, 0, .15), 0 .5rem .75rem rgba(0, 0, 0, .1)",
-    cursor: "pointer", // Optional: change cursor to pointer for better UX
+    cursor: "pointer",
   },
 }));
 
@@ -312,12 +313,21 @@ const Memberanalytics = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(2);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isShortlistDialog, setIsShortlistDialog] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
   const { logout } = useContext(AuthContext);
 
   const handleSwitchToggle = () => {
     // setIsOn(prevState => !prevState);
     seturlState({ ...urlState, isOn: !urlState.isOn });
+  };
+
+  const ShortListDialogOpener = () => {
+    setIsShortlistDialog(true);
+  };
+
+  const ShortListDialogClose = () => {
+    setIsShortlistDialog(false);
   };
 
   useEffect(() => {
@@ -411,6 +421,7 @@ const Memberanalytics = () => {
 
   return (
     <Container>
+      {isShortlistDialog && <Shortlist onClose={ShortListDialogClose} />}
       <Sidebar
         onSearchHandler={searchHandler}
         onCandidateTypeHandler={candidateTypeHandler}
@@ -467,7 +478,7 @@ const Memberanalytics = () => {
               <div>
                 <GreyColor>{count} member</GreyColor>
               </div>
-              <Shortlist>
+              <ShortlistDiv>
                 <SortedByDiv>
                   <div style={{ position: "absolute" }}>
                     <GreyColor>Sort By </GreyColor>
@@ -504,7 +515,8 @@ const Memberanalytics = () => {
                     DESC {urlState.sortOrder === "desc" && <DoneIcon />}
                   </Dsc>
                 </OrderBy>
-              </Shortlist>
+                <button onClick={ShortListDialogOpener}>open</button>
+              </ShortlistDiv>
             </LowerHeader>
           </HeaderContainer>
           <SwitchWrapper>

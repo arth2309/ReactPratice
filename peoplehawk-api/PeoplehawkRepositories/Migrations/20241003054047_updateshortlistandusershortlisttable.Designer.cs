@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeoplehawkRepositories;
@@ -11,9 +12,11 @@ using PeoplehawkRepositories;
 namespace PeoplehawkRepositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241003054047_updateshortlistandusershortlisttable")]
+    partial class updateshortlistandusershortlisttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -555,23 +558,15 @@ namespace PeoplehawkRepositories.Migrations
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.UserShortlist", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("ShortlistId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("User")
                         .HasColumnType("integer");
-
-                    b.HasKey("Id");
 
                     b.HasIndex("ShortlistId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("User");
 
                     b.ToTable("userShortlists");
                 });
@@ -782,7 +777,7 @@ namespace PeoplehawkRepositories.Migrations
 
                     b.HasOne("PeoplehawkRepositories.Models.User", "Users")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("User")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

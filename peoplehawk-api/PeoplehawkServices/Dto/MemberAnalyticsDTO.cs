@@ -25,4 +25,6 @@ namespace PeoplehawkServices.Dto;
     public Completion Completion { get; set; }
 
     public bool? IsResumeUpload { get; set; }
+
+    public List<Shortlist> Shortlist { get; set; }  
 }

@@ -45,4 +45,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<TextNote> TextNotes { get; set; }
 
     public DbSet<Request> requests { get; set; }
+
+    public DbSet<Shortlist> shortlists { get; set; }
+
+    public DbSet<UserShortlist> userShortlists {get; set;}
+
 }

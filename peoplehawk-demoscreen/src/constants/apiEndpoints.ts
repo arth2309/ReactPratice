@@ -86,4 +86,5 @@ export const API_ENDPOINTS = {
   REQUEST: "candidate/request",
   MANAGE_NOTE: (userId: number, isNote: boolean) =>
     `candidate/manage-note?UserId=${userId}&isNote=${isNote}`,
+  SHORTLIST: "candidate/shortlist",
 };

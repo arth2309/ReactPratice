@@ -264,3 +264,8 @@ export interface Request {
   isPersonalityTestRequest: boolean;
   isResumeUploadRequest: boolean;
 }
+
+export interface Shortlist {
+  id: number;
+  name: string;
+}

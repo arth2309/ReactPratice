@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
+using System.Formats.Asn1;
 
 namespace peoplehawk_api.Controllers;
 
@@ -27,8 +28,9 @@ public class CandidateController : BaseController
     private readonly IAudioNoteService _audioNoteService;
     private readonly IRequestService _requestService;
     private readonly ICompletionService _completionService;
+    private readonly IShortlistService _shortlistService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService,ICompletionService completionService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService,ICompletionService completionService,IShortlistService shortlistService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -46,6 +48,7 @@ public class CandidateController : BaseController
         _audioNoteService = audioNoteService;
         _requestService = requestService;
         _completionService = completionService;
+        _shortlistService = shortlistService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -296,5 +299,41 @@ public class CandidateController : BaseController
     public async Task<RequestDTO> Req([FromBody] RequestDTO requestDTO)
     {
         return await _requestService.UpsertRequest(requestDTO);
+    }
+
+    [HttpPost("shortlist")]
+    public async Task<ShortlistDto> AddShortlist(ShortlistDto shortlistDto)
+    {
+        return await _shortlistService.AddShortlist(shortlistDto);
+    }
+
+    [HttpDelete("shortlist")]
+    public async Task<ShortlistDto> DeleteShortlist(ShortlistDto shortlistDto)
+    {
+        return await _shortlistService.DeleteShortlist(shortlistDto);
+    }
+
+    [HttpPut("shortlist")]
+    public async Task<ShortlistDto> UpdateShortlistDto(ShortlistDto shortlistDto)
+    {
+        return await _shortlistService.UpdateShortlist(shortlistDto);
+    }
+
+    [HttpPost("userShortlist")]
+    public async Task<ShortlistDto> AddUserInShortlist(ShortlistDto shortlistDto)
+    {
+        return await _shortlistService.AddUserinShortlist(shortlistDto);
+    }
+
+    [HttpDelete("userShortlist")]
+    public async Task<ShortlistDto> RemoveUserInShortlist(ShortlistDto shortlistDto)
+    {
+        return await _shortlistService.RemoveUserFromShortlist(shortlistDto);
+    }
+
+    [HttpGet("shortlist")]
+    public async Task<List<Shortlist>> Shortlist()
+    {
+        return await _shortlistService.GetAllShortlist();
     }
 }

@@ -1,5 +1,4 @@
-﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PeoplehawkRepositories.Interface;
+﻿using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
@@ -11,10 +10,14 @@ namespace PeoplehawkServices.Implementation;
 public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAnalyticsService
 {
     private readonly IMemberAnalyticsRepository _memberAnalyticsRepository;
+    private readonly IUserShortlistRepository _userShortlistRepository;
+    private readonly IShortlistRepository _shortlistRepository;
 
-    public MemberAnalyticsService(IMemberAnalyticsRepository memberAnalyticsRepository) : base(memberAnalyticsRepository)
+    public MemberAnalyticsService(IMemberAnalyticsRepository memberAnalyticsRepository, IUserShortlistRepository userShortlistRepository, IShortlistRepository shortlistRepository) : base(memberAnalyticsRepository)
     {
         _memberAnalyticsRepository = memberAnalyticsRepository;
+        _userShortlistRepository = userShortlistRepository;
+        _shortlistRepository = shortlistRepository;
     }
 
     public async Task<List<MemberAnalyticsDTO>> GetList(
@@ -56,7 +59,18 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         }
 
         List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
-        return memberAnalytics.ToDtoList();
+        List<MemberAnalyticsDTO> memberAnalyticsDTOs =  new List<MemberAnalyticsDTO>();
+        
+ 
+        foreach(var member in memberAnalytics) 
+        {
+            MemberAnalyticsDTO dto = member.ToDto();
+             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter : x => x.UserId == member.UserId ,includes: x => x.Shortlists);
+            dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
+            memberAnalyticsDTOs.Add(dto);
+        }
+        
+        return memberAnalyticsDTOs;
     }
     public async Task<int> GetCount(
         bool isResume = false,
