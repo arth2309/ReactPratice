@@ -8,6 +8,7 @@ export const ROUTES = {
   RESUME: "/resume",
   PERSONALITY_TEST: "/personality-test",
   MEMBER_ANALYTICS: "/member-analytics",
+  SHORTLIST: "/shortlist",
   PROFILE: "/profile/:userId",
   OTHERS: "*",
 };

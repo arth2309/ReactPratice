@@ -113,6 +113,7 @@ export interface MemberAnalytics {
   isResumeUpload: boolean;
   isProfilePhoto: boolean;
   photoContent: string | null;
+  shortlist: Shortlist[];
 }
 
 export interface OrderBy {
@@ -268,4 +269,16 @@ export interface Request {
 export interface Shortlist {
   id: number;
   name: string;
+}
+
+export interface UserShortlist {
+  id: number;
+  name: string;
+  userId: number;
+}
+
+export interface ShortlistReducerProps {
+  list: Shortlist[];
+  userList: Shortlist[];
+  userId: number;
 }

@@ -1,11 +1,12 @@
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import profile from "../../assests/img/profile_placeholder-3x.png";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useReducer } from "react";
 import Pagination from "../../components/layout/pagination/Pagination";
 import {
   MemberAnalytics as List,
   OptionTypes,
+  Shortlist as ShortlistProps,
 } from "../../interface/Interface";
 import {
   MemberAnalyticsList,
@@ -31,6 +32,10 @@ import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "../../components/layout/tooltip/Tooltip";
 import Shortlist from "../../modals/Shortlist";
+import StarIcon from "@mui/icons-material/Star";
+import { intialState, shortlistReducer } from "../../store/ShortlistReducer";
+import { getShortlist } from "../../services/ShortlistService";
+import { ROUTES } from "../../constants/routes";
 
 const defaults = {
   page: 1,
@@ -45,6 +50,10 @@ const defaults = {
   countryId: 0,
   memberType: "",
 };
+
+interface StarProps {
+  isShortlisted: boolean;
+}
 
 const SortTypes: OptionTypes[] = [
   { value: 1, label: "Last Updated" },
@@ -215,6 +224,23 @@ const MemberCardSubTitle = styled.div({
   fontSize: "14px",
   fontWeight: 600,
 });
+
+const StarDiv = styled.div<StarProps>(({ isShortlisted }) => ({
+  border: `1px solid ${isShortlisted ? "#0097A2" : "#D1DBE3"}`,
+  backgroundColor: isShortlisted ? "#0097A2" : "#FFFFFF",
+  borderRadius: "8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "42px",
+  width: "42px",
+  marginTop: "20px",
+  cursor: "pointer",
+
+  ".star-icon": {
+    color: isShortlisted ? "#FFFFFF" : "#D1DBE3",
+  },
+}));
 
 const ItemContainer = styled.div({
   display: "flex",
@@ -401,6 +427,13 @@ const Memberanalytics = () => {
     result1 && setTotalPages(Math.ceil(result1 / 6));
   };
 
+  const userlistHandler = (list: ShortlistProps[], userId: number) => {
+    const response = filterData.map((item) =>
+      item.userId === userId ? { ...item, shortlist: list } : item
+    );
+    setFilterData(response);
+  };
+
   const navigate = useNavigate();
 
   const goToUser = (userId: number) => {
@@ -419,9 +452,18 @@ const Memberanalytics = () => {
     navigate(`/profile/${userId}`);
   };
 
+  const [shortListstate, dispatch] = useReducer(shortlistReducer, intialState);
+
   return (
     <Container>
-      {isShortlistDialog && <Shortlist onClose={ShortListDialogClose} />}
+      {isShortlistDialog && (
+        <Shortlist
+          onClose={ShortListDialogClose}
+          onUserlist={userlistHandler}
+          state={shortListstate}
+          dispatch={dispatch}
+        />
+      )}
       <Sidebar
         onSearchHandler={searchHandler}
         onCandidateTypeHandler={candidateTypeHandler}
@@ -437,6 +479,15 @@ const Memberanalytics = () => {
             <UpperHeader>
               <Member>Members</Member>
               <ItemContainer>
+                <ItemCard
+                  color="#0097a2"
+                  onClick={() => {
+                    navigate(ROUTES.SHORTLIST);
+                  }}
+                >
+                  Shortlist
+                </ItemCard>
+                <BorderStraight />
                 <ItemCard
                   color={urlState.isProfilePhoto ? "#172C4C" : "#0097a2"}
                   onClick={() => {
@@ -515,7 +566,6 @@ const Memberanalytics = () => {
                     DESC {urlState.sortOrder === "desc" && <DoneIcon />}
                   </Dsc>
                 </OrderBy>
-                <button onClick={ShortListDialogOpener}>open</button>
               </ShortlistDiv>
             </LowerHeader>
           </HeaderContainer>
@@ -634,6 +684,21 @@ const Memberanalytics = () => {
                         />
                       </CompletionCard>
                     </CompletionCont>
+                    <StarDiv
+                      isShortlisted={item.shortlist.length > 0}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dispatch({ type: "POST_USERID", payload: item.userId });
+                        dispatch({
+                          type: "POST_USERLIST",
+                          payload: item.shortlist,
+                        });
+                        ShortListDialogOpener();
+                      }}
+                    >
+                      <StarIcon fontSize="small" className="star-icon" />
+                    </StarDiv>
                   </MemberLeftCard>
                   <MemberRightCard>
                     <MemberCardTitle>

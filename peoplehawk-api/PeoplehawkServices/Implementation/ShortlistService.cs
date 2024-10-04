@@ -39,10 +39,15 @@ public class ShortlistService : GenericService<Shortlist>,IShortlistService
         };
     }
 
-    public async Task<ShortlistDto> RemoveUserFromShortlist(ShortlistDto shortlistDto)
+    public async Task<ShortlistDto> RemoveUserFromShortlist(int UserId,int ShortlistId)
     {
-        await _userShortlistRepository.DeleteAsync(a => a.UserId == shortlistDto.UserId && a.ShortlistId == shortlistDto.Id);
-        return shortlistDto;
+        var entity = await _userShortlistRepository.DeleteAsync(a => a.UserId == UserId && a.ShortlistId == ShortlistId);
+        return new ShortlistDto
+        {
+            Id = entity.Id,
+            UserId = UserId,
+            name = "",
+        };
     }
 
     public async Task<ShortlistDto> DeleteShortlist(ShortlistDto shortlistDto)

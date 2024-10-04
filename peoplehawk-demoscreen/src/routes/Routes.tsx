@@ -16,6 +16,7 @@ import { ROUTES } from "../constants/routes";
 import Memberanalytics from "../pages/MemberAnalytics/Memberanalytics";
 import { getToken } from "../utils/manageAccessToken";
 import Candidateprofile from "../pages/CandidateProfile/Candidateprofile";
+import MemberShortlist from "../pages/Shortlist/MemberShortlist";
 
 const Routes = () => {
   const authCtx = useContext(AuthContext);
@@ -101,6 +102,7 @@ const Routes = () => {
           }
         ></Route>
         <Route path={ROUTES.PROFILE} element={<Candidateprofile />}></Route>
+        <Route path={ROUTES.SHORTLIST} element={<MemberShortlist />}></Route>
       </Main>
     </BrowserRouter>
   );

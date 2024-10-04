@@ -326,9 +326,9 @@ public class CandidateController : BaseController
     }
 
     [HttpDelete("userShortlist")]
-    public async Task<ShortlistDto> RemoveUserInShortlist(ShortlistDto shortlistDto)
+    public async Task<ShortlistDto> RemoveUserInShortlist(int UserId, int ShortlistId)
     {
-        return await _shortlistService.RemoveUserFromShortlist(shortlistDto);
+        return await _shortlistService.RemoveUserFromShortlist(UserId,ShortlistId);
     }
 
     [HttpGet("shortlist")]
