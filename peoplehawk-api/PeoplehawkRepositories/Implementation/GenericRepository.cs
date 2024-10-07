@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PeoplehawkRepositories.Interface;
+using PeoplehawkRepositories.Models;
 using System.Linq.Expressions;
 
 namespace PeoplehawkRepositories.Implementation;
@@ -122,4 +123,59 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await query.ToListAsync();
     }
 
+    public async Task<PaginatedList<T>> GetByPaginatedCriteriaAsync(
+    Expression<Func<T, bool>>? filter = null,
+    Func<IQueryable<T>?, IOrderedQueryable<T>>? orderBy = null,
+    int? page = null,
+    int? pageSize = null,
+    Func<IQueryable<T>?, IQueryable<T>>? thenInclude = null,
+    params Expression<Func<T, object>>[]? includes
+)
+    {
+        IQueryable<T> query = _dbSet;
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        if (thenInclude != null)
+        {
+            query = thenInclude(query);
+        }
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
+        }
+
+        var totalCount = await query.CountAsync();
+
+        if (page.HasValue && pageSize.HasValue)
+        {
+            query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+        }
+
+        var items = await query.ToListAsync();
+
+        return new PaginatedList<T>
+        {
+            Page = page ?? 1,
+            PageSize = pageSize ?? totalCount,
+            TotalCount = totalCount,
+            items = items ?? new List<T>()
+        };
+    }
+
+
 }
+
+

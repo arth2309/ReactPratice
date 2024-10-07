@@ -16,13 +16,9 @@ import Profilephoto from "../../modals/Profilephoto";
 import ZoomInOutlinedIcon from "@mui/icons-material/ZoomInOutlined";
 import { useParams } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import { ROUTES } from "../../constants/routes";
-import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Personalityresult from "../../modals/Personalityresult";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
-import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
-import queryString from "query-string";
 import Request from "../../modals/Request";
 import { Request as RequestProps } from "../../interface/Interface";
 import { upsertRequest } from "../../services/RequestService";
@@ -289,8 +285,6 @@ const Candidateprofile = () => {
 
   const { state, dispatch } = useApi();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     fetchdata();
     // eslint-disable-next-line
@@ -331,11 +325,7 @@ const Candidateprofile = () => {
       <Header>
         <BackButton
           onClick={() => {
-            navigate(
-              `${ROUTES.HOME}?${queryString.stringify(
-                overrideAndEncodeState(data.state, data.state, defaults)
-              )}`
-            );
+            window.history.back();
           }}
         >
           <KeyboardArrowLeftIcon />

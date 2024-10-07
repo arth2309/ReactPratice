@@ -33,11 +33,7 @@ public class AuthController : BaseController
         return  await _userService.Login(loginDetails);
     }
 
-    [HttpPost("forgotpassword")]
-    public ActionResult<string> SendMail([FromBody] ForgotPasswordDetails forgotPasswordDetails)
-    {
-        return _userService.SendEmail(forgotPasswordDetails.email);
-    }
+
 
     [HttpGet("country")]
     public async Task<List<CountryDTO>> Country()

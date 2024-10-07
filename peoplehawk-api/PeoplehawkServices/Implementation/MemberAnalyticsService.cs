@@ -20,7 +20,7 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         _shortlistRepository = shortlistRepository;
     }
 
-    public async Task<List<MemberAnalyticsDTO>> GetList(
+    public async Task<PaginatedList<MemberAnalyticsDTO>> GetList(
         int page,
           bool isResume = false,
           bool isPersonalityTest = false,
@@ -58,59 +58,46 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
             };
         }
 
-        List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
-        List<MemberAnalyticsDTO> memberAnalyticsDTOs =  new List<MemberAnalyticsDTO>();
-        
- 
-        foreach(var member in memberAnalytics) 
-        {
-            MemberAnalyticsDTO dto = member.ToDto();
-             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter : x => x.UserId == member.UserId ,includes: x => x.Shortlists);
-            dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
-            memberAnalyticsDTOs.Add(dto);
-        }
+        PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs =  new PaginatedList<MemberAnalyticsDTO>();
+
+        memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
+        memberAnalyticsDTOs.Page = memberAnalytics.Page;
+        memberAnalyticsDTOs.PageSize = memberAnalytics.PageSize;
+        memberAnalyticsDTOs.items = new List<MemberAnalyticsDTO>();
+     
+            foreach (var member in memberAnalytics.items)
+            {
+                MemberAnalyticsDTO dto = member.ToDto();
+                    var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId, includes: x => x.Shortlists);
+                    dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
+                    memberAnalyticsDTOs.items.Add(dto);
+            }
         
         return memberAnalyticsDTOs;
     }
-    public async Task<int> GetCount(
-        bool isResume = false,
-         bool isPersonalityTest = false,
-        string sortOrder = "asc", int orderedBy = 0,
-        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+
+    public async Task<PaginatedList<MemberAnalyticsDTO>> GetShortlistedList(int page, int shortlistId)
     {
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
-        Expression<Func<MemberAnalytics, bool>> filter = a =>
-        (countryId == 0 || a.user.CountryId == countryId) &&
-        (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
-        (memberType == null || a.user.MemberType == memberType) &&
-        (!isProfilePhoto || a.user.ProfilePhoto != null) &&
-        (!isResume || a.completion.IsCVUploaded)&&
-        (!isPersonalityTest || a.completion.IsPersonalityQuizGiven); ;
-        
+        var list = await _userShortlistRepository.GetByCriteriaAsync(filter : x => x.ShortlistId == shortlistId);
+        var userIds = list.Select(s => s.UserId).ToList();
+        PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: x => userIds.Contains(x.UserId), page: page, includes: includes, pageSize: 6);
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new PaginatedList<MemberAnalyticsDTO>();
 
-        Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
+        memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
+        memberAnalyticsDTOs.Page = memberAnalytics.Page;
+        memberAnalyticsDTOs.PageSize = memberAnalytics.PageSize;
+        memberAnalyticsDTOs.items = new List<MemberAnalyticsDTO>();
 
-        if (orderedBy == 2)
+        foreach (var member in memberAnalytics.items)
         {
-            orderBy = sortOrder.ToLower() switch
-            {
-                "asc" => q => q.OrderBy(u => u.user.FirstName),
-                "desc" => q => q.OrderByDescending(u => u.user.FirstName),
-                _ => q => q.OrderBy(u => u.Id)
-            };
+            MemberAnalyticsDTO dto = member.ToDto();
+            var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId, includes: x => x.Shortlists);
+            dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
+            memberAnalyticsDTOs.items.Add(dto);
         }
 
-        else
-        {
-            orderBy = sortOrder.ToLower() switch
-            {
-                "asc" => q => q.OrderBy(u => u.Id),
-                "desc" => q => q.OrderByDescending(u => u.user.Id),
-                _ => q => q.OrderBy(u => u.Id)
-            };
-        }
-
-        List<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByCriteriaAsync(filter: filter, includes: includes, pageSize: 6, orderBy: orderBy);
-        return memberAnalytics.ToDtoList().Count();
+        return memberAnalyticsDTOs;
     }
 }

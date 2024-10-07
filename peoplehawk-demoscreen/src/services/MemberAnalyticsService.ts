@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import { apiClient } from "./BaseService";
-import { MemberAnalytics } from "../interface/Interface";
+import { MemberAnalytics, PaginatedList } from "../interface/Interface";
 
 export const MemberAnalyticsList = async (
   page: number,
@@ -12,7 +12,7 @@ export const MemberAnalyticsList = async (
   searchTerm?: string,
   countryId?: number,
   memberType?: string
-): Promise<MemberAnalytics[] | null> => {
+): Promise<PaginatedList<MemberAnalytics> | null> => {
   try {
     const response = await apiClient.get(
       API_ENDPOINTS.MEMBER_ANALYTICS(
@@ -33,31 +33,16 @@ export const MemberAnalyticsList = async (
   }
 };
 
-export const MemberAnalyticsCount = async (
-  isResume: boolean,
-  isPersonalityTest: boolean,
-  sortOrder: string,
-  isProfilePhoto: boolean,
-  orderedBy: number,
-  searchTerm?: string,
-  countryId?: number,
-  memberType?: string
-): Promise<number | null> => {
+export const memberAnalyticsShortList = async (
+  page: number,
+  shortlistId: number
+): Promise<PaginatedList<MemberAnalytics> | null> => {
   try {
     const response = await apiClient.get(
-      API_ENDPOINTS.MEMBER_ANALYTICS_COUNT(
-        isResume,
-        isPersonalityTest,
-        sortOrder,
-        orderedBy,
-        isProfilePhoto,
-        searchTerm,
-        countryId,
-        memberType
-      )
+      API_ENDPOINTS.MEMBER_ANALYTICS_SHORTLIST(page, shortlistId)
     );
     return response.data;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

@@ -112,31 +112,7 @@ public class UserService : GenericService<User>,IUserService
         return userDTO;
     }
 
-    public string SendEmail(string email)
-    {
-        try
-        {
-            MailMessage mm = new MailMessage("tatva.dotnet.arthgandhi@outlook.com", email);
-            mm.Subject = "Reset Password";
-            string url = "https://localhost:3000/home";
-            mm.Body = string.Format("Hi <p><a href=\"" + url + "\">Click here to resetpassword</a></p>");
-            mm.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "smtp.office365.com";
-            smtp.EnableSsl = true;
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential(userName: "tatva.dotnet.arthgandhi@outlook.com", password: "Liony@2002");
-            smtp.Port = 587;
-            smtp.Send(mm);
-            return email;
-        }
-
-        catch (Exception ex) 
-        {
-            return ex.ToString();
-        }
-        
-    }
+   
 
     public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
     {
@@ -184,12 +160,12 @@ public class UserService : GenericService<User>,IUserService
     public async Task<UserDetailDTO> GetDetail(int UserId)
     {
 
-        UserDetailDTO userDetailDTO  = new UserDetailDTO();
+        UserDetailDTO userDetailDTO  = new();
         int x = 0;
         ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);
         if (resumeFileDTO != null)
         {
-            x = x + 50;
+            x += 50;
         }
 
         QuizStatus quizStatus = await _personalityReportService.GetReport(UserId);
@@ -200,12 +176,12 @@ public class UserService : GenericService<User>,IUserService
         }
         userDetailDTO.UserProgress = new ProgressDTO()
         {
-            isResumeUpload = resumeFileDTO != null ? true : false,
+            isResumeUpload = resumeFileDTO != null ,
             Progress = x
     };
 
         User user = await _userRepository.FirstOrDefaultWithIncludesAsync(x => x.Id == UserId,a => a.Country);
-        string? base64String;
+        string? base64String = null;
         if (user.ProfilePhoto != null)
         {
             string uploadsFolder = Path.Combine("Files");
@@ -214,11 +190,7 @@ public class UserService : GenericService<User>,IUserService
             base64String = Convert.ToBase64String(fileBytes);
         }
 
-        else
-        {
-            base64String = null;
-        }
-
+        
         
 
 

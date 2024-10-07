@@ -116,6 +116,13 @@ export interface MemberAnalytics {
   shortlist: Shortlist[];
 }
 
+export interface PaginatedList<T> {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: T[];
+}
+
 export interface OrderBy {
   field: string;
   direction: string;

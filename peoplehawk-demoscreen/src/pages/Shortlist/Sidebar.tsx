@@ -1,9 +1,15 @@
 import styled from "styled-components";
-import { useEffect, useReducer } from "react";
+import { Dispatch, useEffect, useReducer, useState } from "react";
 import { getShortlist } from "../../services/ShortlistService";
-import { intialState, shortlistReducer } from "../../store/ShortlistReducer";
+import { Action } from "../../store/ShortlistReducer";
+import CreateShortlist from "../../modals/CreateShortlist";
+import { ShortlistReducerProps } from "../../interface/Interface";
 
-interface SideBarProps {}
+interface SideBarProps {
+  state: ShortlistReducerProps;
+  dispatch: Dispatch<Action>;
+  onChangeShortlistId: (shortListId: number) => void;
+}
 
 const Container = styled.div({
   backgroundColor: "#F7F9FC",
@@ -44,11 +50,11 @@ const ShortlistButton = styled.button({
   },
 });
 
-const ShortlistDiv = styled.div`
+const ShortlistDiv = styled.div<ButtonProps>`
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: start;
-  background-color: white;
+  background-color: ${(props) => (!props.isSelect ? "white" : "#c6cdd9")};
   color: black;
   padding: 10px;
   font-weight: 700;
@@ -62,13 +68,30 @@ const ShortlistDiv = styled.div`
   }
 `;
 
-const Sidebar: React.FC<SideBarProps> = () => {
+interface ButtonProps {
+  isSelect: boolean;
+}
+
+const Sidebar: React.FC<SideBarProps> = ({
+  state,
+  dispatch,
+  onChangeShortlistId,
+}) => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, []);
 
-  const [state, dispatch] = useReducer(shortlistReducer, intialState);
+  const [isCreateShortlist, setIsCreateShortlist] = useState<boolean>(false);
+  const [isSelect, setIsSelect] = useState<number>(0);
+
+  const CreateShortlistOpenHandler = () => {
+    setIsCreateShortlist(true);
+  };
+
+  const CreateShortlistCloseHandler = () => {
+    setIsCreateShortlist(false);
+  };
 
   const fetchData = async () => {
     const response = await getShortlist();
@@ -78,14 +101,34 @@ const Sidebar: React.FC<SideBarProps> = () => {
   return (
     <div>
       <Container>
+        {isCreateShortlist && (
+          <CreateShortlist
+            onClose={CreateShortlistCloseHandler}
+            state={state}
+            dispatch={dispatch}
+          />
+        )}
         <Title>
           Shortlists
-          <ShortlistButton>New Shortlist</ShortlistButton>
+          <ShortlistButton onClick={CreateShortlistOpenHandler}>
+            New Shortlist
+          </ShortlistButton>
         </Title>
         <MainContainer>
           {state.list &&
             state.list.map((item, index) => (
-              <ShortlistDiv key={index}>{item.name}</ShortlistDiv>
+              <ShortlistDiv
+                isSelect={item.id === isSelect}
+                key={index}
+                onClick={() => {
+                  if (item.id !== isSelect) {
+                    onChangeShortlistId(item.id);
+                    setIsSelect(item.id);
+                  }
+                }}
+              >
+                {item.name}
+              </ShortlistDiv>
             ))}
         </MainContainer>
       </Container>

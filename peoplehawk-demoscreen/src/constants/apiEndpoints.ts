@@ -43,32 +43,6 @@ export const API_ENDPOINTS = {
 
     return url;
   },
-  MEMBER_ANALYTICS_COUNT: (
-    isResume: boolean,
-    isPersonalityTest: boolean,
-    sortOrder: string,
-    orderedBy: number,
-    isProfilePhoto: boolean,
-    searchTerm?: string,
-    countryId?: number,
-    memberType?: string
-  ) => {
-    let url = `candidate/member-analytics-count?isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
-
-    if (searchTerm) {
-      url += `&searchTerm=${searchTerm}`;
-    }
-    if (countryId) {
-      url += `&countryId=${countryId}`;
-    }
-
-    if (memberType) {
-      url += `&memberType=${memberType}`;
-    }
-
-    return url;
-  },
-
   EDUCATION_DETAIL_USER_ID: (userId: number) =>
     `candidate/education-detail?UserId=${userId}`,
   EDUCATION_DETAIL: `candidate/education-detail`,
@@ -90,4 +64,6 @@ export const API_ENDPOINTS = {
   USERSHORTLIST: "candidate/userShortlist",
   DELETE_USERSHORTLIST: (userId: number, shortListId: number) =>
     `candidate/userShortlist?UserId=${userId}&ShortlistId=${shortListId}`,
+  MEMBER_ANALYTICS_SHORTLIST: (page: number, shortlistId: number) =>
+    `candidate/userShortlist?page=${page}&shortlist=${shortlistId}`,
 };

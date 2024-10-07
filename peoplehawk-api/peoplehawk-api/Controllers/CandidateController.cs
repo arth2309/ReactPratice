@@ -93,6 +93,7 @@ public class CandidateController : BaseController
     }
 
     [HttpGet("quiz")]
+
     public async Task<List<QuizDTO>> QuizList()
     {
         return await _quizService.GetAllQuiz();
@@ -143,14 +144,14 @@ public class CandidateController : BaseController
         ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);
         if (resumeFileDTO != null)
         {
-            x = x + 50;
+            x += 50;
         }
 
         QuizStatus quizStatus = await _personalityReportService.GetReport(UserId);
 
         if (quizStatus.IsFirstTestGiven == true)
         {
-            x = x + 50;
+            x += 50;
         }
 
         progressDTO.isResumeUpload = resumeFileDTO != null ? true : false;
@@ -171,15 +172,9 @@ public class CandidateController : BaseController
     }
 
     [HttpGet("member-analytics")]
-    public async Task<ActionResult<List<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isResume = false, bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
+    public async Task<ActionResult<PaginatedList<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isResume = false, bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null,int?countryId  = 0, string? memberType = null)
     {
         return await _memberAnalyticsService.GetList(page,isResume,isPersonalityTest, sortOrder,orderedBy, isProfilePhoto, searchTerm,countryId,memberType);
-    }
-
-    [HttpGet("member-analytics-count")]
-    public async Task<ActionResult<int>> MemberAnalyticsCount(bool isResume = false,bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
-    {
-        return await _memberAnalyticsService.GetCount(isResume ,isPersonalityTest, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
     }
 
     [HttpPost("education-detail")]
@@ -335,5 +330,11 @@ public class CandidateController : BaseController
     public async Task<List<Shortlist>> Shortlist()
     {
         return await _shortlistService.GetAllShortlist();
+    }
+
+    [HttpGet("userShortlist")]
+    public async Task<PaginatedList<MemberAnalyticsDTO>> UserShortlist(int page = 1,int shortlist = 0)
+    {
+        return await _memberAnalyticsService.GetShortlistedList(page, shortlist);
     }
 }
