@@ -157,12 +157,6 @@ const ModalClose = styled.div`
   justify-content: end;
 `;
 
-const ButtonDiv = styled.div`
-  display: flex;
-  justify-content: end;
-  gap: 30px;
-`;
-
 const ConfirmButton = styled.button({
   backgroundColor: "#0097A2",
   padding: "12px 26px",
@@ -175,20 +169,6 @@ const ConfirmButton = styled.button({
   },
 });
 
-const CancelButton = styled.button({
-  backgroundColor: "#eef2f6",
-  padding: "12px 26px",
-  fontSize: "15px",
-  color: "#0097A2",
-  border: "1px solid #eef2f6",
-  borderRadius: "0px",
-  fontWeight: 700,
-
-  "&:hover": {
-    border: "1px solid #0097A2",
-  },
-});
-
 const Shortlist: React.FC<ModalProps> = ({
   onClose,
   state,
@@ -197,6 +177,7 @@ const Shortlist: React.FC<ModalProps> = ({
 }) => {
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const fetchData = async () => {
@@ -226,7 +207,7 @@ const Shortlist: React.FC<ModalProps> = ({
     response && dispatch({ type: "DELETE_IN_USERLIST", payload: shortlistId });
     response &&
       onUserlist(
-        state.userList.filter((item) => item.id != shortlistId),
+        state.userList.filter((item) => item.id !== shortlistId),
         state.userId
       );
   };

@@ -33,10 +33,6 @@ const defaults = {
   memberType: "",
 };
 
-interface StarProps {
-  isShortlisted: boolean;
-}
-
 const SortTypes: OptionTypes[] = [
   { value: 1, label: "Last Updated" },
   { value: 2, label: "Alphabetical" },
@@ -52,11 +48,6 @@ interface SwitchHandleProps {
 
 interface ColorProps {
   color: string;
-}
-
-interface TransistionProps {
-  isVisible: boolean;
-  delay: number;
 }
 
 const Container = styled.div({
@@ -108,6 +99,7 @@ const Member = styled.div({
 const ShortlistDiv = styled.div({
   display: "flex",
   gap: "40px",
+  alignItems: "center",
 });
 
 const GreyColor = styled.span({
@@ -120,6 +112,7 @@ const GreenColor = styled.span({
 
 const OrderBy = styled.div({
   display: "flex",
+  marginBottom: "15px",
 });
 
 const Asc = styled.div({
@@ -150,10 +143,6 @@ const SortedByDiv = styled.div({
   display: "block",
   position: "relative",
   width: "200px",
-});
-
-const CompletionImg = styled.img({
-  height: "24px",
 });
 
 const SwitchWrapper = styled.div`
@@ -218,7 +207,21 @@ const ItemCard = styled.div<ColorProps>`
   padding: 10px;
   border-radius: 30px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
+
+const ShortlistButton = styled.button({
+  backgroundColor: "#0097A2",
+  padding: "12px 26px",
+  fontSize: "15px",
+  fontWeight: 700,
+  borderRadius: "0px",
+
+  "&:hover": {
+    backgroundColor: "#00B0BA",
+  },
+});
 
 const Memberanalytics = () => {
   const { state } = useMemberAnalytics();
@@ -297,6 +300,7 @@ const Memberanalytics = () => {
       urlState.memberType
     );
     result && setFilterData(result.items);
+    result && setPage(result.page);
     if (result && result.totalCount === 0) {
       setCount(0);
       setTotalPages(0);
@@ -330,6 +334,22 @@ const Memberanalytics = () => {
     navigate(`/profile/${userId}`);
   };
 
+  const goToShortlist = () => {
+    state.isResume = urlState.isResume;
+    state.isPersonalityTest = urlState.isPersonalityTest;
+    state.isProfilePhoto = urlState.isProfilePhoto;
+    state.orderedBy = urlState.orderedBy;
+    state.searchTerm = urlState.searchTerm;
+    state.countryId = urlState.countryId;
+    state.memberType = urlState.memberType;
+    state.sortOrder = urlState.sortOrder;
+    state.orderedBy = urlState.orderedBy;
+    state.sortBy = urlState.sortBy;
+    state.isOn = urlState.isOn;
+    state.page = urlState.page;
+    navigate(ROUTES.DEFAULT_SHORTLIST);
+  };
+
   const [shortListstate, dispatch] = useReducer(shortlistReducer, intialState);
 
   return (
@@ -355,17 +375,12 @@ const Memberanalytics = () => {
         <Header>
           <HeaderContainer>
             <UpperHeader>
-              <Member>Members</Member>
+              <div>
+                <Member>Members</Member>
+                <GreyColor>{count} member</GreyColor>
+              </div>
+
               <ItemContainer>
-                <ItemCard
-                  color="#0097a2"
-                  onClick={() => {
-                    navigate(ROUTES.SHORTLIST);
-                  }}
-                >
-                  Shortlist
-                </ItemCard>
-                <BorderStraight />
                 <ItemCard
                   color={urlState.isProfilePhoto ? "#172C4C" : "#0097a2"}
                   onClick={() => {
@@ -404,9 +419,9 @@ const Memberanalytics = () => {
               </ItemContainer>
             </UpperHeader>
             <LowerHeader>
-              <div>
-                <GreyColor>{count} member</GreyColor>
-              </div>
+              <ShortlistButton onClick={goToShortlist}>
+                Shortlist
+              </ShortlistButton>
               <ShortlistDiv>
                 <SortedByDiv>
                   <div style={{ position: "absolute" }}>

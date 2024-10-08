@@ -11,7 +11,8 @@ export type Action =
   | { type: "POST_USERID"; payload: number }
   | { type: "POST_USERLIST"; payload: Shortlist[] }
   | { type: "ADD_IN_USERLIST"; payload: Shortlist }
-  | { type: "DELETE_IN_USERLIST"; payload: number };
+  | { type: "DELETE_IN_USERLIST"; payload: number }
+  | { type: "DELETE_SHORTLIST"; payload: number };
 
 export const shortlistReducer = (
   state: ShortlistReducerProps,
@@ -46,7 +47,12 @@ export const shortlistReducer = (
     case "DELETE_IN_USERLIST":
       return {
         ...state,
-        userList: state.userList.filter((item) => item.id != action.payload),
+        userList: state.userList.filter((item) => item.id !== action.payload),
+      };
+    case "DELETE_SHORTLIST":
+      return {
+        ...state,
+        list: state.list.filter((item) => item.id !== action.payload),
       };
     default:
       return state;

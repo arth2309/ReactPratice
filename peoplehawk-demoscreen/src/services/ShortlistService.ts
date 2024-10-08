@@ -46,3 +46,16 @@ export const addShortlist = async (
     return null;
   }
 };
+
+export const deleteShortlist = async (
+  shortListId: number
+): Promise<UserShortlist | null> => {
+  try {
+    const response = await apiClient.delete(
+      API_ENDPOINTS.DELETE_SHORTLIST(shortListId)
+    );
+    return response.data;
+  } catch {
+    return null;
+  }
+};

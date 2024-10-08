@@ -18,7 +18,6 @@ import { useParams } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Personalityresult from "../../modals/Personalityresult";
-import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import Request from "../../modals/Request";
 import { Request as RequestProps } from "../../interface/Interface";
 import { upsertRequest } from "../../services/RequestService";
@@ -172,20 +171,6 @@ const MainButtonDiv = styled.div({
   width: "100%",
 });
 
-const defaults = {
-  page: 1,
-  isResume: false,
-  isPersonalityTest: false,
-  sortOrder: "asc",
-  orderedBy: 1,
-  isProfilePhoto: false,
-  sortBy: "Last Updated",
-  isOn: false,
-  searchTerm: "",
-  countryId: 0,
-  memberType: "",
-};
-
 const Candidateprofile = () => {
   const [isKeyInformationOpen, setIsKeyInformationOpen] =
     useState<boolean>(false);
@@ -317,8 +302,6 @@ const Candidateprofile = () => {
       requestModalOpenHandler("You can make request to Candidate", 1);
     }
   };
-
-  const data = useMemberAnalytics();
 
   return (
     <div>

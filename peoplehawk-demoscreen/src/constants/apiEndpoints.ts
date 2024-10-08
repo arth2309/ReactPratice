@@ -66,4 +66,6 @@ export const API_ENDPOINTS = {
     `candidate/userShortlist?UserId=${userId}&ShortlistId=${shortListId}`,
   MEMBER_ANALYTICS_SHORTLIST: (page: number, shortlistId: number) =>
     `candidate/userShortlist?page=${page}&shortlist=${shortlistId}`,
+  DELETE_SHORTLIST: (shortListId: number) =>
+    `candidate/shortlist?ShortlistId=${shortListId}`,
 };

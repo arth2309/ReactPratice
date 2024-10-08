@@ -50,16 +50,21 @@ public class ShortlistService : GenericService<Shortlist>,IShortlistService
         };
     }
 
-    public async Task<ShortlistDto> DeleteShortlist(ShortlistDto shortlistDto)
+    public async Task<ShortlistDto> DeleteShortlist(int ShortlistId)
     {
-        List<UserShortlist> userShortlists = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.ShortlistId == shortlistDto.Id);    
+        List<UserShortlist> userShortlists = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.ShortlistId == ShortlistId);    
         foreach(var userShortlist in userShortlists)
         {
             await _userShortlistRepository.DeleteAsync(x => x.UserId == userShortlist.UserId && x.ShortlistId == userShortlist.ShortlistId);
         }
 
-        await DeleteAsync(x => x.Id == shortlistDto.Id);    
-        return shortlistDto;
+        await DeleteAsync(x => x.Id == ShortlistId);
+        return new ShortlistDto
+        {
+            Id = 0,
+            UserId = 0,
+            name = "",
+        };
     }
 
     public async Task<ShortlistDto> UpdateShortlist(ShortlistDto shortlistDto)

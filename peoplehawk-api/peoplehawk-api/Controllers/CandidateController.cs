@@ -303,9 +303,9 @@ public class CandidateController : BaseController
     }
 
     [HttpDelete("shortlist")]
-    public async Task<ShortlistDto> DeleteShortlist(ShortlistDto shortlistDto)
+    public async Task<ShortlistDto> DeleteShortlist(int ShortlistId)
     {
-        return await _shortlistService.DeleteShortlist(shortlistDto);
+        return await _shortlistService.DeleteShortlist(ShortlistId);
     }
 
     [HttpPut("shortlist")]

@@ -1,15 +1,35 @@
 import styled from "styled-components";
-import { Dispatch, useEffect, useReducer, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { getShortlist } from "../../services/ShortlistService";
 import { Action } from "../../store/ShortlistReducer";
 import CreateShortlist from "../../modals/CreateShortlist";
 import { ShortlistReducerProps } from "../../interface/Interface";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import queryString from "query-string";
+import { overrideAndEncodeState } from "../../customhooks/useUrlSearchState";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
+import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
+import { useParams } from "react-router-dom";
 
 interface SideBarProps {
   state: ShortlistReducerProps;
   dispatch: Dispatch<Action>;
-  onChangeShortlistId: (shortListId: number) => void;
 }
+
+const defaults = {
+  page: 1,
+  isResume: false,
+  isPersonalityTest: false,
+  sortOrder: "asc",
+  orderedBy: 1,
+  isProfilePhoto: false,
+  sortBy: "Last Updated",
+  isOn: false,
+  searchTerm: "",
+  countryId: 0,
+  memberType: "",
+};
 
 const Container = styled.div({
   backgroundColor: "#F7F9FC",
@@ -29,6 +49,12 @@ const Title = styled.div({
   fontWeight: 800,
   boxShadow:
     "0 .125rem .25rem rgba(0, 0, 0, .075), 0 .25rem .5rem rgba(0, 0, 0, .05)",
+
+  ".back": {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+  },
 });
 
 const MainContainer = styled.div({
@@ -72,24 +98,29 @@ interface ButtonProps {
   isSelect: boolean;
 }
 
-const Sidebar: React.FC<SideBarProps> = ({
-  state,
-  dispatch,
-  onChangeShortlistId,
-}) => {
+const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, []);
 
   const [isCreateShortlist, setIsCreateShortlist] = useState<boolean>(false);
-  const [isSelect, setIsSelect] = useState<number>(0);
+  const urlState = useMemberAnalytics();
+  const navigate = useNavigate();
 
-  const CreateShortlistOpenHandler = () => {
+  const backToLoginPage = () => {
+    navigate(
+      `${ROUTES.MEMBER_ANALYTICS}?${queryString.stringify(
+        overrideAndEncodeState(urlState.state, urlState.state, defaults)
+      )}`
+    );
+  };
+
+  const createShortlistOpenHandler = () => {
     setIsCreateShortlist(true);
   };
 
-  const CreateShortlistCloseHandler = () => {
+  const createShortlistCloseHandler = () => {
     setIsCreateShortlist(false);
   };
 
@@ -98,19 +129,24 @@ const Sidebar: React.FC<SideBarProps> = ({
     response && dispatch({ type: "POST_SHORTLIST", payload: response });
   };
 
+  const { id } = useParams();
+
   return (
     <div>
       <Container>
         {isCreateShortlist && (
           <CreateShortlist
-            onClose={CreateShortlistCloseHandler}
+            onClose={createShortlistCloseHandler}
             state={state}
             dispatch={dispatch}
           />
         )}
         <Title>
+          <div className="back" onClick={backToLoginPage}>
+            <ArrowBackIosIcon />
+          </div>
           Shortlists
-          <ShortlistButton onClick={CreateShortlistOpenHandler}>
+          <ShortlistButton onClick={createShortlistOpenHandler}>
             New Shortlist
           </ShortlistButton>
         </Title>
@@ -118,13 +154,10 @@ const Sidebar: React.FC<SideBarProps> = ({
           {state.list &&
             state.list.map((item, index) => (
               <ShortlistDiv
-                isSelect={item.id === isSelect}
+                isSelect={id !== undefined && item.id === parseInt(id)}
                 key={index}
                 onClick={() => {
-                  if (item.id !== isSelect) {
-                    onChangeShortlistId(item.id);
-                    setIsSelect(item.id);
-                  }
+                  navigate(`/shortlist/${item.id}`);
                 }}
               >
                 {item.name}

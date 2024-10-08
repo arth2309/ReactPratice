@@ -28,6 +28,12 @@ const Container = styled.div({
   backgroundColor: "#F7F9FC",
   width: "500px",
   minHeight: "100vh",
+
+  ".flex-div": {
+    display: "flex",
+    justifyContent: "end",
+    width: "100%",
+  },
 });
 
 const SearchKeyword = styled.div({

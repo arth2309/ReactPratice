@@ -103,6 +103,10 @@ const Routes = () => {
         ></Route>
         <Route path={ROUTES.PROFILE} element={<Candidateprofile />}></Route>
         <Route path={ROUTES.SHORTLIST} element={<MemberShortlist />}></Route>
+        <Route
+          path={ROUTES.DEFAULT_SHORTLIST}
+          element={<MemberShortlist />}
+        ></Route>
       </Main>
     </BrowserRouter>
   );
