@@ -337,4 +337,10 @@ public class CandidateController : BaseController
     {
         return await _memberAnalyticsService.GetShortlistedList(page, shortlist);
     }
+
+    [HttpPost("share-profile")]
+    public async Task ShareProfile(ShareProfileTokenPostDto shareProfileTokenPostDto)
+    {
+        await _userService.SendEmailAsync(shareProfileTokenPostDto);
+    }
 }

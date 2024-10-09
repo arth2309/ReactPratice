@@ -43,6 +43,7 @@ import { useApi } from "../../store/ReducerContext";
 import Aboutme from "../../modals/Aboutme";
 import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Note from "../../modals/Note";
+import ShareProfile from "../../modals/ShareProfile";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -451,6 +452,7 @@ const Dashboard = () => {
   const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
   const [isAboutMeOpen, setIsAboutMeOpen] = useState<boolean>(false);
   const [isNoteOpen, setIsNoteOpen] = useState<boolean>(false);
+  const [isShareProfileOpen, setIsShareProfileOpen] = useState<boolean>(false);
   const [isWorkExperienceOpen, setWorkExperienceOpen] =
     useState<boolean>(false);
   const [isUpdateProfileOpen, setUpdateProfileOpen] = useState<boolean>(false);
@@ -512,6 +514,14 @@ const Dashboard = () => {
   };
   const closeWorkExperience = useCallback(() => {
     setWorkExperienceOpen(false);
+  }, []);
+
+  const openShareProfileModal = useCallback(() => {
+    setIsShareProfileOpen(true);
+  }, []);
+
+  const closeShareProfileModal = useCallback(() => {
+    setIsShareProfileOpen(false);
   }, []);
 
   const HandleDelete = async (index: number, id: number) => {
@@ -691,6 +701,8 @@ const Dashboard = () => {
           onEditHandler={EditData}
         />
       )}
+
+      {isShareProfileOpen && <ShareProfile onClose={closeShareProfileModal} />}
       <ToastComponent />
       <Header />
       <MobileLeftContainer>
@@ -783,7 +795,7 @@ const Dashboard = () => {
                       {ctx.state && `${ctx.state.userProgress?.progress}%`}
                     </Progress>
                   </Card2SubItem>
-                  <Card2SubItem>
+                  <Card2SubItem onClick={openShareProfileModal}>
                     <div style={{ color: "#394456", fontSize: "12px" }}>
                       <strong>Trophies</strong>
                     </div>

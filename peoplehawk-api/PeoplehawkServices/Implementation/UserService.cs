@@ -38,9 +38,10 @@ public class UserService : GenericService<User>,IUserService
     private readonly IAudioNoteService _audioNoteService;
     private readonly ICompletionRepository _completionRepository;
     private readonly IRequestService _requestService;
+    private readonly IShareProfileTokenService _shareProfileTokenService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService,IRequestService requestService) : base(userRepository)
+    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService,IRequestService requestService,IShareProfileTokenService shareProfileTokenService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -60,6 +61,7 @@ public class UserService : GenericService<User>,IUserService
         _completionRepository  = completionRepository;  
         _memberAnalyticsService = memberAnalyticsService;
         _requestService = requestService;
+        _shareProfileTokenService = shareProfileTokenService;
 
     }
 
@@ -224,4 +226,23 @@ public class UserService : GenericService<User>,IUserService
         var entity1 = await _userRepository.UpdateAsync(entity);
         return aboutMeDetailDTO;
     }
+
+    public async Task SendEmailAsync(ShareProfileTokenPostDto shareProfileTokenPostDto)
+    {
+        ShareProfileToken entity = await _shareProfileTokenService.AddToken(shareProfileTokenPostDto);
+
+        MailMessage mm = new MailMessage("arth.gandhi@tatvasoft.com", "arth.gandhi@tatvasoft.com");
+        mm.Subject = "Share Profile";
+        string mainURL = "http://localhost:3000/candidate/" + entity.Token;
+        mm.Body = string.Format("Message: " + shareProfileTokenPostDto.Message + "<br >Hi Click on the link to see profile <br> <p><a href=\"" + mainURL + "\">" + mainURL + "</a></p>");
+        mm.IsBodyHtml = true;
+        SmtpClient smtp = new SmtpClient();
+        smtp.Host = "mail.etatvasoft.com";
+        smtp.EnableSsl = true;
+        smtp.UseDefaultCredentials = false;
+        smtp.Credentials = new NetworkCredential(userName: "arth.gandhi@tatvasoft.com", password: "bishop@2002");
+        smtp.Port = 587;
+        await smtp.SendMailAsync(mm);
+    }
+
 }

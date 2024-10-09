@@ -387,6 +387,7 @@ const Memberanalytics = () => {
                     seturlState({
                       ...urlState,
                       isProfilePhoto: !urlState.isProfilePhoto,
+                      page: 1,
                     });
                   }}
                 >
@@ -399,6 +400,7 @@ const Memberanalytics = () => {
                     seturlState({
                       ...urlState,
                       isPersonalityTest: !urlState.isPersonalityTest,
+                      page: 1,
                     });
                   }}
                 >
@@ -411,6 +413,7 @@ const Memberanalytics = () => {
                     seturlState({
                       ...urlState,
                       isResume: !urlState.isResume,
+                      page: 1,
                     });
                   }}
                 >
@@ -420,7 +423,7 @@ const Memberanalytics = () => {
             </UpperHeader>
             <LowerHeader>
               <ShortlistButton onClick={goToShortlist}>
-                Shortlist
+                View Shortlist
               </ShortlistButton>
               <ShortlistDiv>
                 <SortedByDiv>

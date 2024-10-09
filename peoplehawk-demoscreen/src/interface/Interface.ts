@@ -289,3 +289,11 @@ export interface ShortlistReducerProps {
   userList: Shortlist[];
   userId: number;
 }
+
+export interface ShareProfileProps {
+  id: number;
+  email: string;
+  message: string;
+  linkExpireDuration: number;
+  userId: number;
+}

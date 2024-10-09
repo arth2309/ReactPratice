@@ -10,5 +10,6 @@ export const ROUTES = {
   SHORTLIST: "/shortlist/:id",
   DEFAULT_SHORTLIST: "/shortlist",
   PROFILE: "/profile/:userId",
+  TOKEN_PROFILE: "/candidate/:token",
   OTHERS: "*",
 };

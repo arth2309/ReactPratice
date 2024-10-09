@@ -68,4 +68,5 @@ export const API_ENDPOINTS = {
     `candidate/userShortlist?page=${page}&shortlist=${shortlistId}`,
   DELETE_SHORTLIST: (shortListId: number) =>
     `candidate/shortlist?ShortlistId=${shortListId}`,
+  SHARE_PROFILE: "candidate/share-profile",
 };

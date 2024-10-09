@@ -5,6 +5,7 @@ import {
   UserCompetency,
   CandidateDetail,
   AboutMeDetail,
+  ShareProfileProps,
 } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
@@ -117,6 +118,18 @@ export const manageNote = async (
     await apiClient.post(API_ENDPOINTS.MANAGE_NOTE(userId, isNote));
     return true;
   } catch {
+    return false;
+  }
+};
+
+export const shareProfile = async (
+  data: ShareProfileProps
+): Promise<boolean> => {
+  try {
+    await apiClient.post(API_ENDPOINTS.SHARE_PROFILE, data);
+    return true;
+  } catch {
+    console.log("error");
     return false;
   }
 };
