@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace PeoplehawkServices.Implementation;
 
-public class UserService : GenericService<User>,IUserService
+public class UserService : GenericService<User>, IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
@@ -38,10 +38,9 @@ public class UserService : GenericService<User>,IUserService
     private readonly IAudioNoteService _audioNoteService;
     private readonly ICompletionRepository _completionRepository;
     private readonly IRequestService _requestService;
-    private readonly IShareProfileTokenService _shareProfileTokenService;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository,IMapper mapper, IConfiguration configuration,IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService,ICompletionRepository completionRepository, IResumeFileService resumeFileService,IWorkExperienceService workExperienceService,IAssignmentService assignmentService, IEducationDetailService educationDetailService,IUserCompentencyDetailService userCompentencyDetailService,ICompentencyService compentencyService,IChartService chartService, ICourseInterestService courseInterestService,IQuizService quizService,IAudioNoteService audioNoteService,ITextNoteService textNoteService,IRequestService requestService,IShareProfileTokenService shareProfileTokenService) : base(userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -58,10 +57,10 @@ public class UserService : GenericService<User>,IUserService
         _quizService = quizService;
         _audioNoteService = audioNoteService;
         _textNoteService = textNoteService;
-        _completionRepository  = completionRepository;  
+        _completionRepository = completionRepository;
         _memberAnalyticsService = memberAnalyticsService;
         _requestService = requestService;
-        _shareProfileTokenService = shareProfileTokenService;
+
 
     }
 
@@ -70,7 +69,7 @@ public class UserService : GenericService<User>,IUserService
 
         User user = await FirstorDefaultAsync(a => a.Email == loginDetails.email && a.Password == HashHelper.HashedInput(loginDetails.password));
 
-        if (user == null) 
+        if (user == null)
         {
             throw new KeyNotFoundException(ErrorMessages.InValidCredentials);
         }
@@ -86,7 +85,7 @@ public class UserService : GenericService<User>,IUserService
                 new Claim("UserData",JsonSerializer.Serialize(user))
             }),
             Expires = DateTime.Now.AddDays(1),
-            SigningCredentials = new(new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -96,7 +95,7 @@ public class UserService : GenericService<User>,IUserService
     public async Task<UserDTO> Register(UserDTO userDTO)
     {
         User user = await FirstorDefaultAsync(a => a.Email == userDTO.Email);
-        if(user != null)
+        if (user != null)
         {
             throw new BadHttpRequestException(ErrorMessages.EmailAlreadyExist);
         }
@@ -109,22 +108,22 @@ public class UserService : GenericService<User>,IUserService
 
         MemberAnalytics memberAnalytics = new MemberAnalytics();
         memberAnalytics.UserId = entity.Id;
-       memberAnalytics.CompletionId = entity1.Id;
+        memberAnalytics.CompletionId = entity1.Id;
         await _memberAnalyticsService.AddAsync(memberAnalytics);
         return userDTO;
     }
 
-   
+
 
     public async Task<List<UserDTO>> UsersList(Expression<Func<User, bool>> predicate)
     {
-        List<User> users =  await _userRepository.GetByCriteriaAsync( filter : predicate);
-        return  _mapper.Map<List<UserDTO>>(users);
+        List<User> users = await _userRepository.GetByCriteriaAsync(filter: predicate);
+        return _mapper.Map<List<UserDTO>>(users);
     }
 
     public async Task<UserDTO> UpdateFile(IFormFile file, int UserId)
     {
-        User user = await FirstorDefaultAsync(x => x.Id == UserId); 
+        User user = await FirstorDefaultAsync(x => x.Id == UserId);
         string uploadsFolder = Path.Combine("Files");
         string filePath = Path.Combine(uploadsFolder, file.FileName);
         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -134,13 +133,13 @@ public class UserService : GenericService<User>,IUserService
 
         user.ProfilePhoto = file.FileName;
         User user1 = await _userRepository.UpdateAsync(user);
-        return _mapper.Map<UserDTO>(user1); 
+        return _mapper.Map<UserDTO>(user1);
     }
 
     public async Task<(byte[], string)> GetPhoto(int UserId)
     {
         User user = await FirstorDefaultAsync(x => x.Id == UserId);
-        if(user == null || user.ProfilePhoto == null)
+        if (user == null || user.ProfilePhoto == null)
         {
             throw new KeyNotFoundException(ErrorMessages.PhotoNotFound);
         }
@@ -153,16 +152,16 @@ public class UserService : GenericService<User>,IUserService
         Func<IQueryable<User>?, IOrderedQueryable<User>>? orderBy = null,
         int? page = null,
         int? pageSize = null,
-        params Expression<Func<User, object>>[]? includes)  
+        params Expression<Func<User, object>>[]? includes)
     {
         Expression<Func<User, bool>> predicate = user => user.FirstName.Contains("a") && user.LastName.Contains("g");
-        return await _userRepository.GetByCriteriaAsync(filter : predicate,page : page,pageSize : pageSize,includes : includes, orderBy : orderBy);
+        return await _userRepository.GetByCriteriaAsync(filter: predicate, page: page, pageSize: pageSize, includes: includes, orderBy: orderBy);
     }
 
     public async Task<UserDetailDTO> GetDetail(int UserId)
     {
 
-        UserDetailDTO userDetailDTO  = new();
+        UserDetailDTO userDetailDTO = new();
         int x = 0;
         ResumeFileDTO resumeFileDTO = await _resumeFileService.GetUserResume(UserId);
         if (resumeFileDTO != null)
@@ -178,11 +177,11 @@ public class UserService : GenericService<User>,IUserService
         }
         userDetailDTO.UserProgress = new ProgressDTO()
         {
-            isResumeUpload = resumeFileDTO != null ,
+            isResumeUpload = resumeFileDTO != null,
             Progress = x
-    };
+        };
 
-        User user = await _userRepository.FirstOrDefaultWithIncludesAsync(x => x.Id == UserId,a => a.Country);
+        User user = await _userRepository.FirstOrDefaultWithIncludesAsync(x => x.Id == UserId, a => a.Country);
         string? base64String = null;
         if (user.ProfilePhoto != null)
         {
@@ -192,8 +191,8 @@ public class UserService : GenericService<User>,IUserService
             base64String = Convert.ToBase64String(fileBytes);
         }
 
-        
-        
+
+
 
 
         userDetailDTO.ProfilePhoto = base64String;
@@ -205,7 +204,7 @@ public class UserService : GenericService<User>,IUserService
         userDetailDTO.competencies = await _compentencyService.GetList();
         userDetailDTO.AboutMe = user.AboutMe;
         userDetailDTO.userCompentencyDetails = await _userCompentencyDetailService.GetList();
-        userDetailDTO.Educations =  await _educationDetailService.GetList(UserId) ;
+        userDetailDTO.Educations = await _educationDetailService.GetList(UserId);
         userDetailDTO.Assignments = await _assignmentService.GetList(UserId);
         userDetailDTO.WorkExperiences = await _workExperienceService.GetList(UserId);
         userDetailDTO.CourseInterestDetails = await _courseInterestService.GetCourseInterestLists();
@@ -226,23 +225,4 @@ public class UserService : GenericService<User>,IUserService
         var entity1 = await _userRepository.UpdateAsync(entity);
         return aboutMeDetailDTO;
     }
-
-    public async Task SendEmailAsync(ShareProfileTokenPostDto shareProfileTokenPostDto)
-    {
-        ShareProfileToken entity = await _shareProfileTokenService.AddToken(shareProfileTokenPostDto);
-
-        MailMessage mm = new MailMessage("arth.gandhi@tatvasoft.com", "arth.gandhi@tatvasoft.com");
-        mm.Subject = "Share Profile";
-        string mainURL = "http://localhost:3000/candidate/" + entity.Token;
-        mm.Body = string.Format("Message: " + shareProfileTokenPostDto.Message + "<br >Hi Click on the link to see profile <br> <p><a href=\"" + mainURL + "\">" + mainURL + "</a></p>");
-        mm.IsBodyHtml = true;
-        SmtpClient smtp = new SmtpClient();
-        smtp.Host = "mail.etatvasoft.com";
-        smtp.EnableSsl = true;
-        smtp.UseDefaultCredentials = false;
-        smtp.Credentials = new NetworkCredential(userName: "arth.gandhi@tatvasoft.com", password: "bishop@2002");
-        smtp.Port = 587;
-        await smtp.SendMailAsync(mm);
-    }
-
 }

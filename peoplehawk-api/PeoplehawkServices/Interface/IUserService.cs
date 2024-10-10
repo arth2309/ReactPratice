@@ -25,7 +25,6 @@ public interface IUserService : IGenericService<User>
         params Expression<Func<User, object>>[]? includes);
     Task<AboutMeDetailDTO> AddAboutMe(AboutMeDetailDTO aboutMeDetailDTO);
 
-    Task SendEmailAsync(ShareProfileTokenPostDto shareProfileTokenPostDto);
 }
 
 

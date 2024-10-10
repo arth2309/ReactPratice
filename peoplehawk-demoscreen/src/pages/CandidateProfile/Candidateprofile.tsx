@@ -8,7 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import Keyinformation from "../../modals/Keyinformation";
-import { fetchUserDetail } from "../../services/HomeService";
+import { fetchUserDetail, verifyToken } from "../../services/HomeService";
 import { useApi } from "../../store/ReducerContext";
 import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Markdown from "react-markdown";
@@ -21,6 +21,8 @@ import Personalityresult from "../../modals/Personalityresult";
 import Request from "../../modals/Request";
 import { Request as RequestProps } from "../../interface/Interface";
 import { upsertRequest } from "../../services/RequestService";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
 
 const Header = styled.div({
   backgroundColor: "#FFFFFF",
@@ -174,7 +176,7 @@ const MainButtonDiv = styled.div({
 const Candidateprofile = () => {
   const [isKeyInformationOpen, setIsKeyInformationOpen] =
     useState<boolean>(false);
-  const { userId } = useParams();
+  const { userId, token } = useParams();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [personalityResult, setPersonalityResult] = useState<number[]>([]);
@@ -208,6 +210,7 @@ const Candidateprofile = () => {
   const stopZoom = () => {
     setIsZoom(false);
   };
+  const navigate = useNavigate();
   const requestModalOpenHandler = (content: string, index: number) => {
     state.request === null
       ? setRequestData({
@@ -286,6 +289,19 @@ const Candidateprofile = () => {
         const list = resultMaker(response.quizDetail.quizResponse);
         list && setPersonalityResult(list.array);
         list && setPersonalityIndex(list.index);
+      }
+    } else if (token) {
+      const response = await verifyToken(token);
+      if (response) {
+        response && dispatch({ type: "GET_HOME_PAGE_DATA", payload: response });
+
+        response.profilePhoto &&
+          setImageSrc(`data:image/jpeg;base64,${response.profilePhoto}`);
+        const list = resultMaker(response.quizDetail.quizResponse);
+        list && setPersonalityResult(list.array);
+        list && setPersonalityIndex(list.index);
+      } else {
+        navigate(ROUTES.LINK_EXPIRE);
       }
     }
   };

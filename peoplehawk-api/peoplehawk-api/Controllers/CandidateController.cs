@@ -29,8 +29,9 @@ public class CandidateController : BaseController
     private readonly IRequestService _requestService;
     private readonly ICompletionService _completionService;
     private readonly IShortlistService _shortlistService;
+    private readonly IShareProfileTokenService _shareProfileTokenService;
 
-    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService,ICompletionService completionService,IShortlistService shortlistService)
+    public CandidateController(ICourseInterestService courseInterestService, IChartService chartService, IResumeFileService resumeFileService, IUserService userService, IQuizService quizService, IPersonalityReportService personalityReportService,ICompentencyService compentencyService, IUserCompentencyDetailService userCompentencyDetailService, IMemberAnalyticsService memberAnalyticsService,IEducationDetailService educationDetailService,IAssignmentService assignmentService,IWorkExperienceService workExperienceService,IAudioNoteService audioNoteService,ITextNoteService textNoteService, IRequestService requestService,ICompletionService completionService,IShortlistService shortlistService,IShareProfileTokenService shareProfileTokenService)
     {
         _courseInterestService = courseInterestService;
         _chartService = chartService;
@@ -49,6 +50,7 @@ public class CandidateController : BaseController
         _requestService = requestService;
         _completionService = completionService;
         _shortlistService = shortlistService;
+        _shareProfileTokenService = shareProfileTokenService;
     }
 
     [HttpGet("{UserId:int}/chart")]
@@ -341,6 +343,13 @@ public class CandidateController : BaseController
     [HttpPost("share-profile")]
     public async Task ShareProfile(ShareProfileTokenPostDto shareProfileTokenPostDto)
     {
-        await _userService.SendEmailAsync(shareProfileTokenPostDto);
+        await _shareProfileTokenService.SendEmailAsync(shareProfileTokenPostDto);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("verify-token")]
+    public async Task<UserDetailDTO> VerifyToken(string token)
+    {
+       return await _shareProfileTokenService.VerifyToken(token);
     }
 }

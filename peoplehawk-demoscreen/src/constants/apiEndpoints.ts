@@ -69,4 +69,6 @@ export const API_ENDPOINTS = {
   DELETE_SHORTLIST: (shortListId: number) =>
     `candidate/shortlist?ShortlistId=${shortListId}`,
   SHARE_PROFILE: "candidate/share-profile",
+  VERIFY_SHARE_PROFILE_TOKEN: (token: string) =>
+    `candidate/verify-token?token=${token}`,
 };

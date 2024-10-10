@@ -10,6 +10,8 @@ import {
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
+import { TOAST } from "../constants/toast";
 
 export const uploadPhoto = async (
   UserId: number,
@@ -127,9 +129,31 @@ export const shareProfile = async (
 ): Promise<boolean> => {
   try {
     await apiClient.post(API_ENDPOINTS.SHARE_PROFILE, data);
+    showToast(
+      TOAST.SEND_EMAIL.title,
+      TOAST.SEND_EMAIL.description,
+      TOAST.SEND_EMAIL.type
+    );
     return true;
   } catch {
-    console.log("error");
+    showToast(
+      TOAST.ERROR_EMAIL.title,
+      TOAST.ERROR_EMAIL.description,
+      TOAST.ERROR_EMAIL.type
+    );
     return false;
+  }
+};
+
+export const verifyToken = async (
+  token: string
+): Promise<CandidateDetail | null> => {
+  try {
+    const response = await apiClient.get(
+      API_ENDPOINTS.VERIFY_SHARE_PROFILE_TOKEN(token)
+    );
+    return response.data;
+  } catch {
+    return null;
   }
 };
