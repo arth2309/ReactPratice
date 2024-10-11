@@ -297,3 +297,9 @@ export interface ShareProfileProps {
   linkExpireDuration: number;
   userId: number;
 }
+
+export interface ProfileLinkListProps {
+  id: number;
+  token: string;
+  dayToExpire: number;
+}

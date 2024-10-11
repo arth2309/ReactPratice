@@ -6,6 +6,7 @@ import {
   CandidateDetail,
   AboutMeDetail,
   ShareProfileProps,
+  ProfileLinkListProps,
 } from "../interface/Interface";
 import { apiClient } from "./BaseService";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
@@ -152,6 +153,30 @@ export const verifyToken = async (
     const response = await apiClient.get(
       API_ENDPOINTS.VERIFY_SHARE_PROFILE_TOKEN(token)
     );
+    return response.data;
+  } catch {
+    return null;
+  }
+};
+
+export const getProfileLinkList = async (
+  userId: number
+): Promise<ProfileLinkListProps[] | null> => {
+  try {
+    const response = await apiClient.get(
+      API_ENDPOINTS.PROFILE_LINK_LIST(userId)
+    );
+    return response.data;
+  } catch {
+    return null;
+  }
+};
+
+export const deleteProfileLink = async (
+  id: number
+): Promise<ProfileLinkListProps | null> => {
+  try {
+    const response = await apiClient.delete(API_ENDPOINTS.SHARE_PROFILE_ID(id));
     return response.data;
   } catch {
     return null;

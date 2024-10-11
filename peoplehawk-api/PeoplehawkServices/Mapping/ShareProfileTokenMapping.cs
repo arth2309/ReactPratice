@@ -14,4 +14,21 @@ public static class ShareProfileTokenMapping
             UserId = shareProfileTokenPostDto.UserId
         };
     }
+
+    public static ShareProfileTokenGetDto ToDto(this ShareProfileToken shareProfileToken)
+    {
+        TimeSpan duration = shareProfileToken.ExpirationDate - DateTime.Now;
+
+        return new ShareProfileTokenGetDto
+        {
+            Id = shareProfileToken.Id,
+            Token = shareProfileToken.Token,
+            DayToExpire = (int)duration.TotalDays
+        };
+    }
+
+    public static List<ShareProfileTokenGetDto> ToDtolist(this List<ShareProfileToken> shareProfileTokens) 
+    {
+       return shareProfileTokens.Select(shareProfileToken => shareProfileToken.ToDto()).ToList(); 
+    }
 }

@@ -25,6 +25,8 @@ interface ToastProps {
   UPDATE_EDUCATION_DETAIL: ToastComponentProps;
   SEND_EMAIL: ToastComponentProps;
   ERROR_EMAIL: ToastComponentProps;
+  DELETE_PROFILE_LINK: ToastComponentProps;
+  COPY_PROFILE_LINK: ToastComponentProps;
 }
 
 export const TOAST: ToastProps = {
@@ -128,5 +130,15 @@ export const TOAST: ToastProps = {
     title: "Error",
     description: "Error while sending email",
     type: "error",
+  },
+  DELETE_PROFILE_LINK: {
+    title: "Success",
+    description: "Profile link deleted successfully",
+    type: "success",
+  },
+  COPY_PROFILE_LINK: {
+    title: "Success",
+    description: "Link copied successfully",
+    type: "success",
   },
 };

@@ -352,4 +352,16 @@ public class CandidateController : BaseController
     {
        return await _shareProfileTokenService.VerifyToken(token);
     }
+
+    [HttpGet("profile-link-list")]
+    public async Task<List<ShareProfileTokenGetDto>> ProfileLinkList(int UserId)
+    {
+        return await _shareProfileTokenService.Getlist(UserId);
+    }
+
+    [HttpDelete("share-profile")]
+    public async Task<ShareProfileTokenGetDto> DeleteProfileLink(int Id)
+    {
+        return await _shareProfileTokenService.DeleteItem(Id);
+    }
 }

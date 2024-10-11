@@ -41,7 +41,7 @@ namespace PeoplehawkServices.Implementation
       <p style=""font-size: 16px; color: #555"">
         Click below button to view profile
         <br />
-        Messeage : '{shareProfileTokenPostDto.Message}'
+        Message : '{shareProfileTokenPostDto.Message}'
       </p>
       <p>
         <a
@@ -89,6 +89,18 @@ namespace PeoplehawkServices.Implementation
             }
 
             return await _userService.GetDetail(entity.UserId);
+        }
+
+       public async Task<List<ShareProfileTokenGetDto>> Getlist(int UserId)
+        {
+            var entity = await _shareProfileRepository.GetByCriteriaAsync(filter: x => x.UserId == UserId);
+            return entity.ToDtolist();
+        }
+
+        public async Task<ShareProfileTokenGetDto> DeleteItem(int Id)
+        {
+           var entity = await DeleteAsync(x => x.Id == Id);
+            return entity.ToDto();
         }
     }
 }
