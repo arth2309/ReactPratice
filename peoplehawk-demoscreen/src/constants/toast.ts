@@ -27,6 +27,7 @@ interface ToastProps {
   ERROR_EMAIL: ToastComponentProps;
   DELETE_PROFILE_LINK: ToastComponentProps;
   COPY_PROFILE_LINK: ToastComponentProps;
+  AUTO_LOGGED_OUT: ToastComponentProps;
 }
 
 export const TOAST: ToastProps = {
@@ -140,5 +141,10 @@ export const TOAST: ToastProps = {
     title: "Success",
     description: "Link copied successfully",
     type: "success",
+  },
+  AUTO_LOGGED_OUT: {
+    title: "info",
+    description: "You have been Logged out Automatically.",
+    type: "info",
   },
 };

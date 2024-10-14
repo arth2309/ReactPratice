@@ -1,6 +1,8 @@
-import { useState, createContext, ReactNode } from "react";
+import { useState, createContext, ReactNode, useEffect } from "react";
 import { getToken, storeToken, removeToken } from "../utils/manageAccessToken";
 import { decodeJwt } from "jose";
+import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
+import { TOAST } from "../constants/toast";
 
 type AuthProvider = {
   children: ReactNode;
@@ -40,6 +42,31 @@ export const AuthContextProvider = (props: AuthProvider) => {
   const [userData, setUserData] = useState<Candidate | null>(
     intialToken ? JSON.parse(decodeJwt<JwtPayload>(intialToken).UserData) : null
   );
+
+  useEffect(() => {
+    const decoded = intialToken
+      ? JSON.parse(decodeJwt<any>(intialToken).exp)
+      : 0;
+    const expirationTime = decoded * 1000; // convert to milliseconds
+    const currentTime = Date.now();
+
+    if (expirationTime < currentTime && token != null) {
+      autoLogoutHandler();
+    }
+
+    const timeoutId = setTimeout(() => {
+      if (token != null) {
+        autoLogoutHandler();
+      }
+
+      // Call your logout function here
+    }, expirationTime - currentTime);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [token]);
+
   const userIsLoggedIn = !!token;
 
   const loginHandler = (token: string) => {
@@ -53,6 +80,21 @@ export const AuthContextProvider = (props: AuthProvider) => {
     setToken(null);
     setUserData(null);
     removeToken();
+  };
+
+  const autoLogoutHandler = async () => {
+    setToken(null);
+    setUserData(null);
+    removeToken();
+    setTimeout(
+      () =>
+        showToast(
+          TOAST.AUTO_LOGGED_OUT.title,
+          TOAST.AUTO_LOGGED_OUT.description,
+          TOAST.AUTO_LOGGED_OUT.type
+        ),
+      100
+    );
   };
 
   const contextValue: Auth = {

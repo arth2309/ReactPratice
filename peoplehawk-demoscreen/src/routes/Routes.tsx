@@ -8,7 +8,7 @@ import Resumeupload from "../pages/Resume/Resumeupload";
 import Useranalysis from "../pages/IdealCoursesAnalysis/Useranalysis";
 import { Login } from "../pages/Authentication/Login";
 import AuthContext from "../store/AuthContext";
-import { useContext } from "react";
+import { ComponentType, useContext } from "react";
 import { Register } from "../pages/Authentication/Register";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Personalitytest from "../pages/PersonalityTest/Personalitytest";
@@ -23,6 +23,31 @@ const Routes = () => {
   const authCtx = useContext(AuthContext);
   const token = getToken();
 
+  const routesManager = (roleId: number): JSX.Element => {
+    if (roleId === 1) {
+      return <Navigate to={ROUTES.HOME} />;
+    } else if (roleId === 2) {
+      return <Navigate to={ROUTES.MEMBER_ANALYTICS} />;
+    } else {
+      return <Navigate to={ROUTES.LOGIN} />;
+    }
+  };
+
+  const protectRoutes = (
+    isLoggedIn: boolean,
+    roleId: number,
+    Component: ComponentType
+  ): JSX.Element => {
+    return isLoggedIn ? (
+      authCtx.userData && authCtx.userData.RoleId === roleId ? (
+        <Component />
+      ) : (
+        routesManager(authCtx.userData ? authCtx.userData.RoleId : 0)
+      )
+    ) : (
+      <Navigate to={ROUTES.LOGIN} />
+    );
+  };
   return (
     <BrowserRouter>
       <Main>
@@ -44,53 +69,26 @@ const Routes = () => {
         ></Route>
         <Route
           path={ROUTES.HOME}
-          element={
-            authCtx.isLoggedIn ? (
-              authCtx.userData && authCtx.userData.RoleId === 1 ? (
-                <Dashboard />
-              ) : (
-                <Memberanalytics />
-              )
-            ) : (
-              <Navigate to={ROUTES.LOGIN} />
-            )
-          }
+          element={protectRoutes(authCtx.isLoggedIn, 1, Dashboard)}
         ></Route>
         <Route
           path={ROUTES.IDEAL_COURSES}
-          element={
-            authCtx.isLoggedIn ? (
-              <Useranalysis />
-            ) : (
-              <Navigate to={ROUTES.LOGIN} />
-            )
-          }
+          element={protectRoutes(authCtx.isLoggedIn, 1, Useranalysis)}
         ></Route>
+
         <Route
           path={ROUTES.RESUME}
-          element={
-            authCtx.isLoggedIn ? (
-              <Resumeupload />
-            ) : (
-              <Navigate to={ROUTES.LOGIN} />
-            )
-          }
+          element={protectRoutes(authCtx.isLoggedIn, 1, Resumeupload)}
         ></Route>
         <Route path={ROUTES.LOGIN} element={<Login />}></Route>
         <Route
           path={ROUTES.PERSONALITY_TEST}
-          element={
-            authCtx.isLoggedIn ? (
-              <Personalitytest />
-            ) : (
-              <Navigate to={ROUTES.LOGIN} />
-            )
-          }
+          element={protectRoutes(authCtx.isLoggedIn, 1, Personalitytest)}
         ></Route>
         <Route path={ROUTES.REGISTER} element={<Register />}></Route>
         <Route
           path={ROUTES.MEMBER_ANALYTICS}
-          element={<Memberanalytics />}
+          element={protectRoutes(authCtx.isLoggedIn, 2, Memberanalytics)}
         ></Route>
         <Route
           path={ROUTES.OTHERS}
@@ -98,12 +96,21 @@ const Routes = () => {
             !token ? (
               <Navigate to={ROUTES.LOGIN} />
             ) : (
-              <Navigate to={ROUTES.HOME} />
+              <Navigate
+                to={
+                  authCtx.userData && authCtx.userData.RoleId === 1
+                    ? ROUTES.HOME
+                    : ROUTES.MEMBER_ANALYTICS
+                }
+              />
             )
           }
         ></Route>
         <Route path={ROUTES.PROFILE} element={<Candidateprofile />}></Route>
-        <Route path={ROUTES.SHORTLIST} element={<MemberShortlist />}></Route>
+        <Route
+          path={ROUTES.SHORTLIST}
+          element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
+        ></Route>
         <Route path={ROUTES.LINK_EXPIRE} element={<LinkExpire />}></Route>
         <Route
           path={ROUTES.TOKEN_PROFILE}
@@ -111,7 +118,7 @@ const Routes = () => {
         ></Route>
         <Route
           path={ROUTES.DEFAULT_SHORTLIST}
-          element={<MemberShortlist />}
+          element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
         ></Route>
       </Main>
     </BrowserRouter>

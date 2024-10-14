@@ -61,11 +61,11 @@ export const API_ENDPOINTS = {
   MANAGE_NOTE: (userId: number, isNote: boolean) =>
     `candidate/manage-note?UserId=${userId}&isNote=${isNote}`,
   SHORTLIST: "candidate/shortlist",
-  USERSHORTLIST: "candidate/userShortlist",
+  USERSHORTLIST: "candidate/shortlist/user",
   DELETE_USERSHORTLIST: (userId: number, shortListId: number) =>
-    `candidate/userShortlist?UserId=${userId}&ShortlistId=${shortListId}`,
+    `candidate/shortlist/user?UserId=${userId}&ShortlistId=${shortListId}`,
   MEMBER_ANALYTICS_SHORTLIST: (page: number, shortlistId: number) =>
-    `candidate/userShortlist?page=${page}&shortlist=${shortlistId}`,
+    `candidate/shortlist/user?page=${page}&shortlist=${shortlistId}`,
   DELETE_SHORTLIST: (shortListId: number) =>
     `candidate/shortlist?ShortlistId=${shortListId}`,
   SHARE_PROFILE: "candidate/share-profile",

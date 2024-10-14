@@ -44,6 +44,6 @@ public class AuthController : BaseController
     [HttpGet("criteria")]
     public async Task<List<User>> UsersList()
     {
-        return await _userService.GetUserByCriteria(filter : a=>a.CountryId == 1,page : 1, pageSize : 3, orderBy:a=> a.OrderBy(a=> a.Id),includes : x => x.Role );
+        return await _userService.GetUserByCriteria(filter : a=>a.CountryId == 1,page : 1, pageSize : 3, orderBy:a=> a.OrderBy(a=> a.Id),includes : x => x.Role);
     }
 }

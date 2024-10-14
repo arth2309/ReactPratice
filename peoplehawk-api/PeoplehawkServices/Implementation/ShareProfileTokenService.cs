@@ -30,7 +30,7 @@ namespace PeoplehawkServices.Implementation
         {
             ShareProfileToken entity = await AddToken(shareProfileTokenPostDto);
            
-            MailMessage mm = new MailMessage("arth.gandhi@tatvasoft.com", "arth.gandhi@tatvasoft.com");
+            MailMessage mm = new MailMessage("arth.gandhi@tatvasoft.com", shareProfileTokenPostDto.email);
             mm.Subject = "Share Profile";
             string mainURL = "http://localhost:3000/candidate/" + entity.Token;
             var htmlBody = $@"<!DOCTYPE html>

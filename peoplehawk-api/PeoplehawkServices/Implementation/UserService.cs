@@ -67,7 +67,7 @@ public class UserService : GenericService<User>, IUserService
     public async Task<string> Login(LoginDetails loginDetails)
     {
 
-        User user = await FirstorDefaultAsync(a => a.Email == loginDetails.email && a.Password == HashHelper.HashedInput(loginDetails.password));
+        User user = await _userRepository.FirstOrDefaultWithIncludesAsync(a => a.Email == loginDetails.email && a.Password == HashHelper.HashedInput(loginDetails.password),a => a.Role);
 
         if (user == null)
         {
@@ -82,6 +82,7 @@ public class UserService : GenericService<User>, IUserService
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, Convert.ToString(user.Id)),
+                new Claim (ClaimTypes.Role,user.Role.RoleName ?? ""),
                 new Claim("UserData",JsonSerializer.Serialize(user))
             }),
             Expires = DateTime.Now.AddDays(1),

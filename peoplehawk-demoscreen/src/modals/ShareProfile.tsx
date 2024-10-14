@@ -224,7 +224,10 @@ const LinkExpirationOption: OptionTypes[] = [
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .required("Please enter email")
-    .email("Please enter valid email"),
+    .matches(
+      /^[a-zA-Z]+\.[a-zA-Z]+@tatvasoft\.com$/,
+      "please enter a valid company email"
+    ),
   message: Yup.string().required("Please enter message"),
 });
 
@@ -405,14 +408,21 @@ const ShareProfile: React.FC<ModalProps> = ({ onClose }) => {
                           );
                         }}
                       >
-                        <ContentCopyIcon color="success" fontSize="small" />
+                        <ContentCopyIcon
+                          color="success"
+                          fontSize="small"
+                          style={{ cursor: "pointer" }}
+                        />
                       </div>
                       <div
                         onClick={async () => {
                           await deleteDataInList(item.id);
                         }}
                       >
-                        <DeleteOutlineOutlinedIcon color="error" />
+                        <DeleteOutlineOutlinedIcon
+                          color="error"
+                          style={{ cursor: "pointer" }}
+                        />
                       </div>
                     </div>
                   </NotesDate>

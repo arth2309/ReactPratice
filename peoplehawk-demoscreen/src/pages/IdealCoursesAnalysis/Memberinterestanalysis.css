@@ -1,247 +1,200 @@
-body
-{
-      background-color: #EEF2F6;
+body {
+  background-color: #eef2f6;
 }
 
-.heading
-{
-    font-family: obviously;
-    font-size: 28px;
-    display: flex;
-    justify-content: start;
-    color: #F96332;
+.heading {
+  font-family: obviously;
+  font-size: 28px;
+  display: flex;
+  justify-content: start;
+  color: #f96332;
 }
 
-.main-content
-{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
+.main-content {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
 }
 
-.w-50
-{
-    width: 50%;
+.w-50 {
+  width: 50%;
 }
 
 .button {
-    background-color: #F96332;;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
-    width: 40%;
-    cursor: pointer;
-    border-radius: 16px;
-    margin-top: 36px;
-    
-  }
-
-
-
-
-
-.ab
-{
-    position: relative;
-    height: 485px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 44px;
+  background-color: #f96532;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 40%;
+  cursor: pointer;
+  border-radius: 16px;
+  margin-top: 36px;
 }
 
-.icon 
-{
-    position: absolute;
-    width: 100px;
-    padding-top: 185px;
-}
-
-.p
-{
-    padding: 16px;
-}
-
-.d-flex
-{
-    display: flex;
-}
-
-.justify-content-between
-{
-    justify-content: space-between;
-}
-
-.justify-content-start
-{
-    justify-content: start;
-}
-
-.chart-slice
-{
-    position: absolute;
-    width: 485px;
-    cursor: pointer;
-  
-}
-
-.result-heading
-{
-    color: #394456;
-    font-family: obviously;
-    font-size: 28px;
-    margin-bottom: 15px;
-}
-
-.main-card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
-    background-color: currentColor;
-    color: #ffffff;
-    border-radius: 5px;
-  }
-
-  .main-card-top
-  {
-    border-radius: 15px 15px 0 0;
-  }
-
-  .main-card-bottom
-  {
-    border-radius: 0 0 15px 15px;
-  }
-
-  .item-card
-  {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: white;
-    color: black;
-    margin-top: 10px;
-    width: fit-content;
-    padding: 10px;
-    margin-left: 10px;
-    border-radius: 30px;
-    cursor: pointer;
-  }
-
-  .cls-1 {
-    fill : transparent;
-    stroke-miterlimit: 10;
-    stroke-width: 10px;
-    pointer-events: auto;
-  }
-
-  .progress-wrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.progress-label {
-    flex: 1; /* Take up remaining space */
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.progress-bar {
-    flex: 4; /* Take up more space for the progress bar */
-    height: 30px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-left: 0px;
-    position: relative;
-    cursor: pointer;
-}
-
-.progress {
-    height: 100%;
-    border-radius: 5px;
-    background-color: #4CAF50; /* default green color */
-    position: relative;
-    text-align: center;
-    line-height: 30px;
-    color: white;
-
-}
-
-.progress-bar .progress {
-    background-color: #ff6347; 
-}
-
-
-.m-5
-{
-    margin-top: 110px;
-}
-
-.flex-wrap
-{
-    display: flex;
-    flex-wrap: wrap;
-}
-
-
-
-
-
-@media only screen and (max-width : 680px)
-{
-      
-    .chart-slice
-    {
-       
-        width: 270px;
-    }
-
-    .ab
-{
-    
-    height: 270px;
+.ab {
+  position: relative;
+  height: 485px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 44px;
 }
 
 .icon {
-    
+  position: absolute;
+  width: 100px;
+  padding-top: 185px;
+}
+
+.p {
+  padding: 16px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-start {
+  justify-content: start;
+}
+
+.chart-slice {
+  position: absolute;
+  width: 485px;
+  cursor: pointer;
+}
+
+.result-heading {
+  color: #394456;
+  font-family: obviously;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.main-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: currentColor;
+  color: #ffffff;
+  border-radius: 5px;
+}
+
+.main-card-top {
+  border-radius: 15px 15px 0 0;
+}
+
+.main-card-bottom {
+  border-radius: 0 0 15px 15px;
+}
+
+.item-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: white;
+  color: black;
+  margin-top: 10px;
+  width: fit-content;
+  padding: 10px;
+  margin-left: 10px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.cls-1 {
+  fill: transparent;
+  stroke-miterlimit: 10;
+  stroke-width: 10px;
+  pointer-events: auto;
+}
+
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  flex: 1; /* Take up remaining space */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.progress-bar {
+  flex: 4; /* Take up more space for the progress bar */
+  height: 30px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  margin-left: 0px;
+  position: relative;
+  cursor: pointer;
+}
+
+.progress {
+  height: 100%;
+  border-radius: 5px;
+  background-color: #4caf50; /* default green color */
+  position: relative;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+
+.progress-bar .progress {
+  background-color: #ff6347;
+}
+
+.m-5 {
+  margin-top: 110px;
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 680px) {
+  .chart-slice {
+    width: 270px;
+  }
+
+  .ab {
+    height: 270px;
+  }
+
+  .icon {
     width: 70px;
     padding-top: 103px;
+  }
 }
 
+@media only screen and (max-width: 611px) {
+  .heading {
+    font-size: 15px;
+  }
 
-    
+  .result-heading {
+    font-size: 20px;
+  }
 }
 
-@media only screen and (max-width : 611px)
-{
-    .heading
-    {
-        font-size: 15px;
-    }
+@media only screen and (max-width: 1409px) {
+  .w-50 {
+    width: 100%;
+  }
 
-    .result-heading
-    {
-        font-size: 20px;
-    }
-}
+  .m-5 {
+    margin-top: 10px;
+  }
 
-@media only screen and (max-width : 1409px)
-{
-    .w-50
-    {
-        width: 100%;
-    }
-
-    .m-5
-    {
-        margin-top: 10px;
-    }
-
-    .main-content
-{
+  .main-content {
     display: block;
     justify-content: none;
     margin-top: 15px;
-}
-
+  }
 }

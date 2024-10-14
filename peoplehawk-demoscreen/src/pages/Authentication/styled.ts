@@ -29,6 +29,9 @@ export const MainContainer = styled.div`
   justify-content: center;
   height: 100%;
   width: 70%;
+  @media (max-width: 420px) {
+    width: 90%;
+  }
 `;
 
 export const FormControl = styled.input`

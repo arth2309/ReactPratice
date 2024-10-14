@@ -22,6 +22,19 @@ const Sub = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .term {
+    font-size: 13px;
+    @media (max-width: 1680px) {
+      font-size: 10px;
+    }
+    @media (max-width: 900px) {
+      font-size: 14px;
+    }
+    @media (max-width: 560px) {
+      font-size: 10px;
+    }
+  }
 `;
 const Right = styled.div`
   background-color: #dbeffa;
@@ -72,7 +85,7 @@ export const Bottom = () => {
     <Fragment>
       <BorderBottom />
       <Sub>
-        <div style={{ fontSize: "10px" }}>
+        <div className="term">
           All use of PeopleHawk is subject to our{" "}
           <span className="text-lightblue">Terms and Conditions</span>
         </div>

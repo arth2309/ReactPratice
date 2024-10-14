@@ -44,6 +44,7 @@ import Aboutme from "../../modals/Aboutme";
 import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Note from "../../modals/Note";
 import ShareProfile from "../../modals/ShareProfile";
+import shareProfileIcon from "../../assests/img/share-profile.png";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -152,10 +153,9 @@ const Card2SubItem = styled.div({
   flexDirection: "column",
   alignItems: "center",
   backgroundColor: "#DBEFFA",
-  padding: "5px 25px 5px 25px",
   gap: "13px",
   borderRadius: "8px",
-  width: "50px",
+  width: "110px",
   height: "100px",
 });
 
@@ -174,7 +174,7 @@ const Trophy = styled.div.withConfig({
   display: "flex",
   justifyContent: "center",
   height: props.trophyHeight,
-  padding: "2px",
+  padding: "2px 0px 2px 5px",
   cursor: "pointer",
 }));
 
@@ -796,11 +796,16 @@ const Dashboard = () => {
                     </Progress>
                   </Card2SubItem>
                   <Card2SubItem onClick={openShareProfileModal}>
-                    <div style={{ color: "#394456", fontSize: "12px" }}>
-                      <strong>Trophies</strong>
+                    <div style={{ color: "#394456", fontSize: "14px" }}>
+                      <strong>Share Profile</strong>
                     </div>
                     <Trophy trophyHeight="60px" trophyWidth="60px">
-                      <img src={trophy} alt="trophy" />
+                      <img
+                        src={shareProfileIcon}
+                        alt="trophy"
+                        width="52px"
+                        height="52px"
+                      />
                     </Trophy>
                   </Card2SubItem>
                 </Card2Sub>
