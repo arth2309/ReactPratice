@@ -10,12 +10,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using PeoplehawkServices.Common;
-using System.Net;
-using System.Net.Mail;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http;
-
-
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace PeoplehawkServices.Implementation;
 
@@ -38,6 +36,7 @@ public class UserService : GenericService<User>, IUserService
     private readonly IAudioNoteService _audioNoteService;
     private readonly ICompletionRepository _completionRepository;
     private readonly IRequestService _requestService;
+    private readonly IConfiguration _configuration;
     private string secretKey;
 
     public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService) : base(userRepository)
@@ -60,6 +59,7 @@ public class UserService : GenericService<User>, IUserService
         _completionRepository = completionRepository;
         _memberAnalyticsService = memberAnalyticsService;
         _requestService = requestService;
+        _configuration = configuration;
 
 
     }
@@ -225,5 +225,32 @@ public class UserService : GenericService<User>, IUserService
         entity.AboutMe = aboutMeDetailDTO.Text;
         var entity1 = await _userRepository.UpdateAsync(entity);
         return aboutMeDetailDTO;
+    }
+
+    public async IAsyncEnumerable<string> GetStreamingResponse(string prompt)
+    {
+       
+        using var client = new HttpClient();
+        var apiKey = _configuration["OpenAI:ApiKey"];
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+        var content = new StringContent(JsonSerializer.Serialize(new
+        {
+            prompt = "Write me three poems about llamas, the first in AABB format, the second in ABAB, the third without any rhyming",
+    prompt_template = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    presence_penalty = 0,
+    frequency_penalty = 0
+        }));
+
+        var response = await client.PostAsJsonAsync("https://api.llama3.com/v1/endpoint", content);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Error calling OpenAI API: " + response.ReasonPhrase);
+        }
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        dynamic result =JsonSerializer.Deserialize<string>(jsonResponse);
+        yield return result.choices[0].message.content.ToString();
     }
 }

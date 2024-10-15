@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Js0ub+4ZCFmLt+Pjd5ZO7y2c4AAVuuF+qAJhZeFunzwsOtZb4lvrhY7Ru6eknr4IQ+LA/jz0QBCUnxrYegKAPg==",
+  "dgSpecHash": "W/GxsmZNGdCobVJYUX/PYBoKcR33cyohyO0nmTuK9TTDRhpTvWitCLwK+o8FgZWfYw5bEoQFtGexbdysNt5U3Q==",
   "success": true,
   "projectFilePath": "D:\\ReactProject\\peoplehawk-api\\PeoplehawkServices\\PeoplehawkServices.csproj",
   "expectedPackageFiles": [
@@ -42,10 +42,15 @@
     "C:\\Users\\pce105\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\npgsql\\7.0.7\\npgsql.7.0.7.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.18\\npgsql.entityframeworkcore.postgresql.7.0.18.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\openai\\2.0.0\\openai.2.0.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\system.clientmodel\\1.1.0\\system.clientmodel.1.1.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.1\\system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.35.0\\system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
+    "C:\\Users\\pce105\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Users\\pce105\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",

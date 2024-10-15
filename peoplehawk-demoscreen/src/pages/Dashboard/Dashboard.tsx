@@ -45,6 +45,7 @@ import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Note from "../../modals/Note";
 import ShareProfile from "../../modals/ShareProfile";
 import shareProfileIcon from "../../assests/img/share-profile.png";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -400,6 +401,8 @@ const Dashboard = () => {
         list && setPersonalityIndex(list.index);
       }
     }
+
+    await aiRun();
   };
 
   const handleFileChange = async (
@@ -448,6 +451,7 @@ const Dashboard = () => {
   };
 
   const [isModalOpen, setModalOpen] = useState(false);
+  const [streamedText, setStreamedText] = useState<string>("");
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
   const [isAboutMeOpen, setIsAboutMeOpen] = useState<boolean>(false);
@@ -660,6 +664,19 @@ const Dashboard = () => {
         TOAST.UPDATE_WORK_EXPERIENCE.type
       );
     }, 100);
+  };
+
+  const genAI = new GoogleGenerativeAI(
+    "AIzaSyD1rX7VkFWhjoEtYUl48DgMFjM2wFl4C7M"
+  );
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const aiRun = async () => {
+    const prompt = `how to write tell me about yourself`;
+    const result = await model.generateContentStream(prompt);
+    const response = await result.response;
+    const text = response.text();
+    setStreamedText(text);
   };
 
   return (
@@ -901,6 +918,7 @@ const Dashboard = () => {
               OpenWorkExperienceEditModal={OpenWorkExperienceEditModal}
             />
           )}
+          {streamedText}
           <MobileButtonDiv>
             <PrimaryButton
               onClick={() => {
