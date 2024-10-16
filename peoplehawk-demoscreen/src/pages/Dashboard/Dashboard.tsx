@@ -401,8 +401,6 @@ const Dashboard = () => {
         list && setPersonalityIndex(list.index);
       }
     }
-
-    await aiRun();
   };
 
   const handleFileChange = async (
@@ -664,19 +662,6 @@ const Dashboard = () => {
         TOAST.UPDATE_WORK_EXPERIENCE.type
       );
     }, 100);
-  };
-
-  const genAI = new GoogleGenerativeAI(
-    "AIzaSyD1rX7VkFWhjoEtYUl48DgMFjM2wFl4C7M"
-  );
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const aiRun = async () => {
-    const prompt = `how to write tell me about yourself`;
-    const result = await model.generateContentStream(prompt);
-    const response = await result.response;
-    const text = response.text();
-    setStreamedText(text);
   };
 
   return (

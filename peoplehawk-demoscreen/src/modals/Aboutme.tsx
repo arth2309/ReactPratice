@@ -7,6 +7,10 @@ import AuthContext from "../store/AuthContext";
 import { useApi } from "../store/ReducerContext";
 import { postAboutMeDetail } from "../services/HomeService";
 import Markdown from "react-markdown";
+import aiIcon from "../assests/img/icon-ai.svg";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 interface ModalProps {
   onClose: () => void;
@@ -100,6 +104,15 @@ const SectionDiv = styled.div({
   padding: "10px",
   borderRadius: "12px",
   marginBottom: "5px",
+  height: "450px",
+  overflow: "auto",
+});
+
+const AIIconDiv = styled.div({
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  marginBottom: "5px",
 });
 
 const ButtonDiv = styled.div({
@@ -108,65 +121,228 @@ const ButtonDiv = styled.div({
   gap: "10px",
 });
 
+const AIIconImg = styled.img({
+  height: "25px",
+  width: "40px",
+  cursor: "pointer",
+});
+
+const OutlineButton = styled.button({
+  cursor: "pointer",
+  position: "relative",
+  background: "transparent",
+  border: "1px solid #F96332",
+  width: "150px",
+  fontSize: "16px",
+  fontWeight: "600",
+  display: "flex",
+  marginTop: "10px",
+  marginBottom: "10px",
+  justifyContent: "center",
+  borderRadius: "20px",
+  color: "#394456",
+});
+let listArray: string[] = [];
 const Aboutme: React.FC<ModalProps> = ({ onClose, note }) => {
   const { userData } = useContext(AuthContext);
   const { state, dispatch } = useApi();
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isAutoGenerateText, setIsAutoGenerateText] = useState<boolean>(false);
+  const [streamedText, setStreamedText] = useState<string>("");
+  const [count, setCount] = useState<number>(0);
+  const [isRegenerate, setIsRegenerate] = useState<boolean>(false);
 
   useEffect(() => {
     setIsEdit(state.aboutMe ? true : false);
   }, [state]);
 
+  const genAI = new GoogleGenerativeAI(
+    "AIzaSyD1rX7VkFWhjoEtYUl48DgMFjM2wFl4C7M"
+  );
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const aiRun = async () => {
+    setIsAutoGenerateText(true);
+    const prompt = `please create about me description here are my details my name is ${
+      state.firstName + " " + state.lastName
+    } my birth country is ${
+      state.countryName
+    } i have broker as personality type`;
+    const result = await model.generateContentStream(prompt);
+
+    let res = await result.stream.next();
+
+    while (!res.done) {
+      if (res.value.candidates) {
+        setStreamedText(
+          (prevState) =>
+            prevState + res.value.candidates[0].content.parts[0].text
+        );
+      }
+      res = await result.stream.next();
+    }
+    listArray.push((await result.response).text());
+    setCount(listArray.length);
+    setIsRegenerate(true);
+  };
+
+  const regenerateText = async () => {
+    setIsRegenerate(false);
+    setStreamedText("");
+    await aiRun();
+  };
+
+  const goToForward = () => {
+    if (count < listArray.length) {
+      setCount((prevState) => prevState + 1);
+      setStreamedText(listArray[count]);
+    }
+  };
+
+  const goToBackward = () => {
+    if (count > 1) {
+      setCount((prevState) => prevState - 1);
+      setStreamedText(listArray[count - 2]);
+    }
+  };
+
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <ModalClose onClick={onClose}>
-            <HighlightOffOutlinedIcon fontSize="large" />
-          </ModalClose>
-          <Title>Tell me About Yourself!!</Title>
-        </ModalHeader>
-
-        {isEdit ? (
-          <div>
-            <SectionDiv>
-              <Markdown>{state.aboutMe}</Markdown>
-            </SectionDiv>
-            <ButtonDiv>
-              <SaveButton
-                onClick={() => {
-                  setIsEdit(false);
-                }}
-              >
-                Edit
-              </SaveButton>
-            </ButtonDiv>
-          </div>
-        ) : (
-          <Formik
-            initialValues={{
-              userId: userData ? userData.Id : 0,
-              text: "",
-            }}
-            onSubmit={async (values) => {
-              const response = await postAboutMeDetail(values);
-              response &&
-                dispatch({ type: "POST_ABOUT_ME", payload: values.text });
+          <ModalClose
+            onClick={() => {
+              listArray = [];
+              onClose();
             }}
           >
-            {({ setFieldValue }) => (
-              <Form>
-                <NoteTextArea
-                  name="text"
-                  defaultValue={state.aboutMe ? state.aboutMe : ""}
-                  onChange={(e) => {
-                    setFieldValue("text", e.target.value);
-                  }}
-                />
-                <SaveButton type="submit">Save</SaveButton>
-              </Form>
+            <HighlightOffOutlinedIcon fontSize="large" />
+          </ModalClose>
+          <Title>
+            {isAutoGenerateText
+              ? "Auto Generated About me"
+              : "Tell me About Yourself!!"}
+          </Title>
+        </ModalHeader>
+        <AIIconDiv>
+          <div>
+            {" "}
+            {isAutoGenerateText && (
+              <div
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                onClick={() => {
+                  listArray = [];
+                  setStreamedText("");
+                  setIsAutoGenerateText(false);
+                  setCount(0);
+                }}
+              >
+                <ArrowBackIosNewIcon /> Back
+              </div>
             )}
-          </Formik>
+          </div>
+          {!isAutoGenerateText && (
+            <AIIconImg src={aiIcon} onClick={async () => aiRun()} />
+          )}
+          {listArray.length > 1 && (
+            <div style={{ display: "flex" }}>
+              <div style={{ cursor: "pointer" }} onClick={goToBackward}>
+                <ArrowBackIosNewIcon />
+              </div>
+              {count + "/" + listArray.length}
+              <div style={{ cursor: "pointer" }} onClick={goToForward}>
+                <ArrowForwardIosIcon />
+              </div>
+            </div>
+          )}
+        </AIIconDiv>
+        {!isAutoGenerateText ? (
+          isEdit ? (
+            <div>
+              <SectionDiv>
+                <Markdown>{state.aboutMe}</Markdown>
+              </SectionDiv>
+              <ButtonDiv>
+                <SaveButton
+                  onClick={() => {
+                    setIsEdit(false);
+                  }}
+                >
+                  Edit
+                </SaveButton>
+              </ButtonDiv>
+            </div>
+          ) : (
+            <Formik
+              initialValues={{
+                userId: userData ? userData.Id : 0,
+                text: "",
+              }}
+              onSubmit={async (values) => {
+                const response = await postAboutMeDetail(values);
+                response &&
+                  dispatch({ type: "POST_ABOUT_ME", payload: values.text });
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <NoteTextArea
+                    name="text"
+                    defaultValue={state.aboutMe ? state.aboutMe : ""}
+                    onChange={(e) => {
+                      setFieldValue("text", e.target.value);
+                    }}
+                  />
+                  <SaveButton type="submit">Save</SaveButton>
+                </Form>
+              )}
+            </Formik>
+          )
+        ) : (
+          <>
+            <SectionDiv>
+              <Markdown>{streamedText}</Markdown>
+            </SectionDiv>
+
+            <div style={{ display: "flex" }}>
+              {isRegenerate && listArray.length > 0 && (
+                <SaveButton
+                  onClick={async () => {
+                    const response = await postAboutMeDetail({
+                      userId: userData ? userData.Id : 0,
+                      text: streamedText,
+                    });
+                    response &&
+                      dispatch({
+                        type: "POST_ABOUT_ME",
+                        payload: streamedText,
+                      });
+                    response && (listArray = []);
+                    response && setIsEdit(false);
+                    response && setStreamedText("");
+                    response && setIsAutoGenerateText(false);
+                  }}
+                >
+                  Save
+                </SaveButton>
+              )}
+              {isRegenerate &&
+                listArray.length === count &&
+                listArray.length < 3 && (
+                  <SaveButton
+                    onClick={async () => {
+                      regenerateText();
+                    }}
+                  >
+                    Regenerate
+                  </SaveButton>
+                )}
+            </div>
+          </>
         )}
       </ModalContent>
     </ModalOverlay>
