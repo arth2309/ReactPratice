@@ -303,3 +303,10 @@ export interface ProfileLinkListProps {
   token: string;
   dayToExpire: number;
 }
+
+export interface AddClientProps {
+  clientName: string;
+  email: string;
+  countryId: number;
+  memberCode: string;
+}

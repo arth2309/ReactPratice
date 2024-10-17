@@ -188,6 +188,11 @@ const BorderStraight = styled.div({
   borderLeft: "1px solid black",
 });
 
+const FlexDiv = styled.div({
+  display: "flex",
+  gap: "10px",
+});
+
 const MemberContainer = styled.div({
   display: "flex",
   flexWrap: "wrap",
@@ -350,6 +355,22 @@ const Memberanalytics = () => {
     navigate(ROUTES.DEFAULT_SHORTLIST);
   };
 
+  const goToNavigate = (route: string) => {
+    state.isResume = urlState.isResume;
+    state.isPersonalityTest = urlState.isPersonalityTest;
+    state.isProfilePhoto = urlState.isProfilePhoto;
+    state.orderedBy = urlState.orderedBy;
+    state.searchTerm = urlState.searchTerm;
+    state.countryId = urlState.countryId;
+    state.memberType = urlState.memberType;
+    state.sortOrder = urlState.sortOrder;
+    state.orderedBy = urlState.orderedBy;
+    state.sortBy = urlState.sortBy;
+    state.isOn = urlState.isOn;
+    state.page = urlState.page;
+    navigate(route);
+  };
+
   const [shortListstate, dispatch] = useReducer(shortlistReducer, intialState);
 
   return (
@@ -422,9 +443,18 @@ const Memberanalytics = () => {
               </ItemContainer>
             </UpperHeader>
             <LowerHeader>
-              <ShortlistButton onClick={goToShortlist}>
-                View Shortlist
-              </ShortlistButton>
+              <FlexDiv>
+                <ShortlistButton onClick={goToShortlist}>
+                  View Shortlist
+                </ShortlistButton>
+                <ShortlistButton
+                  onClick={() => {
+                    goToNavigate(ROUTES.CLIENT_LIST);
+                  }}
+                >
+                  My Client
+                </ShortlistButton>
+              </FlexDiv>
               <ShortlistDiv>
                 <SortedByDiv>
                   <div style={{ position: "absolute" }}>

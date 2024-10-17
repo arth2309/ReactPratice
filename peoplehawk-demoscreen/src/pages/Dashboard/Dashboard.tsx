@@ -883,8 +883,7 @@ const Dashboard = () => {
               Your <RightHeadingSpan>EPIC</RightHeadingSpan> Progress
             </RightHeading1>
           </RightHeading>
-          {authctx.userData &&
-          authctx.userData.MemberType !== "Experienced Hire" ? (
+          {ctx.state.memberType !== "Experienced Hire" ? (
             <EducationList
               dataList={ctx.state.educations}
               openProfile={openProfile}

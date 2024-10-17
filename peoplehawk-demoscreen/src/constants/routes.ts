@@ -13,4 +13,6 @@ export const ROUTES = {
   LINK_EXPIRE: "/link-not-found",
   TOKEN_PROFILE: "/candidate/:token",
   OTHERS: "*",
+  CLIENT_LIST: "/client/list",
+  CLIENT_CREATE: "/client/create",
 };

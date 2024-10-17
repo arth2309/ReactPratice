@@ -51,4 +51,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserShortlist> userShortlists {get; set;}
 
     public DbSet<ShareProfileToken> shareProfileToken { get; set; }
+
+    public DbSet<Candidate> Candidates { get; set; }
+
+    public DbSet<Client> Clients { get; set; }
+
+    public DbSet<Admin> Admins { get; set; }
 }

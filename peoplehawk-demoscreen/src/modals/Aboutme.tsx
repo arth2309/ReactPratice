@@ -173,7 +173,7 @@ const Aboutme: React.FC<ModalProps> = ({ onClose, note }) => {
     let res = await result.stream.next();
 
     while (!res.done) {
-      if (res.value.candidates) {
+      if (res.value !== undefined && res.value.candidates) {
         setStreamedText(
           (prevState) =>
             prevState + res.value.candidates[0].content.parts[0].text

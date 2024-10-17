@@ -37,9 +37,10 @@ public class UserService : GenericService<User>, IUserService
     private readonly ICompletionRepository _completionRepository;
     private readonly IRequestService _requestService;
     private readonly IConfiguration _configuration;
+    private readonly ICandidateRepository _candidateRepository;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService) : base(userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService,ICandidateRepository candidateRepository) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -60,6 +61,7 @@ public class UserService : GenericService<User>, IUserService
         _memberAnalyticsService = memberAnalyticsService;
         _requestService = requestService;
         _configuration = configuration;
+        _candidateRepository = candidateRepository;
 
 
     }
@@ -191,10 +193,6 @@ public class UserService : GenericService<User>, IUserService
             var fileBytes = File.ReadAllBytes(filePath);
             base64String = Convert.ToBase64String(fileBytes);
         }
-
-
-
-
 
         userDetailDTO.ProfilePhoto = base64String;
         userDetailDTO.FirstName = user.FirstName;

@@ -18,6 +18,8 @@ import { getToken } from "../utils/manageAccessToken";
 import Candidateprofile from "../pages/CandidateProfile/Candidateprofile";
 import MemberShortlist from "../pages/Shortlist/MemberShortlist";
 import LinkExpire from "../pages/Error/LinkExpire";
+import MyClient from "../pages/Client/MyClient";
+import ClientCreate from "../pages/Client/ClientCreate";
 
 const Routes = () => {
   const authCtx = useContext(AuthContext);
@@ -120,6 +122,8 @@ const Routes = () => {
           path={ROUTES.DEFAULT_SHORTLIST}
           element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
         ></Route>
+        <Route path={ROUTES.CLIENT_LIST} element={<MyClient />}></Route>
+        <Route path={ROUTES.CLIENT_CREATE} element={<ClientCreate />}></Route>
       </Main>
     </BrowserRouter>
   );
