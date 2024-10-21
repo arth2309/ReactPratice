@@ -15,4 +15,7 @@ export const ROUTES = {
   OTHERS: "*",
   CLIENT_LIST: "/client/list",
   CLIENT_CREATE: "/client/create",
+  CLIENT_PROFILE: "/client/:clientId/profile",
+  CLIENT_GENERATE_PASSWORD: "/create-password",
+  CLIENT_DASHBOARD: "/client",
 };

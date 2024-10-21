@@ -38,9 +38,11 @@ public class UserService : GenericService<User>, IUserService
     private readonly IRequestService _requestService;
     private readonly IConfiguration _configuration;
     private readonly ICandidateRepository _candidateRepository;
+    private readonly IClientRepository _clientRepository;
+    private readonly IAdminRepository _adminRepository;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService,ICandidateRepository candidateRepository) : base(userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService,ICandidateRepository candidateRepository,IAdminRepository adminRepository,IClientRepository clientRepository) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -62,8 +64,8 @@ public class UserService : GenericService<User>, IUserService
         _requestService = requestService;
         _configuration = configuration;
         _candidateRepository = candidateRepository;
-
-
+        _adminRepository = adminRepository;
+        _clientRepository = clientRepository;
     }
 
     public async Task<string> Login(LoginDetails loginDetails)
@@ -79,12 +81,31 @@ public class UserService : GenericService<User>, IUserService
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(secretKey);
 
+        int typeId = 0;
+
+        if(user.RoleId == 1)
+        {
+            Candidate candidate = await _candidateRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            typeId = candidate.Id;
+        }
+        else if(user.RoleId == 2)
+        {
+            Admin admin = await _adminRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            typeId = admin.Id;
+        }
+        else if(user.RoleId == 3) 
+        {
+            Client client = await _clientRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);  
+            typeId= client.Id;
+        }
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, Convert.ToString(user.Id)),
                 new Claim (ClaimTypes.Role,user.Role.RoleName ?? ""),
+                 new Claim("typeId",Convert.ToString(typeId)),
                 new Claim("UserData",JsonSerializer.Serialize(user))
             }),
             Expires = DateTime.Now.AddDays(1),
@@ -102,17 +123,23 @@ public class UserService : GenericService<User>, IUserService
         {
             throw new BadHttpRequestException(ErrorMessages.EmailAlreadyExist);
         }
-        userDTO.Password = HashHelper.HashedInput(userDTO.Password);
+        userDTO.Password = userDTO.Password != null ? HashHelper.HashedInput(userDTO.Password) : null;
         var entity = await AddAsync(_mapper.Map<User>(userDTO));
+        userDTO.Id = entity.Id;
 
-        Completion completion = new Completion();
-        completion.UserId = entity.Id;
-        var entity1 = await _completionRepository.AddAsync(completion);
+        if(userDTO.RoleId == 1)
+        {
 
-        MemberAnalytics memberAnalytics = new MemberAnalytics();
-        memberAnalytics.UserId = entity.Id;
-        memberAnalytics.CompletionId = entity1.Id;
-        await _memberAnalyticsService.AddAsync(memberAnalytics);
+            Completion completion = new Completion();
+            completion.UserId = entity.Id;
+            var entity1 = await _completionRepository.AddAsync(completion);
+
+            MemberAnalytics memberAnalytics = new MemberAnalytics();
+            memberAnalytics.UserId = entity.Id;
+            memberAnalytics.CompletionId = entity1.Id;
+            await _memberAnalyticsService.AddAsync(memberAnalytics);
+        }
+
         return userDTO;
     }
 
@@ -193,6 +220,8 @@ public class UserService : GenericService<User>, IUserService
             var fileBytes = File.ReadAllBytes(filePath);
             base64String = Convert.ToBase64String(fileBytes);
         }
+
+        var candidate = await _candidateRepository.FirstOrDefaultWithIncludesAsync(x => x.UserId == UserId, x => x.User);
 
         userDetailDTO.ProfilePhoto = base64String;
         userDetailDTO.FirstName = user.FirstName;

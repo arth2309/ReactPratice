@@ -57,4 +57,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Client> Clients { get; set; }
 
     public DbSet<Admin> Admins { get; set; }
+
+    public DbSet<ClientPasswordToken> ClientPasswordTokens { get; set; }
+
+    public DbSet<CandidateClient> CandidatesClients { get; set; }  
 }

@@ -19,7 +19,7 @@ public class UserDTO
     [Required]
     public string? LastName { get; set; }
 
-    [Required]
+ 
     public string? MemberType { get; set; }
 
     [Required]

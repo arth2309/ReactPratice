@@ -305,8 +305,29 @@ export interface ProfileLinkListProps {
 }
 
 export interface AddClientProps {
-  clientName: string;
+  id: number;
+  adminId: number;
+  lastName: string;
+  firstName: string;
   email: string;
   countryId: number;
-  memberCode: string;
+  roleId: number;
+  organisationCode: string;
+}
+
+export interface ViewClientProps {
+  id: number;
+  lastName: string;
+  firstName: string;
+  email: string;
+  countryName: string;
+  organisationCode: string;
+  profilePhoto: string | null;
+  isActive: boolean;
+}
+
+export interface ClientGeneratePasswordProps {
+  userId: number;
+  password: string;
+  confirmPassword: string;
 }

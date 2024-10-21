@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage } from "formik";
+import { addClient } from "../../services/AdminService";
 
 const Container = styled.div({
   display: "flex",
@@ -132,21 +133,26 @@ const ClientCreate = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    clientName: Yup.string().required("Please enter client name"),
+    firstName: Yup.string().required("Please enter client name"),
+    lastName: Yup.string().required("Please enter client name"),
     email: Yup.string()
       .required("Please enter email")
       .email("Please enter a valid email"),
     countryId: Yup.number()
       .moreThan(0, "Please select a Country")
       .required("Please select a Country"),
-    memberCode: Yup.string().required("please enter organisation code"),
+    organisationCode: Yup.string().required("please enter organisation code"),
   });
 
   const intialValues: AddClientProps = {
-    clientName: "",
+    firstName: "",
+    lastName: "",
+    adminId: 1,
+    id: 0,
     email: "",
     countryId: 0,
-    memberCode: "",
+    organisationCode: "",
+    roleId: 3,
   };
 
   return (
@@ -156,8 +162,9 @@ const ClientCreate = () => {
           <Formik
             initialValues={intialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              console.log(values);
+            onSubmit={async (values) => {
+              const response = await addClient(values);
+              response && navigate(`/client/${response}/profile`);
             }}
           >
             {({ setFieldValue }) => (
@@ -178,14 +185,27 @@ const ClientCreate = () => {
                     <div>
                       <Input
                         className="input-div"
-                        label="Client Name"
+                        label="First Name"
                         required
                         onChange={(e) => {
-                          setFieldValue("clientName", e.target.value);
+                          setFieldValue("firstName", e.target.value);
                         }}
                       />
                       <div className="error">
-                        <ErrorMessage name="clientName" />
+                        <ErrorMessage name="firstName" />
+                      </div>
+                    </div>
+                    <div>
+                      <Input
+                        className="input-div"
+                        label="Last Name"
+                        required
+                        onChange={(e) => {
+                          setFieldValue("lastName", e.target.value);
+                        }}
+                      />
+                      <div className="error">
+                        <ErrorMessage name="lastName" />
                       </div>
                     </div>
                     <div>
@@ -227,11 +247,11 @@ const ClientCreate = () => {
                         label="Member Registration Code"
                         required
                         onChange={(e) => {
-                          setFieldValue("memberCode", e.target.value);
+                          setFieldValue("organisationCode", e.target.value);
                         }}
                       />
                       <div className="error">
-                        <ErrorMessage name="memberCode" />
+                        <ErrorMessage name="organisationCode" />
                       </div>
                     </div>
                   </MainContainer>

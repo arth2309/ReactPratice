@@ -115,10 +115,6 @@ namespace PeoplehawkRepositories.Migrations
                     b.Property<string>("AboutMe")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("integer");
-
                     b.Property<string>("MemberType")
                         .HasColumnType("text");
 
@@ -127,11 +123,32 @@ namespace PeoplehawkRepositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.CandidateClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CandidateId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("CandidatesClients");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
@@ -195,6 +212,12 @@ namespace PeoplehawkRepositories.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("isAllowed")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdminId");
@@ -202,6 +225,30 @@ namespace PeoplehawkRepositories.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.ClientPasswordToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("token")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ClientPasswordTokens");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.Competency", b =>
@@ -746,21 +793,32 @@ namespace PeoplehawkRepositories.Migrations
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.Candidate", b =>
                 {
-                    b.HasOne("PeoplehawkRepositories.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PeoplehawkRepositories.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.CandidateClient", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PeoplehawkRepositories.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidate");
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.Chart", b =>
@@ -789,6 +847,17 @@ namespace PeoplehawkRepositories.Migrations
                         .IsRequired();
 
                     b.Navigation("Admin");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PeoplehawkRepositories.Models.ClientPasswordToken", b =>
+                {
+                    b.HasOne("PeoplehawkRepositories.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

@@ -18,8 +18,4 @@ public class Candidate
 
     public string? AboutMe{ get; set; }
 
-    [ForeignKey("Client")]
-    public int? ClientId { get; set; }
-
-    public Client Client { get; set; }
 }

@@ -48,4 +48,10 @@ public class GenericService<T> : IGenericService<T> where T : class
         await _genericRepository.AddAsync(entity);
         return entity;
     }
+
+    public async Task<T> UpdateAsync(T entity)
+    {
+        await _genericRepository.UpdateAsync(entity);
+        return entity;
+    }
 }

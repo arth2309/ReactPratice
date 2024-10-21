@@ -10,6 +10,7 @@ type AuthProvider = {
 
 interface JwtPayload {
   UserData: string;
+  typeId: string;
 }
 
 interface Candidate {
@@ -22,6 +23,7 @@ interface Candidate {
 
 interface Auth {
   token: string | null;
+  typeId: string | null;
   isLoggedIn: boolean;
   userData: Candidate | null;
   login: (token: string) => void;
@@ -30,6 +32,7 @@ interface Auth {
 
 const AuthContext = createContext<Auth>({
   token: "",
+  typeId: "",
   isLoggedIn: false,
   userData: null,
   login: (token) => {},
@@ -39,6 +42,9 @@ const AuthContext = createContext<Auth>({
 export const AuthContextProvider = (props: AuthProvider) => {
   const intialToken = getToken();
   const [token, setToken] = useState<string | null>(intialToken);
+  const [typeId, setTypeId] = useState<string | null>(
+    intialToken ? JSON.parse(decodeJwt<JwtPayload>(intialToken).typeId) : null
+  );
   const [userData, setUserData] = useState<Candidate | null>(
     intialToken ? JSON.parse(decodeJwt<JwtPayload>(intialToken).UserData) : null
   );
@@ -98,6 +104,7 @@ export const AuthContextProvider = (props: AuthProvider) => {
   };
 
   const contextValue: Auth = {
+    typeId: typeId,
     token: token,
     userData: userData,
     isLoggedIn: userIsLoggedIn,

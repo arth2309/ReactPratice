@@ -20,6 +20,9 @@ import MemberShortlist from "../pages/Shortlist/MemberShortlist";
 import LinkExpire from "../pages/Error/LinkExpire";
 import MyClient from "../pages/Client/MyClient";
 import ClientCreate from "../pages/Client/ClientCreate";
+import ClientProfile from "../pages/Client/ClientProfile";
+import { ClientPasswordGenerate } from "../pages/Authentication/ClientPasswordGenerate";
+import ClientDashBoard from "../pages/ClientHome/ClientDashBoard";
 
 const Routes = () => {
   const authCtx = useContext(AuthContext);
@@ -30,6 +33,8 @@ const Routes = () => {
       return <Navigate to={ROUTES.HOME} />;
     } else if (roleId === 2) {
       return <Navigate to={ROUTES.MEMBER_ANALYTICS} />;
+    } else if (roleId === 3) {
+      return <Navigate to={ROUTES.CLIENT_DASHBOARD} />;
     } else {
       return <Navigate to={ROUTES.LOGIN} />;
     }
@@ -122,8 +127,26 @@ const Routes = () => {
           path={ROUTES.DEFAULT_SHORTLIST}
           element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
         ></Route>
-        <Route path={ROUTES.CLIENT_LIST} element={<MyClient />}></Route>
-        <Route path={ROUTES.CLIENT_CREATE} element={<ClientCreate />}></Route>
+        <Route
+          path={ROUTES.CLIENT_LIST}
+          element={protectRoutes(authCtx.isLoggedIn, 2, MyClient)}
+        ></Route>
+        <Route
+          path={ROUTES.CLIENT_CREATE}
+          element={protectRoutes(authCtx.isLoggedIn, 2, ClientCreate)}
+        ></Route>
+        <Route
+          path={ROUTES.CLIENT_PROFILE}
+          element={protectRoutes(authCtx.isLoggedIn, 2, ClientProfile)}
+        ></Route>
+        <Route
+          path={ROUTES.CLIENT_GENERATE_PASSWORD}
+          element={<ClientPasswordGenerate />}
+        ></Route>
+        <Route
+          path={ROUTES.CLIENT_DASHBOARD}
+          element={protectRoutes(authCtx.isLoggedIn, 3, ClientDashBoard)}
+        ></Route>
       </Main>
     </BrowserRouter>
   );

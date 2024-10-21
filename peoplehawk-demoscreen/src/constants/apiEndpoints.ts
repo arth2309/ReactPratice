@@ -74,4 +74,12 @@ export const API_ENDPOINTS = {
     `candidate/verify-token?token=${token}`,
   PROFILE_LINK_LIST: (userId: number) =>
     `candidate/profile-link-list?UserId=${userId}`,
+  ADD_CLIENT: "candidate/client/create",
+  GET_CLIENT: (id: number) => `candidate/client/${id}`,
+  CLIENT_PASSWORD_INVITATION_LINK: (email: string) =>
+    `candidate/client/invitation-link?email=${email}`,
+  CLIENT_PASSWORD_VERIFY_TOKEN: (email: string, token: string) =>
+    `candidate/client?email=${email}&token=${token}`,
+  CLIENT_REGISTER: "candidate/client/password",
+  CLIENT_LIST: (adminId: number) => `candidate/client/list?AdminId=${adminId}`,
 };

@@ -17,5 +17,9 @@ public class Client
     [ForeignKey("Admin")]
     public int? AdminId { get; set; }
 
+    public bool isActive { get; set; }
+
+    public bool isAllowed { get; set; }
+
     public Admin Admin { get; set; }
 }
