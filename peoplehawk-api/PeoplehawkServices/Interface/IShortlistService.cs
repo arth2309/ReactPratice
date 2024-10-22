@@ -8,5 +8,5 @@ public interface IShortlistService
     Task<ShortlistDto> UpdateShortlist(ShortlistDto shortlistDto);
     Task<ShortlistDto> AddUserinShortlist(ShortlistDto shortlistDto);
     Task<ShortlistDto> RemoveUserFromShortlist(int UserId, int ShortlistId);
-    Task<List<Shortlist>> GetAllShortlist();
+    Task<List<Shortlist>> GetAllShortlist(int id);
 }

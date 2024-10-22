@@ -14,4 +14,14 @@ public interface IClientService : IGenericService<Client>
 
     Task<bool> VerifyToken(string email,string token);
     Task<bool> CreatePassword(LoginDetails loginDetails);
-}
+
+    Task<PaginatedList<MemberAnalyticsDTO>> GetList(
+       int page,
+       int userId,
+       int typeId,
+         bool isResume = false,
+         bool isPersonalityTest = false,
+      string sortOrder = "asc", int orderedBy = 0,
+       bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null);
+    
+    }

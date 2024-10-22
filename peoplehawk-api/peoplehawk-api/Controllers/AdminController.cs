@@ -22,10 +22,12 @@ public class AdminController : BaseController
         _requestService = requestService;
         _clientService = clientService;
     }
+
+    [AllowAnonymous]
     [HttpGet("member-analytics")]
-    public async Task<ActionResult<PaginatedList<MemberAnalyticsDTO>>> MemberAnalyticsList(int page = 1, bool isResume = false, bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+    public async Task<ActionResult<PaginatedList<MemberAnalyticsDTO>>> MemberList(int page = 1, int userId = 1, int typeId = 1, bool isResume = false, bool isPersonalityTest = false, string sortOrder = "asc", int orderedBy = 0, bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
-        return await _memberAnalyticsService.GetList(page, isResume, isPersonalityTest, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
+        return await _memberAnalyticsService.GetList(page, userId, typeId, isResume, isPersonalityTest, sortOrder, orderedBy, isProfilePhoto, searchTerm, countryId, memberType);
     }
 
     [AllowAnonymous]

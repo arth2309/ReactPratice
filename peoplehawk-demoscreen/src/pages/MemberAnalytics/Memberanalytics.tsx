@@ -237,7 +237,7 @@ const Memberanalytics = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isShortlistDialog, setIsShortlistDialog] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const { logout } = useContext(AuthContext);
+  const { logout, userData, typeId } = useContext(AuthContext);
 
   const handleSwitchToggle = () => {
     // setIsOn(prevState => !prevState);
@@ -295,6 +295,8 @@ const Memberanalytics = () => {
   const fetchData = async () => {
     const result = await MemberAnalyticsList(
       urlState.page,
+      userData ? userData.Id : 0,
+      typeId ? parseInt(typeId) : 0,
       urlState.isResume,
       urlState.isPersonalityTest,
       urlState.sortOrder,
@@ -352,7 +354,11 @@ const Memberanalytics = () => {
     state.sortBy = urlState.sortBy;
     state.isOn = urlState.isOn;
     state.page = urlState.page;
-    navigate(ROUTES.DEFAULT_SHORTLIST);
+    navigate(
+      userData && userData.RoleId == 3
+        ? ROUTES.CLIENT_DEFAULT_SHORTLIST
+        : ROUTES.DEFAULT_SHORTLIST
+    );
   };
 
   const goToNavigate = (route: string) => {
@@ -447,13 +453,15 @@ const Memberanalytics = () => {
                 <ShortlistButton onClick={goToShortlist}>
                   View Shortlist
                 </ShortlistButton>
-                <ShortlistButton
-                  onClick={() => {
-                    goToNavigate(ROUTES.CLIENT_LIST);
-                  }}
-                >
-                  My Client
-                </ShortlistButton>
+                {userData && userData.RoleId == 2 && (
+                  <ShortlistButton
+                    onClick={() => {
+                      goToNavigate(ROUTES.CLIENT_LIST);
+                    }}
+                  >
+                    My Client
+                  </ShortlistButton>
+                )}
               </FlexDiv>
               <ShortlistDiv>
                 <SortedByDiv>

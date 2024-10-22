@@ -87,6 +87,7 @@ export const intialState: CandidateDetail = {
   textNoteList: [],
   aboutMe: null,
   request: null,
+  ownedBy_Client: null,
 };
 
 export const apiReducer = (

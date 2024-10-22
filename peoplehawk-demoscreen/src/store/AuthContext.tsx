@@ -79,6 +79,7 @@ export const AuthContextProvider = (props: AuthProvider) => {
     setToken(token);
     const claims = decodeJwt<JwtPayload>(token);
     setUserData(JSON.parse(claims.UserData));
+    setTypeId(JSON.parse(claims.typeId));
     token && storeToken(token);
   };
 

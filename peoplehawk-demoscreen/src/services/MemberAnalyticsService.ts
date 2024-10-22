@@ -4,6 +4,8 @@ import { MemberAnalytics, PaginatedList } from "../interface/Interface";
 
 export const MemberAnalyticsList = async (
   page: number,
+  userId: number,
+  typeId: number,
   isResume: boolean,
   isPersonalityTest: boolean,
   sortOrder: string,
@@ -17,6 +19,8 @@ export const MemberAnalyticsList = async (
     const response = await apiClient.get(
       API_ENDPOINTS.MEMBER_ANALYTICS(
         page,
+        userId,
+        typeId,
         isResume,
         isPersonalityTest,
         sortOrder,

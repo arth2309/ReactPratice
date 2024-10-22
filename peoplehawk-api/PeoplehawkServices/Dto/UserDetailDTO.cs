@@ -43,4 +43,6 @@ public class UserDetailDTO
     public List<AudioNoteDTO>? AudioNoteList { get; set; }  
 
     public RequestDTO? Request { get; set; }
+
+    public ClientDto? OwnedBy_Client { get; set; }
 }

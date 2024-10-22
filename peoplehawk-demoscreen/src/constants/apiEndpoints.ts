@@ -19,6 +19,8 @@ export const API_ENDPOINTS = {
   CRUD_FILE: (UserId: number) => `candidate/files/${UserId}`,
   MEMBER_ANALYTICS: (
     page: number,
+    userId: number,
+    typeId: number,
     isResume: boolean,
     isPersonalityTest: boolean,
     sortOrder: string,
@@ -28,7 +30,7 @@ export const API_ENDPOINTS = {
     countryId?: number,
     memberType?: string
   ) => {
-    let url = `candidate/member-analytics?page=${page}&isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
+    let url = `candidate/member-analytics?page=${page}&userId=${userId}&typeId=${typeId}&isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
 
     if (searchTerm) {
       url += `&searchTerm=${searchTerm}`;
@@ -61,6 +63,7 @@ export const API_ENDPOINTS = {
   MANAGE_NOTE: (userId: number, isNote: boolean) =>
     `candidate/manage-note?UserId=${userId}&isNote=${isNote}`,
   SHORTLIST: "candidate/shortlist",
+  GET_SHORTLIST: (id: number) => `candidate/shortlist/${id}`,
   USERSHORTLIST: "candidate/shortlist/user",
   DELETE_USERSHORTLIST: (userId: number, shortListId: number) =>
     `candidate/shortlist/user?UserId=${userId}&ShortlistId=${shortListId}`,

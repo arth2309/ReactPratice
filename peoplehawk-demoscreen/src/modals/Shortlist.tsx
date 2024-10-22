@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { addShortlist, getShortlist } from "../services/ShortlistService";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useEffect, useState, useContext } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import { Action } from "../store/ShortlistReducer";
@@ -17,6 +17,7 @@ import {
 import { Formik, Form, ErrorMessage } from "formik";
 import Input from "../components/layout/form/Input";
 import * as Yup from "yup";
+import AuthContext from "../store/AuthContext";
 
 interface ModalProps {
   onClose: () => void;
@@ -180,8 +181,9 @@ const Shortlist: React.FC<ModalProps> = ({
     // eslint-disable-next-line
   }, []);
 
+  const { userData } = useContext(AuthContext);
   const fetchData = async () => {
-    const response = await getShortlist();
+    const response = await getShortlist(userData ? userData.Id : 0);
     response && dispatch({ type: "POST_SHORTLIST", payload: response });
   };
 
@@ -193,11 +195,22 @@ const Shortlist: React.FC<ModalProps> = ({
     response &&
       dispatch({
         type: "ADD_IN_USERLIST",
-        payload: { id: response.id, name: response.name },
+        payload: {
+          id: response.id,
+          name: response.name,
+          createdBy: userData ? userData.Id : 0,
+        },
       });
     response &&
       onUserlist(
-        [...state.userList, { id: response.id, name: response.name }],
+        [
+          ...state.userList,
+          {
+            id: response.id,
+            name: response.name,
+            createdBy: userData ? userData.Id : 0,
+          },
+        ],
         state.userId
       );
   };
@@ -245,6 +258,7 @@ const Shortlist: React.FC<ModalProps> = ({
                   id: 0,
                   name: values.title,
                   userId: state.userId,
+                  createdBy: userData ? userData.Id : 0,
                 });
                 response &&
                   dispatch({ type: "ADD_IN_SHORTLIST", payload: response });
@@ -299,6 +313,7 @@ const Shortlist: React.FC<ModalProps> = ({
                         id: item.id,
                         name: item.name,
                         userId: state.userId,
+                        createdBy: userData ? userData.Id : 0,
                       });
                     }}
                   >

@@ -10,6 +10,7 @@ public static class ShortlistExtensions
         {
             Id = shortlist.Id,
             name = shortlist.Name,
+            CreatedBy = shortlist.CreatedBy
         };
     }
 
@@ -18,7 +19,8 @@ public static class ShortlistExtensions
         return new Shortlist
         {
             Id = shortlistDto.Id,
-           Name = shortlistDto.name
+           Name = shortlistDto.name,
+            CreatedBy = shortlistDto.CreatedBy
         };
     }
 }

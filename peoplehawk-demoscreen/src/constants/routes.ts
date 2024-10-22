@@ -9,6 +9,8 @@ export const ROUTES = {
   MEMBER_ANALYTICS: "/member-analytics",
   SHORTLIST: "/shortlist/:id",
   DEFAULT_SHORTLIST: "/shortlist",
+  CLIENT_SHORTLIST: "/client/shortlist/:id",
+  CLIENT_DEFAULT_SHORTLIST: "/client/shortlist",
   PROFILE: "/profile/:userId",
   LINK_EXPIRE: "/link-not-found",
   TOKEN_PROFILE: "/candidate/:token",

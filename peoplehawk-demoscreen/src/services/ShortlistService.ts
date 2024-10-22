@@ -2,9 +2,9 @@ import { apiClient } from "./BaseService";
 import { Shortlist, UserShortlist } from "../interface/Interface";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 
-export const getShortlist = async (): Promise<Shortlist[] | null> => {
+export const getShortlist = async (id: number): Promise<Shortlist[] | null> => {
   try {
-    const response = await apiClient.get(API_ENDPOINTS.SHORTLIST);
+    const response = await apiClient.get(API_ENDPOINTS.GET_SHORTLIST(id));
     return response.data;
   } catch {
     return null;

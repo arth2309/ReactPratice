@@ -6,7 +6,7 @@ using PeoplehawkServices.Interface;
 
 namespace peoplehawk_api.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Client")]
     [Route("api/candidate/shortlist")]
     [ApiController]
     public class ShortlistController : BaseController
@@ -49,10 +49,10 @@ namespace peoplehawk_api.Controllers
             return await _shortlistService.RemoveUserFromShortlist(UserId, ShortlistId);
         }
 
-        [HttpGet]
-        public async Task<List<Shortlist>> Shortlist()
+        [HttpGet("{id:int}")]
+        public async Task<List<Shortlist>> Shortlist(int id)
         {
-            return await _shortlistService.GetAllShortlist();
+            return await _shortlistService.GetAllShortlist(id);
         }
 
         [HttpGet("user")]

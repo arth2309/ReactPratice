@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useEffect, useState, useContext } from "react";
 import { getShortlist } from "../../services/ShortlistService";
 import { Action } from "../../store/ShortlistReducer";
 import CreateShortlist from "../../modals/CreateShortlist";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { useParams } from "react-router-dom";
+import AuthContext from "../../store/AuthContext";
 
 interface SideBarProps {
   state: ShortlistReducerProps;
@@ -104,6 +105,7 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
     // eslint-disable-next-line
   }, []);
 
+  const { userData, typeId } = useContext(AuthContext);
   const [isCreateShortlist, setIsCreateShortlist] = useState<boolean>(false);
   const urlState = useMemberAnalytics();
   const navigate = useNavigate();
@@ -125,7 +127,7 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
   };
 
   const fetchData = async () => {
-    const response = await getShortlist();
+    const response = await getShortlist(userData ? userData.Id : 0);
     response && dispatch({ type: "POST_SHORTLIST", payload: response });
   };
 
@@ -157,7 +159,11 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
                 isSelect={id !== undefined && item.id === parseInt(id)}
                 key={index}
                 onClick={() => {
-                  navigate(`/shortlist/${item.id}`);
+                  navigate(
+                    userData && userData.RoleId === 3
+                      ? `/client/shortlist/${item.id}`
+                      : `/shortlist/${item.id}`
+                  );
                 }}
               >
                 {item.name}

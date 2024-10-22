@@ -32,6 +32,13 @@ const AddClientButton = styled.button({
   },
 });
 
+const MainDiv = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  height: "calc(100vh - 120px)",
+});
+
 const MyClient = () => {
   const navigate = useNavigate();
   const [list, setList] = useState<ViewClientProps[]>([]);
@@ -62,31 +69,42 @@ const MyClient = () => {
           <div style={{ fontWeight: 500, fontSize: "18px" }}>My Clients</div>
           {count + " Clients"}
         </div>
-        <AddClientButton
-          onClick={() => {
-            navigate(ROUTES.CLIENT_CREATE);
+        <div style={{ display: "flex", gap: "10px" }}>
+          <AddClientButton
+            onClick={() => {
+              navigate(ROUTES.CLIENT_CREATE);
+            }}
+          >
+            Add Client
+          </AddClientButton>
+          <AddClientButton
+            onClick={() => {
+              navigate(ROUTES.MEMBER_ANALYTICS);
+            }}
+          >
+            Back
+          </AddClientButton>
+        </div>
+      </Header>
+      <MainDiv>
+        <div
+          style={{
+            display: "flex",
+            padding: "30px 60px",
+            gap: "20px",
+            flexWrap: "wrap",
           }}
         >
-          Add Client
-        </AddClientButton>
-      </Header>
-      <div
-        style={{
-          display: "flex",
-          padding: "30px 60px",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        {list.map((item, index) => (
-          <ClientCard item={item} key={index} />
-        ))}
-      </div>
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+          {list.map((item, index) => (
+            <ClientCard item={item} key={index} />
+          ))}
+        </div>
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </MainDiv>
     </>
   );
 };

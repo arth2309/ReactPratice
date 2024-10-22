@@ -10,5 +10,10 @@ namespace PeoplehawkRepositories.Models
         public int Id { get; set; } 
 
         public string? Name { get; set; }
+
+        [ForeignKey("User")]
+        public int? CreatedBy { get; set; }
+
+        public User User { get; set; }
     }
 }

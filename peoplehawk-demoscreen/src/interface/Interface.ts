@@ -227,6 +227,7 @@ export interface CandidateDetail {
   quizQuestion: Quiz | null;
   audioNoteList: AudioNote[];
   textNoteList: TextNote[];
+  ownedBy_Client: OwnedByClient | null;
 }
 
 export interface WorkExperience {
@@ -276,12 +277,14 @@ export interface Request {
 export interface Shortlist {
   id: number;
   name: string;
+  createdBy: number;
 }
 
 export interface UserShortlist {
   id: number;
   name: string;
   userId: number;
+  createdBy: number;
 }
 
 export interface ShortlistReducerProps {
@@ -324,6 +327,13 @@ export interface ViewClientProps {
   organisationCode: string;
   profilePhoto: string | null;
   isActive: boolean;
+}
+
+export interface OwnedByClient {
+  clientId: number;
+  lastName: string;
+  firstName: string;
+  email: string;
 }
 
 export interface ClientGeneratePasswordProps {

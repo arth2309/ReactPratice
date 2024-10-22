@@ -40,9 +40,10 @@ public class UserService : GenericService<User>, IUserService
     private readonly ICandidateRepository _candidateRepository;
     private readonly IClientRepository _clientRepository;
     private readonly IAdminRepository _adminRepository;
+    private readonly ICandidateClientRepository _candidateClientRepository;
     private string secretKey;
 
-    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService,ICandidateRepository candidateRepository,IAdminRepository adminRepository,IClientRepository clientRepository) : base(userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IMemberAnalyticsService memberAnalyticsService, IPersonalityReportService personalityReportService, ICompletionRepository completionRepository, IResumeFileService resumeFileService, IWorkExperienceService workExperienceService, IAssignmentService assignmentService, IEducationDetailService educationDetailService, IUserCompentencyDetailService userCompentencyDetailService, ICompentencyService compentencyService, IChartService chartService, ICourseInterestService courseInterestService, IQuizService quizService, IAudioNoteService audioNoteService, ITextNoteService textNoteService, IRequestService requestService,ICandidateRepository candidateRepository,IAdminRepository adminRepository,IClientRepository clientRepository,ICandidateClientRepository candidateClientRepository) : base(userRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -66,6 +67,7 @@ public class UserService : GenericService<User>, IUserService
         _candidateRepository = candidateRepository;
         _adminRepository = adminRepository;
         _clientRepository = clientRepository;
+        _candidateClientRepository = candidateClientRepository;
     }
 
     public async Task<string> Login(LoginDetails loginDetails)
@@ -119,10 +121,29 @@ public class UserService : GenericService<User>, IUserService
     public async Task<UserDTO> Register(UserDTO userDTO)
     {
         User user = await FirstorDefaultAsync(a => a.Email == userDTO.Email);
+        int clientId = 0;
+
         if (user != null)
         {
             throw new BadHttpRequestException(ErrorMessages.EmailAlreadyExist);
         }
+
+        if (!userDTO.OrganisationCode.IsNullOrEmpty())
+        {
+            Client client = await _clientRepository.FirstOrDefaultAsync(x => x.OrganisationCode == userDTO.OrganisationCode);
+
+            if(client == null && !client.isActive) 
+            {
+                throw new BadHttpRequestException(ErrorMessages.OrganisatinCodeError);
+            }
+
+            else
+            {
+                clientId = client.Id;
+            }
+        }
+
+       
         userDTO.Password = userDTO.Password != null ? HashHelper.HashedInput(userDTO.Password) : null;
         var entity = await AddAsync(_mapper.Map<User>(userDTO));
         userDTO.Id = entity.Id;
@@ -138,8 +159,21 @@ public class UserService : GenericService<User>, IUserService
             memberAnalytics.UserId = entity.Id;
             memberAnalytics.CompletionId = entity1.Id;
             await _memberAnalyticsService.AddAsync(memberAnalytics);
-        }
 
+            Candidate candidate = new();
+            candidate.UserId = entity.Id;
+            candidate.MemberType = userDTO.MemberType;
+            var entity2 = await _candidateRepository.AddAsync(candidate);   
+
+            if(clientId > 0)
+            {
+                CandidateClient candidateClient = new();
+                candidateClient.ClientId = clientId;
+                candidateClient.CandidateId = entity2.Id;
+                await _candidateClientRepository.AddAsync(candidateClient);
+            }
+            
+        }
         return userDTO;
     }
 
@@ -223,6 +257,16 @@ public class UserService : GenericService<User>, IUserService
 
         var candidate = await _candidateRepository.FirstOrDefaultWithIncludesAsync(x => x.UserId == UserId, x => x.User);
 
+        ClientDto clientDto = new();
+        User clientUser = await _candidateRepository.getUser(UserId);
+        if(clientUser != null)
+        {
+            clientDto.FirstName = clientUser.FirstName;
+            clientDto.LastName = clientUser.LastName;
+            clientDto.Email = clientUser.Email;
+            clientDto.ClientId = clientUser.Id;
+        }
+
         userDetailDTO.ProfilePhoto = base64String;
         userDetailDTO.FirstName = user.FirstName;
         userDetailDTO.LastName = user.LastName;
@@ -243,6 +287,7 @@ public class UserService : GenericService<User>, IUserService
         userDetailDTO.TextNoteList = await _textNoteService.GetNoteList(UserId);
         userDetailDTO.AudioNoteList = await _audioNoteService.GetNoteList(UserId);
         userDetailDTO.Request = await _requestService.GetRequest(UserId);
+        userDetailDTO.OwnedBy_Client = clientUser != null ? clientDto : null;
         return userDetailDTO;
     }
 

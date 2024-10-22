@@ -22,7 +22,6 @@ import MyClient from "../pages/Client/MyClient";
 import ClientCreate from "../pages/Client/ClientCreate";
 import ClientProfile from "../pages/Client/ClientProfile";
 import { ClientPasswordGenerate } from "../pages/Authentication/ClientPasswordGenerate";
-import ClientDashBoard from "../pages/ClientHome/ClientDashBoard";
 
 const Routes = () => {
   const authCtx = useContext(AuthContext);
@@ -118,6 +117,10 @@ const Routes = () => {
           path={ROUTES.SHORTLIST}
           element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
         ></Route>
+        <Route
+          path={ROUTES.CLIENT_SHORTLIST}
+          element={protectRoutes(authCtx.isLoggedIn, 3, MemberShortlist)}
+        ></Route>
         <Route path={ROUTES.LINK_EXPIRE} element={<LinkExpire />}></Route>
         <Route
           path={ROUTES.TOKEN_PROFILE}
@@ -126,6 +129,10 @@ const Routes = () => {
         <Route
           path={ROUTES.DEFAULT_SHORTLIST}
           element={protectRoutes(authCtx.isLoggedIn, 2, MemberShortlist)}
+        ></Route>
+        <Route
+          path={ROUTES.CLIENT_DEFAULT_SHORTLIST}
+          element={protectRoutes(authCtx.isLoggedIn, 3, MemberShortlist)}
         ></Route>
         <Route
           path={ROUTES.CLIENT_LIST}
@@ -145,7 +152,7 @@ const Routes = () => {
         ></Route>
         <Route
           path={ROUTES.CLIENT_DASHBOARD}
-          element={protectRoutes(authCtx.isLoggedIn, 3, ClientDashBoard)}
+          element={protectRoutes(authCtx.isLoggedIn, 3, Memberanalytics)}
         ></Route>
       </Main>
     </BrowserRouter>

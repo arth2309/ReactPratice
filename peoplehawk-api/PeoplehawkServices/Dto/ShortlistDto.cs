@@ -6,4 +6,6 @@ public class ShortlistDto
     public string? name { get; set; }
 
     public int UserId { get; set; }
+
+    public int? CreatedBy { get; set; }
 }

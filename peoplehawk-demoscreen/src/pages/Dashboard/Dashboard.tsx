@@ -817,24 +817,46 @@ const Dashboard = () => {
                   <BrokerImg src={imageArray[personalityIndex]} alt="broker" />
                 )}
                 <Card3Item>
-                  <div style={{ color: "#394456" }}>Your personality Type</div>
-                  <Broker>{typeArray[personalityIndex]}</Broker>
-                  <div>
-                    <div style={{ fontSize: "12px", letterSpacing: "1px" }}>
-                      <i>Your key strengths:</i>
-                    </div>
-                    <BrokerList>Unflappable</BrokerList>
-                    <BrokerList>Concrete</BrokerList>
-                    <BrokerList>Team-builder</BrokerList>
-                  </div>
+                  {ctx.state.quizDetail.isFirstTestGiven ? (
+                    <>
+                      <div style={{ color: "#394456" }}>
+                        Your personality Type
+                      </div>
+                      <Broker>{typeArray[personalityIndex]}</Broker>
+                      <div>
+                        <div style={{ fontSize: "12px", letterSpacing: "1px" }}>
+                          <i>Your key strengths:</i>
+                        </div>
+                        <BrokerList>Unflappable</BrokerList>
+                        <BrokerList>Concrete</BrokerList>
+                        <BrokerList>Team-builder</BrokerList>
+                      </div>
+                    </>
+                  ) : (
+                    <PrimaryButton
+                      onClick={() => {
+                        navigate(ROUTES.PERSONALITY_TEST);
+                      }}
+                    >
+                      Give Personality Test
+                    </PrimaryButton>
+                  )}
                   <div style={{ marginTop: "20px", color: "#394456" }}>
+                    owned By :{" "}
+                    {ctx.state.ownedBy_Client
+                      ? ctx.state.ownedBy_Client.firstName +
+                        " " +
+                        ctx.state.ownedBy_Client.lastName
+                      : "PeopleHawk"}
+                  </div>
+                  {/* <div style={{ marginTop: "20px", color: "#394456" }}>
                     Share your personality type
                   </div>
                   <Card3Img>
                     <Images src={facebook} alt="facebook" />
                     <Images src={twitter} alt="twitter" />
                     <Images src={linkedin} alt="linkedin" />
-                  </Card3Img>
+                  </Card3Img> */}
                 </Card3Item>
               </Card3>
 

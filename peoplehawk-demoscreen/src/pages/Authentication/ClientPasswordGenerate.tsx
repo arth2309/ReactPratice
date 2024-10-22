@@ -95,11 +95,13 @@ export const ClientPasswordGenerate = () => {
             initialValues={intialValues}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-              email &&
-                (await clientRegister({
+              if (email) {
+                const response = await clientRegister({
                   email: email,
                   password: values.password,
-                }));
+                });
+                response && navigate(ROUTES.LOGIN);
+              }
             }}
             validateOnBlur={false}
           >

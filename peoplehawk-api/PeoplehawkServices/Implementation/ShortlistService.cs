@@ -78,8 +78,8 @@ public class ShortlistService : GenericService<Shortlist>,IShortlistService
         };
     }
 
-    public async Task<List<Shortlist>> GetAllShortlist()
+    public async Task<List<Shortlist>> GetAllShortlist(int id)
     {
-        return await GetAllAsync();    
+        return await _shortlistRepository.GetByCriteriaAsync(filter : x =>x.CreatedBy == id);    
     }
 }

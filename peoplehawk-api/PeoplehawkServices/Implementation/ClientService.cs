@@ -19,14 +19,16 @@ public class ClientService : GenericService<Client>,IClientService
     private readonly IClientPasswordTokenRepository _clientPasswordTokenRepository;
     private readonly IMemberAnalyticsRepository _memberAnalyticsRepository;
     private readonly IUserShortlistRepository _userShortlistRepository;
+    private readonly ICandidateClientRepository _candidateClientRepository;
 
-    public ClientService(IClientRepository clientRepository, IUserService userService, IClientPasswordTokenRepository clientPasswordTokenRepository, IMemberAnalyticsRepository memberAnalyticsRepository, IUserShortlistRepository userShortlistRepository) : base(clientRepository)
+    public ClientService(IClientRepository clientRepository, IUserService userService, IClientPasswordTokenRepository clientPasswordTokenRepository, IMemberAnalyticsRepository memberAnalyticsRepository, IUserShortlistRepository userShortlistRepository,ICandidateClientRepository candidateClientRepository) : base(clientRepository)
     {
         _clientRepository = clientRepository;
         _userService = userService;
         _clientPasswordTokenRepository = clientPasswordTokenRepository;
         _memberAnalyticsRepository = memberAnalyticsRepository;
         _userShortlistRepository = userShortlistRepository;
+        _candidateClientRepository = candidateClientRepository;
     }
 
     public async Task<int> Register(ClientRegisterDto registerDto)
@@ -251,20 +253,38 @@ public class ClientService : GenericService<Client>,IClientService
         Client client = await _clientRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);  
         client.isActive = true;
         await _clientRepository.UpdateAsync(client);
+
+        ClientPasswordToken clientPasswordToken = await _clientPasswordTokenRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);
+        clientPasswordToken.ExpirationDate = DateTime.UtcNow;
+        await _clientPasswordTokenRepository.UpdateAsync(clientPasswordToken);
+
         await _userService.UpdateAsync(user);
         return true;
     }
 
     public async Task<PaginatedList<MemberAnalyticsDTO>> GetList(
        int page,
-       int clientId,
+       int userId,
+       int typeId,
          bool isResume = false,
          bool isPersonalityTest = false,
       string sortOrder = "asc", int orderedBy = 0,
        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
     {
+
+        User user = await _userService.GetByIdAsync(userId);
+
+        IEnumerable<int> userIds = null;
+
+        if (user.RoleId == 3)
+        {
+          userIds= await _candidateClientRepository.GetUserIdsByClientIdAsync(typeId);
+        }
+        
+
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
         Expression<Func<MemberAnalytics, bool>> filter = a =>
+         (user.RoleId == 2 || userIds == null && !userIds.Any() || userIds.Contains(a.user.Id))&&
         (countryId == 0 || a.user.CountryId == countryId) &&
         (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
         (memberType == null || a.user.MemberType == memberType) &&

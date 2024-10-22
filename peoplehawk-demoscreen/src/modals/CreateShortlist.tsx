@@ -5,7 +5,8 @@ import Input from "../components/layout/form/Input";
 import { addShortlist } from "../services/ShortlistService";
 import { ShortlistReducerProps } from "../interface/Interface";
 import { Action } from "../store/ShortlistReducer";
-import { Dispatch } from "react";
+import { Dispatch, useContext } from "react";
+import AuthContext from "../store/AuthContext";
 
 const fadeIn = keyframes`
   from {
@@ -124,6 +125,8 @@ const CreateShortlist: React.FC<ModalProps> = ({
   state,
   dispatch,
 }) => {
+  const { userData } = useContext(AuthContext);
+
   return (
     <ModalOverlay>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -137,6 +140,7 @@ const CreateShortlist: React.FC<ModalProps> = ({
                 id: 0,
                 name: values.title,
                 userId: 0,
+                createdBy: userData ? userData.Id : 0,
               });
               response &&
                 dispatch({ type: "ADD_IN_SHORTLIST", payload: response });
