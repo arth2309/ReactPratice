@@ -85,4 +85,5 @@ export const API_ENDPOINTS = {
     `candidate/client?email=${email}&token=${token}`,
   CLIENT_REGISTER: "candidate/client/password",
   CLIENT_LIST: (adminId: number) => `candidate/client/list?AdminId=${adminId}`,
+  CLIENT_ISALLOWED: "candidate/client/isAllowed",
 };

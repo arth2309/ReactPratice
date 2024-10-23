@@ -1,13 +1,8 @@
 import { apiClient } from "./BaseService";
 import { showToast } from "../components/layout/ToastComponent/Toastcomponent";
-import {
-  CountryList as List,
-  LoginFormValues,
-  ForgotPasswordValues,
-} from "../interface/Interface";
+import { CountryList as List, LoginFormValues } from "../interface/Interface";
 import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import { TOAST } from "../constants/toast";
-import { AxiosError } from "axios";
 
 interface RegisterFormvalues {
   id: number;

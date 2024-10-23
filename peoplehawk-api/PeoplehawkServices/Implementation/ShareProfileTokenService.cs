@@ -66,7 +66,7 @@ namespace PeoplehawkServices.Implementation
            
             mm.Body = htmlBody;
             mm.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient();
+            SmtpClient smtp = new();
             smtp.Host = "mail.etatvasoft.com";
             smtp.EnableSsl = true;
             smtp.UseDefaultCredentials = false;

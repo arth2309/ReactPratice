@@ -24,7 +24,7 @@ public interface IUserService : IGenericService<User>
         int? pageSize = null,
         params Expression<Func<User, object>>[]? includes);
     Task<AboutMeDetailDTO> AddAboutMe(AboutMeDetailDTO aboutMeDetailDTO);
-    IAsyncEnumerable<string> GetStreamingResponse(string prompt);
+   
 
 }
 

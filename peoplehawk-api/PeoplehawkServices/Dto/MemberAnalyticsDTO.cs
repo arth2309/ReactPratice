@@ -27,4 +27,6 @@ namespace PeoplehawkServices.Dto;
     public bool? IsResumeUpload { get; set; }
 
     public List<Shortlist> Shortlist { get; set; }  
+
+    public string? Owned_By { get; set; }
 }

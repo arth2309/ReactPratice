@@ -6,7 +6,7 @@ import { CourseInterest as Course } from "../../interface/Interface";
 Chart.register(CategoryScale);
 
 const Memberinterestanalysischart = (props: any) => {
-  const { courseInterest, chartData } = props;
+  const { courseInterest } = props;
 
   const description = [
     "A preference for activities that entail the explicit, ordered, or systematic manipulation \nof objects, tools, machines, and animals.",
@@ -17,9 +17,9 @@ const Memberinterestanalysischart = (props: any) => {
     "Prefers structured data tasks, including record-keeping, filing, reproducing materials, \nand organizing business machines for organizational or economic goals.",
   ];
 
-  const selecteditems = ["a", "c", "e", "i", "r", "s"];
+  // const selecteditems = ["a", "c", "e", "i", "r", "s"];
 
-  const data1 = selecteditems.map((item) => chartData[item]);
+  // const data1 = selecteditems.map((item) => chartData[item]);
 
   const options: any = {
     responsive: true,

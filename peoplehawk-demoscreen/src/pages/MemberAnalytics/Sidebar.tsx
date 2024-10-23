@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import { ReactSelect } from "../../components/layout/form/Select";
-import { OptionTypes, CountryList } from "../../interface/Interface";
+import {
+  OptionTypes,
+  CountryList,
+  ViewClientProps,
+} from "../../interface/Interface";
 import { useEffect, useState } from "react";
 import Input from "../../components/layout/form/Input";
 import { CountryList as CountryData } from "../../services/AuthService";
 import BounceLoader from "react-spinners/BounceLoader";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { getClientList } from "../../services/AdminService";
 
 interface SideBarProps {
   onSearchHandler: (value: string) => void;
@@ -90,10 +95,23 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
   const [countryOptions, setCountryOptions] = useState<OptionTypes[] | null>(
     null
   );
+  const [clientOptions, setClientOptions] = useState<OptionTypes[] | null>(
+    null
+  );
+
   const convertApiToOptions = (apiData: CountryList[]): OptionTypes[] => {
     return apiData.map((item) => ({
       value: item.id,
       label: item.countryName,
+    }));
+  };
+
+  const convertClientApiToOptions = (
+    apiData: ViewClientProps[]
+  ): OptionTypes[] => {
+    return apiData.map((item) => ({
+      value: item.id,
+      label: item.firstName + " " + item.lastName,
     }));
   };
 
@@ -109,6 +127,14 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
     if (response) {
       const transformedoptions = convertApiToOptions(response);
       setCountryOptions(transformedoptions);
+    }
+
+    const clientResponse = await getClientList(1);
+    if (clientResponse) {
+      const transformedOptions = convertClientApiToOptions(
+        clientResponse.items
+      );
+      setClientOptions(transformedOptions);
     }
   };
 
@@ -180,6 +206,24 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                   onChange={(e, value) => {
                     props.onCountryTypeHandler(value != null ? value.value : 0);
                   }}
+                />
+              )}
+            </div>
+            <div>
+              <SearchLabel>Client Name</SearchLabel>
+              {clientOptions && (
+                <ReactSelect
+                  options={clientOptions}
+                  placeholder=""
+                  isClearable
+                  name="client"
+                  // defaultValue={countryOptions.find(
+                  //   (item) => item.value === props.countryId
+                  // )}
+                  showDropdownIndicator
+                  // onChange={(e, value) => {
+                  //   props.onCountryTypeHandler(value != null ? value.value : 0);
+                  // }}
                 />
               )}
             </div>

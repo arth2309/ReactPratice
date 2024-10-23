@@ -1,4 +1,5 @@
-﻿using PeoplehawkRepositories.Implementation;
+﻿using Microsoft.EntityFrameworkCore;
+using PeoplehawkRepositories.Implementation;
 using PeoplehawkRepositories.Interface;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
@@ -15,14 +16,18 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
     private readonly IShortlistRepository _shortlistRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICandidateClientRepository _candidateClientRepository;
+    private readonly ICandidateRepository _candidateRepository;
+    private readonly IClientRepository _clientRepository;
 
-    public MemberAnalyticsService(IMemberAnalyticsRepository memberAnalyticsRepository, IUserShortlistRepository userShortlistRepository, IShortlistRepository shortlistRepository, IUserRepository userRepository, ICandidateClientRepository candidateClientRepository) : base(memberAnalyticsRepository)
+    public MemberAnalyticsService(IMemberAnalyticsRepository memberAnalyticsRepository, IUserShortlistRepository userShortlistRepository, IShortlistRepository shortlistRepository, IUserRepository userRepository, ICandidateClientRepository candidateClientRepository,ICandidateRepository candidateRepository, IClientRepository clientRepository) : base(memberAnalyticsRepository)
     {
         _memberAnalyticsRepository = memberAnalyticsRepository;
         _userShortlistRepository = userShortlistRepository;
         _shortlistRepository = shortlistRepository;
         _userRepository = userRepository;
         _candidateClientRepository = candidateClientRepository;
+        _candidateRepository = candidateRepository;
+        _clientRepository = clientRepository;
     }
 
 
@@ -40,15 +45,20 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
 
         IEnumerable<int> userIds = null;
 
+        bool isAllowed = false;
+
         if (user.RoleId == 3)
         {
-            userIds = await _candidateClientRepository.GetUserIdsByClientIdAsync(typeId);
+
+            Client client = await _clientRepository.GetByIdAsync(typeId);
+            isAllowed = client.isAllowed;
+            userIds = isAllowed ? await _candidateClientRepository.GetIsAllowedUserIdsByClientIdAsync(typeId) : await _candidateClientRepository.GetUserIdsByClientIdAsync(typeId);
         }
 
 
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
         Expression<Func<MemberAnalytics, bool>> filter = a =>
-         (user.RoleId == 2 || userIds == null && !userIds.Any() || userIds.Contains(a.user.Id)) &&
+         (user.RoleId == 2 || userIds == null && !userIds.Any() || (isAllowed ? !userIds.Contains(a.user.Id) : userIds.Contains(a.user.Id))) &&
         (countryId == 0 || a.user.CountryId == countryId) &&
         (searchTerm == null || a.user.FirstName.ToLower().Contains(searchTerm.ToLower())) &&
         (memberType == null || a.user.MemberType == memberType) &&
@@ -79,7 +89,7 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         }
 
         PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
-        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new PaginatedList<MemberAnalyticsDTO>();
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new();
 
         memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
         memberAnalyticsDTOs.Page = memberAnalytics.Page;
@@ -91,6 +101,7 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
             MemberAnalyticsDTO dto = member.ToDto();
             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId && x.Shortlists.CreatedBy == userId, includes: x => x.Shortlists);
             dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
+            dto.Owned_By = await GetOwnedByAsync(member.UserId);
             memberAnalyticsDTOs.items.Add(dto);
         }
 
@@ -103,7 +114,7 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         var list = await _userShortlistRepository.GetByCriteriaAsync(filter : x => x.ShortlistId == shortlistId);
         var userIds = list.Select(s => s.UserId).ToList();
         PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: x => userIds.Contains(x.UserId), page: page, includes: includes, pageSize: 6);
-        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new PaginatedList<MemberAnalyticsDTO>();
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new();
 
         memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
         memberAnalyticsDTOs.Page = memberAnalytics.Page;
@@ -115,9 +126,34 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
             MemberAnalyticsDTO dto = member.ToDto();
             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId, includes: x => x.Shortlists);
             dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
+          
             memberAnalyticsDTOs.items.Add(dto);
         }
 
         return memberAnalyticsDTOs;
+    }
+
+    public async Task<string> GetOwnedByAsync(int userId)
+    {
+        var candidate = await _candidateRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+        if (candidate == null)
+            return "peoplehawk";
+
+        var candidateClient = await _candidateClientRepository.FirstOrDefaultAsync(cc => cc.CandidateId == candidate.Id);
+
+        if (candidateClient == null)
+            return "peoplehawk";
+
+        var client = await _clientRepository.FirstOrDefaultAsync(c => c.Id == candidateClient.ClientId);
+
+        if (client == null)
+            return "peoplehawk";
+
+        var user = await _userRepository.FirstOrDefaultAsync(u => u.Id == client.UserId);
+
+        if (user == null)
+            return "peoplehawk";
+
+        return $"{user.FirstName} {user.LastName}";
     }
 }

@@ -62,6 +62,7 @@ public class AdminController : BaseController
     {
         await _clientService.SendInvitationLink(email);
     }
+
     [AllowAnonymous]
     [HttpGet("client")]
     public async Task<bool> VerifyPasswordToken(string email, string token)
@@ -77,4 +78,9 @@ public class AdminController : BaseController
         return await _clientService.CreatePassword(loginDetails);
     }
 
+    [HttpPut("client/isAllowed")]
+    public async Task<ClientIsAllowedDto> ClientIsAllowed(ClientIsAllowedDto clientIsAllowedDto)
+    {
+        return await _clientService.ChangeClientIsAllowed(clientIsAllowedDto);
+    }
 }

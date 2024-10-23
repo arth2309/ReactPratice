@@ -20,4 +20,12 @@ public class CandidateClientRepository : GenericRepository<CandidateClient>,ICan
                       select c.UserId)
                      .ToListAsync();
     }
+    public async Task<IEnumerable<int>> GetIsAllowedUserIdsByClientIdAsync(int clientId)
+    {
+        return await (from cc in _context.CandidatesClients
+                      join c in _context.Candidates on cc.CandidateId equals c.Id
+                      where cc.ClientId != clientId
+                      select c.UserId)
+                     .ToListAsync();
+    }
 }

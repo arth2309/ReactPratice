@@ -6,9 +6,7 @@ using PeoplehawkServices.Interface;
 using System.Net.Mail;
 using System.Net;
 using PeoplehawkServices.Common;
-using PeoplehawkRepositories.Migrations;
 using System.Linq.Expressions;
-using PeoplehawkRepositories.Implementation;
 using PeoplehawkServices.Mapping;
 
 namespace PeoplehawkServices.Implementation;
@@ -88,6 +86,7 @@ public class ClientService : GenericService<Client>,IClientService
         clientGetDto.organisationCode = client.OrganisationCode;
         clientGetDto.profilePhoto = base64String;
         clientGetDto.isActive = client.isActive;
+        clientGetDto.isAllowed = client.isAllowed;
 
         return clientGetDto;
     }
@@ -281,7 +280,6 @@ public class ClientService : GenericService<Client>,IClientService
           userIds= await _candidateClientRepository.GetUserIdsByClientIdAsync(typeId);
         }
         
-
         var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
         Expression<Func<MemberAnalytics, bool>> filter = a =>
          (user.RoleId == 2 || userIds == null && !userIds.Any() || userIds.Contains(a.user.Id))&&
@@ -314,6 +312,7 @@ public class ClientService : GenericService<Client>,IClientService
             };
         }
 
+
         PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
         PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new PaginatedList<MemberAnalyticsDTO>();
 
@@ -332,4 +331,14 @@ public class ClientService : GenericService<Client>,IClientService
 
         return memberAnalyticsDTOs;
     }
+
+    public async Task<ClientIsAllowedDto> ChangeClientIsAllowed(ClientIsAllowedDto clientIsAllowed)
+    {
+        Client client = await GetByIdAsync(clientIsAllowed.ClientId);
+        client.isAllowed = clientIsAllowed.isAllowed;
+        await UpdateAsync(client);
+        return clientIsAllowed;
+    }
+
+ 
 }

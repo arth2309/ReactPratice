@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import {
   getClientDetail,
   sendInvitationLink,
+  setClientIsAllowed,
 } from "../../services/AdminService";
 import { useEffect, useState } from "react";
 import { ViewClientProps } from "../../interface/Interface";
@@ -85,12 +86,25 @@ const DetailDec = styled.div({
   color: "#5f6163ad",
 });
 
+const TextDiv = styled.div({
+  textAlign: "left",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+});
+
+const NameDiv = styled.div({
+  fontSize: "24px",
+  fontWeight: 900,
+});
+
 const ClientProfile = () => {
   const navigate = useNavigate();
   const { clientId } = useParams();
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const fetchData = async () => {
@@ -112,6 +126,7 @@ const ClientProfile = () => {
     email: "",
     profilePhoto: null,
     isActive: false,
+    isAllowed: false,
   });
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -143,10 +158,32 @@ const ClientProfile = () => {
 
           <MainContainer>
             <ProfilePhoto src={imageSrc || profile} alt="profile-photo" />
-            <div>{clientDetail.firstName + " " + clientDetail.lastName}</div>
-            <div>{clientDetail.email}</div>
-            <div>{clientDetail.countryName}</div>
-            <div>{clientDetail.organisationCode}</div>
+            <NameDiv>
+              {clientDetail.firstName + " " + clientDetail.lastName}
+            </NameDiv>
+            <TextDiv>
+              <div>Email : {clientDetail.email}</div>
+              <div>Country : {clientDetail.countryName}</div>
+              <div>Member Code: {clientDetail.organisationCode}</div>
+              <div>
+                <input
+                  type="checkbox"
+                  checked={clientDetail.isAllowed}
+                  onChange={async (e) => {
+                    await setClientIsAllowed({
+                      clientId: clientDetail.id,
+                      isAllowed: e.target.checked,
+                    });
+
+                    setClientDetail({
+                      ...clientDetail,
+                      isAllowed: !clientDetail.isAllowed,
+                    });
+                  }}
+                />
+                Give Access to client to see your candidates
+              </div>
+            </TextDiv>
           </MainContainer>
         </SideBarContainer>
       </div>

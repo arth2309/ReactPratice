@@ -9,9 +9,9 @@ import broker from "../../assests/img/broker.png";
 import achiever from "../../assests/img/Achiever.png";
 import director from "../../assests/img/Director.png";
 import anchor from "../../assests/img/Anchor.png";
-import facebook from "../../assests/img/facebook-icon.svg";
-import linkedin from "../../assests/img/linkedin-icon.svg";
-import twitter from "../../assests/img/twitter-icon.svg";
+// import facebook from "../../assests/img/facebook-icon.svg";
+// import linkedin from "../../assests/img/linkedin-icon.svg";
+// import twitter from "../../assests/img/twitter-icon.svg";
 import AuthContext from "../../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -45,7 +45,6 @@ import { resultMaker } from "../PersonalityTest/Personalitytest";
 import Note from "../../modals/Note";
 import ShareProfile from "../../modals/ShareProfile";
 import shareProfileIcon from "../../assests/img/share-profile.png";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 interface TrophyProps {
   trophyHeight: string;
@@ -207,10 +206,10 @@ const Broker = styled.div({
   fontWeight: "700",
 });
 
-const Card3Img = styled.div({
-  display: "flex",
-  gap: "20px",
-});
+// const Card3Img = styled.div({
+//   display: "flex",
+//   gap: "20px",
+// });
 
 const PrimaryButton = styled.button({
   cursor: "pointer",
@@ -352,15 +351,15 @@ const MobileButtonDiv = styled.div({
   },
 });
 
-const Images = styled.img({
-  cursor: "pointer",
-  height: "30px",
+// const Images = styled.img({
+//   cursor: "pointer",
+//   height: "30px",
 
-  "&:hover": {
-    filter:
-      "invert(43%) sepia(93%) saturate(2389%) hue-rotate(154deg) brightness(101%) contrast(101%)",
-  },
-});
+//   "&:hover": {
+//     filter:
+//       "invert(43%) sepia(93%) saturate(2389%) hue-rotate(154deg) brightness(101%) contrast(101%)",
+//   },
+// });
 
 const imageArray = [pioneer, broker, achiever, director, anchor];
 const typeArray = ["Pioneer", "Broker", "Achiever", "Director", "Anchor"];
@@ -449,7 +448,6 @@ const Dashboard = () => {
   };
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [streamedText, setStreamedText] = useState<string>("");
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [isAssignmentOpen, setAssignmentOpen] = useState<boolean>(false);
   const [isAboutMeOpen, setIsAboutMeOpen] = useState<boolean>(false);
@@ -924,7 +922,6 @@ const Dashboard = () => {
               OpenWorkExperienceEditModal={OpenWorkExperienceEditModal}
             />
           )}
-          {streamedText}
           <MobileButtonDiv>
             <PrimaryButton
               onClick={() => {

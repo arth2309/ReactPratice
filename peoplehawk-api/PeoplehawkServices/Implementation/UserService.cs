@@ -299,30 +299,5 @@ public class UserService : GenericService<User>, IUserService
         return aboutMeDetailDTO;
     }
 
-    public async IAsyncEnumerable<string> GetStreamingResponse(string prompt)
-    {
-       
-        using var client = new HttpClient();
-        var apiKey = _configuration["OpenAI:ApiKey"];
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-
-        var content = new StringContent(JsonSerializer.Serialize(new
-        {
-            prompt = "Write me three poems about llamas, the first in AABB format, the second in ABAB, the third without any rhyming",
-    prompt_template = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-    presence_penalty = 0,
-    frequency_penalty = 0
-        }));
-
-        var response = await client.PostAsJsonAsync("https://api.llama3.com/v1/endpoint", content);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception("Error calling OpenAI API: " + response.ReasonPhrase);
-        }
-
-        var jsonResponse = await response.Content.ReadAsStringAsync();
-        dynamic result =JsonSerializer.Deserialize<string>(jsonResponse);
-        yield return result.choices[0].message.content.ToString();
-    }
+    
 }

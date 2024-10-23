@@ -114,6 +114,7 @@ export interface MemberAnalytics {
   isProfilePhoto: boolean;
   photoContent: string | null;
   shortlist: Shortlist[];
+  owned_By: string;
 }
 
 export interface PaginatedList<T> {
@@ -327,6 +328,7 @@ export interface ViewClientProps {
   organisationCode: string;
   profilePhoto: string | null;
   isActive: boolean;
+  isAllowed: boolean;
 }
 
 export interface OwnedByClient {
@@ -340,4 +342,9 @@ export interface ClientGeneratePasswordProps {
   userId: number;
   password: string;
   confirmPassword: string;
+}
+
+export interface ClientIsAllowedProps {
+  clientId: number;
+  isAllowed: boolean;
 }

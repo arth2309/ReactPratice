@@ -99,6 +99,13 @@ const CompletionCont = styled.div({
   gap: "10px",
 });
 
+const OwnedByDiv = styled.div({
+  display: "flex",
+  justifyContent: "end",
+  alignItems: "end",
+  height: "160px",
+});
+
 const CompletionCard = styled.div({
   display: "flex",
   gap: "5px",
@@ -283,12 +290,11 @@ const MemberCard: FC<MemberCardProps> = ({
               <MemberCardSubTitle>Country:</MemberCardSubTitle>
               <div>{item.country && item.country.countryName}</div>
             </CompletionCard>
-            {item.ownedBy && (
-              <CompletionCard>
-                <MemberCardSubTitle>ownedBy:</MemberCardSubTitle>
-                <div>{item.ownedBy.firstName}</div>
-              </CompletionCard>
-            )}
+
+            <OwnedByDiv>
+              <MemberCardSubTitle>ownedBy:</MemberCardSubTitle>
+              <div>{item.owned_By}</div>
+            </OwnedByDiv>
           </CompletionCont>
         </MemberRightCard>
       </MemberMainCard>

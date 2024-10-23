@@ -23,5 +23,6 @@ public interface IClientService : IGenericService<Client>
          bool isPersonalityTest = false,
       string sortOrder = "asc", int orderedBy = 0,
        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null);
-    
+
+    Task<ClientIsAllowedDto> ChangeClientIsAllowed(ClientIsAllowedDto clientIsAllowed);
     }

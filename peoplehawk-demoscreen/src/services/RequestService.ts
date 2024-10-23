@@ -39,7 +39,6 @@ export const generateText = async (prompt: string) => {
       }
     );
 
-    console.log(response.data.contents[0].text[0]);
     return response.data.contents[0].text[0];
   } catch (error) {
     console.error("Error generating text:", error);

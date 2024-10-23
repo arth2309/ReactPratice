@@ -105,7 +105,7 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
     // eslint-disable-next-line
   }, []);
 
-  const { userData, typeId } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const [isCreateShortlist, setIsCreateShortlist] = useState<boolean>(false);
   const urlState = useMemberAnalytics();
   const navigate = useNavigate();

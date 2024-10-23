@@ -355,7 +355,7 @@ const Memberanalytics = () => {
     state.isOn = urlState.isOn;
     state.page = urlState.page;
     navigate(
-      userData && userData.RoleId == 3
+      userData && userData.RoleId === 3
         ? ROUTES.CLIENT_DEFAULT_SHORTLIST
         : ROUTES.DEFAULT_SHORTLIST
     );
@@ -453,7 +453,7 @@ const Memberanalytics = () => {
                 <ShortlistButton onClick={goToShortlist}>
                   View Shortlist
                 </ShortlistButton>
-                {userData && userData.RoleId == 2 && (
+                {userData && userData.RoleId === 2 && (
                   <ShortlistButton
                     onClick={() => {
                       goToNavigate(ROUTES.CLIENT_LIST);

@@ -57,6 +57,7 @@ export const ClientPasswordGenerate = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [location]);
 
   const passwordHandler = () => {
@@ -71,7 +72,6 @@ export const ClientPasswordGenerate = () => {
     if (email && token) {
       // Call your function with email and token
       const response = await verifyToken(email, token);
-      console.log(response);
       !response && navigate(ROUTES.LINK_EXPIRE);
     } else {
       navigate(ROUTES.LINK_EXPIRE);

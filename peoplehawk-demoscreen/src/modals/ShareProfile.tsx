@@ -285,7 +285,6 @@ const ShareProfile: React.FC<ModalProps> = ({ onClose }) => {
     var textarea1 = document.createElement("textarea");
     textarea1.value = link;
     document.body.appendChild(textarea1);
-    console.log(textarea1);
     textarea1.select();
     document.execCommand("copy");
     document.body.removeChild(textarea1);
@@ -298,6 +297,7 @@ const ShareProfile: React.FC<ModalProps> = ({ onClose }) => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -341,7 +341,6 @@ const ShareProfile: React.FC<ModalProps> = ({ onClose }) => {
                 onSubmit={async (values) => {
                   const response = await shareProfile(values);
                   response && onClose();
-                  console.log(values);
                 }}
               >
                 {({ setFieldValue }) => (

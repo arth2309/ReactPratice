@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "../constants/apiEndpoints";
 import { TOAST } from "../constants/toast";
 import {
   AddClientProps,
+  ClientIsAllowedProps,
   LoginFormValues,
   PaginatedList,
   ViewClientProps,
@@ -83,6 +84,17 @@ export const getClientList = async (
 ): Promise<PaginatedList<ViewClientProps> | null> => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.CLIENT_LIST(adminId));
+    return response.data;
+  } catch {
+    return null;
+  }
+};
+
+export const setClientIsAllowed = async (
+  data: ClientIsAllowedProps
+): Promise<ClientIsAllowedProps | null> => {
+  try {
+    const response = await apiClient.put(API_ENDPOINTS.CLIENT_ISALLOWED, data);
     return response.data;
   } catch {
     return null;
