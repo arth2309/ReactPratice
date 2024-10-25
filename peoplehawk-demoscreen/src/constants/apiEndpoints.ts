@@ -28,7 +28,8 @@ export const API_ENDPOINTS = {
     isProfilePhoto: boolean,
     searchTerm?: string,
     countryId?: number,
-    memberType?: string
+    memberType?: string,
+    clientId?: number
   ) => {
     let url = `candidate/member-analytics?page=${page}&userId=${userId}&typeId=${typeId}&isResume=${isResume}&isPersonalityTest=${isPersonalityTest}&sortOrder=${sortOrder}&orderedBy=${orderedBy}&isProfilePhoto=${isProfilePhoto}`;
 
@@ -41,6 +42,10 @@ export const API_ENDPOINTS = {
 
     if (memberType) {
       url += `&memberType=${memberType}`;
+    }
+
+    if (clientId) {
+      url += `&clientId=${clientId}`;
     }
 
     return url;
@@ -67,8 +72,13 @@ export const API_ENDPOINTS = {
   USERSHORTLIST: "candidate/shortlist/user",
   DELETE_USERSHORTLIST: (userId: number, shortListId: number) =>
     `candidate/shortlist/user?UserId=${userId}&ShortlistId=${shortListId}`,
-  MEMBER_ANALYTICS_SHORTLIST: (page: number, shortlistId: number) =>
-    `candidate/shortlist/user?page=${page}&shortlist=${shortlistId}`,
+  MEMBER_ANALYTICS_SHORTLIST: (
+    page: number,
+    shortlistId: number,
+    userId: number,
+    typeId: number
+  ) =>
+    `candidate/shortlist/user?page=${page}&shortlist=${shortlistId}&userId=${userId}&typeId=${typeId}`,
   DELETE_SHORTLIST: (shortListId: number) =>
     `candidate/shortlist?ShortlistId=${shortListId}`,
   SHARE_PROFILE: "candidate/share-profile",

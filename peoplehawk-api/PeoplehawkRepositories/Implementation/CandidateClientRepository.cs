@@ -28,4 +28,12 @@ public class CandidateClientRepository : GenericRepository<CandidateClient>,ICan
                       select c.UserId)
                      .ToListAsync();
     }
+
+    public async Task<int> getClientId(int CandidateId)
+    {
+        return await _context.CandidatesClients
+    .Where(cc => cc.CandidateId == CandidateId)
+    .Select(cc => cc.ClientId)
+    .FirstOrDefaultAsync();
+    }
 }

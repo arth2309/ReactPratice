@@ -13,6 +13,7 @@ export const ROUTES = {
   CLIENT_DEFAULT_SHORTLIST: "/client/shortlist",
   PROFILE: "/profile/:userId",
   LINK_EXPIRE: "/link-not-found",
+  ACCESS_DENIED: "/access-denied",
   TOKEN_PROFILE: "/candidate/:token",
   OTHERS: "*",
   CLIENT_LIST: "/client/list",

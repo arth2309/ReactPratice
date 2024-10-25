@@ -20,6 +20,8 @@ import {
 } from "../../../interface/Interface";
 import { Action } from "../../../store/ShortlistReducer";
 import StarIcon from "@mui/icons-material/Star";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../constants/routes";
 
 const MemberCardTitle = styled.div({
   color: "#4D5767",
@@ -156,13 +158,14 @@ const MemberCard: FC<MemberCardProps> = ({
   onUser,
   onShortlistOpener,
 }) => {
+  const navigate = useNavigate();
   return (
     <MembarCard
       isVisible={isVisible}
       delay={index * 120}
       key={item.userId}
       onClick={() => {
-        onUser(item.userId);
+        item.isAllowed ? onUser(item.userId) : navigate(ROUTES.ACCESS_DENIED);
       }}
     >
       <Tooltip id={`personality-${index}`} place="right-start">

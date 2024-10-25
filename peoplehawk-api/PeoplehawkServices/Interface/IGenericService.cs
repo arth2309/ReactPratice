@@ -1,6 +1,4 @@
 ﻿using System.Linq.Expressions;
-
-
 namespace PeoplehawkServices.Interface;
 public interface IGenericService<T> where T : class 
 {

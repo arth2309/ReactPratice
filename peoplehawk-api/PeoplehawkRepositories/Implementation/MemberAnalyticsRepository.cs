@@ -11,4 +11,6 @@ public class MemberAnalyticsRepository : GenericRepository<MemberAnalytics>, IMe
     {
         _context = context;
     }
+
+   
 }

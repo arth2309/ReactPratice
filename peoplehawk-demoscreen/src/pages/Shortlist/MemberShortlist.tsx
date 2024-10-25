@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar";
 import { intialState, shortlistReducer } from "../../store/ShortlistReducer";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useContext } from "react";
 import { styled } from "styled-components";
 import Pagination from "../../components/layout/pagination/Pagination";
 import { memberAnalyticsShortList } from "../../services/MemberAnalyticsService";
@@ -14,6 +14,7 @@ import Shortlist from "../../modals/Shortlist";
 import { deleteShortlist } from "../../services/ShortlistService";
 import { ROUTES } from "../../constants/routes";
 import ConfirmDialog from "../../modals/ConfirmDialog";
+import AuthContext from "../../store/AuthContext";
 
 const FlexDiv = styled.div({
   display: "flex",
@@ -104,9 +105,16 @@ const MemberShortlist = () => {
     // eslint-disable-next-line
   }, [page, id]);
 
+  const { userData, typeId } = useContext(AuthContext);
+
   const fetchData = async () => {
     if (id) {
-      const result = await memberAnalyticsShortList(page, parseInt(id));
+      const result = await memberAnalyticsShortList(
+        page,
+        parseInt(id),
+        userData ? userData.Id : 0,
+        typeId ? parseInt(typeId) : 0
+      );
       result && setFilterData(result.items);
 
       if (result && result.totalCount === 0) {

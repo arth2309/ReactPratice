@@ -17,6 +17,11 @@ public class MemberAnalytics
     [ForeignKey("Owner")]
     public int? OwnerId { get; set; }
 
+    [ForeignKey("Client")]
+    public int? ClientId { get; set; }
+
+    public Client client { get; set; }
+
     public User user { get; set; }
 
     public Owner OwnedBy { get; set; }

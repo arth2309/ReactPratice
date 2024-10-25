@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PeoplehawkRepositories;
@@ -11,9 +12,11 @@ using PeoplehawkRepositories;
 namespace PeoplehawkRepositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241025043057_addedCandidatecolumninMemberAnalytics")]
+    partial class addedCandidatecolumninMemberAnalytics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,7 +411,7 @@ namespace PeoplehawkRepositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int?>("CandidateId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("CompletionId")
@@ -422,7 +425,7 @@ namespace PeoplehawkRepositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("CandidateId");
 
                     b.HasIndex("CompletionId");
 
@@ -896,9 +899,9 @@ namespace PeoplehawkRepositories.Migrations
 
             modelBuilder.Entity("PeoplehawkRepositories.Models.MemberAnalytics", b =>
                 {
-                    b.HasOne("PeoplehawkRepositories.Models.Client", "client")
+                    b.HasOne("PeoplehawkRepositories.Models.Candidate", "candidate")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("CandidateId");
 
                     b.HasOne("PeoplehawkRepositories.Models.Completion", "completion")
                         .WithMany()
@@ -916,7 +919,7 @@ namespace PeoplehawkRepositories.Migrations
 
                     b.Navigation("OwnedBy");
 
-                    b.Navigation("client");
+                    b.Navigation("candidate");
 
                     b.Navigation("completion");
 

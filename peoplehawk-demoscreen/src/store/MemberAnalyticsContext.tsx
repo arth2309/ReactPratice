@@ -17,6 +17,7 @@ const defaultState: MemberAnalyticsFilter = {
   searchTerm: "",
   countryId: 0,
   memberType: "",
+  clientId: 0,
 };
 
 const MemberAnalyticsContext = createContext<

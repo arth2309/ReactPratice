@@ -20,6 +20,8 @@ interface SideBarProps {
   searchString: string;
   memberType: string;
   countryId: number;
+  clientId: number;
+  onClientIdHandler: (value: number) => void;
 }
 
 const CandidateTypes: OptionTypes[] = [
@@ -131,6 +133,7 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
 
     const clientResponse = await getClientList(1);
     if (clientResponse) {
+      console.log(clientResponse.items);
       const transformedOptions = convertClientApiToOptions(
         clientResponse.items
       );
@@ -209,24 +212,25 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                 />
               )}
             </div>
-            <div>
-              <SearchLabel>Client Name</SearchLabel>
-              {clientOptions && (
+            {clientOptions && (
+              <div>
+                <SearchLabel>Client Name</SearchLabel>
+
                 <ReactSelect
                   options={clientOptions}
                   placeholder=""
                   isClearable
                   name="client"
-                  // defaultValue={countryOptions.find(
-                  //   (item) => item.value === props.countryId
-                  // )}
+                  defaultValue={clientOptions.find(
+                    (item) => item.value === props.clientId
+                  )}
                   showDropdownIndicator
-                  // onChange={(e, value) => {
-                  //   props.onCountryTypeHandler(value != null ? value.value : 0);
-                  // }}
+                  onChange={(e, value) => {
+                    props.onClientIdHandler(value != null ? value.value : 0);
+                  }}
                 />
-              )}
-            </div>
+              </div>
+            )}
           </MainContainer>
         ) : (
           <LoaderDiv>

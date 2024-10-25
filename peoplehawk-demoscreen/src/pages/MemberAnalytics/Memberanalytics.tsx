@@ -31,6 +31,7 @@ const defaults = {
   searchTerm: "",
   countryId: 0,
   memberType: "",
+  clientId: 0,
 };
 
 const SortTypes: OptionTypes[] = [
@@ -287,12 +288,18 @@ const Memberanalytics = () => {
     setPage(1);
   };
 
+  const clientIdHandler = (value: number) => {
+    seturlState({ ...urlState, clientId: value, page: 1 });
+    setPage(1);
+  };
+
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
   }, [urlState]);
 
   const fetchData = async () => {
+    console.log(urlState.clientId);
     const result = await MemberAnalyticsList(
       urlState.page,
       userData ? userData.Id : 0,
@@ -304,7 +311,8 @@ const Memberanalytics = () => {
       urlState.orderedBy,
       urlState.searchTerm,
       urlState.countryId,
-      urlState.memberType
+      urlState.memberType,
+      urlState.clientId
     );
     result && setFilterData(result.items);
     result && setPage(result.page);
@@ -393,10 +401,12 @@ const Memberanalytics = () => {
         onSearchHandler={searchHandler}
         onCandidateTypeHandler={candidateTypeHandler}
         onCountryTypeHandler={countryTypeHandler}
+        onClientIdHandler={clientIdHandler}
         onNavigation={logout}
         searchString={state.searchTerm}
         memberType={state.memberType}
         countryId={state.countryId}
+        clientId={state.clientId}
       />
       <RightContainer>
         <Header>

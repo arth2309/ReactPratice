@@ -121,7 +121,16 @@ const Routes = () => {
           path={ROUTES.CLIENT_SHORTLIST}
           element={protectRoutes(authCtx.isLoggedIn, 3, MemberShortlist)}
         ></Route>
-        <Route path={ROUTES.LINK_EXPIRE} element={<LinkExpire />}></Route>
+        <Route
+          path={ROUTES.LINK_EXPIRE}
+          element={
+            <LinkExpire description="this link is not active any more" />
+          }
+        ></Route>
+        <Route
+          path={ROUTES.ACCESS_DENIED}
+          element={<LinkExpire description="Access Denied" />}
+        ></Route>
         <Route
           path={ROUTES.TOKEN_PROFILE}
           element={<Candidateprofile />}

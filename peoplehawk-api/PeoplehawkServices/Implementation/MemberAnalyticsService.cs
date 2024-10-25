@@ -38,12 +38,12 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
          bool isResume = false,
          bool isPersonalityTest = false,
       string sortOrder = "asc", int orderedBy = 0,
-       bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null)
+       bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null,int? clientId = 0)
     {
 
         User user = await _userRepository.GetByIdAsync(userId);
 
-        IEnumerable<int> userIds = null;
+        IEnumerable<int>? userIds = null;
 
         bool isAllowed = false;
 
@@ -56,7 +56,7 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         }
 
 
-        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
+        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion};
         Expression<Func<MemberAnalytics, bool>> filter = a =>
          (user.RoleId == 2 || userIds == null && !userIds.Any() || (isAllowed ? !userIds.Contains(a.user.Id) : userIds.Contains(a.user.Id))) &&
         (countryId == 0 || a.user.CountryId == countryId) &&
@@ -64,7 +64,11 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         (memberType == null || a.user.MemberType == memberType) &&
         (!isProfilePhoto || a.user.ProfilePhoto != null) &&
         (!isResume || a.completion.IsCVUploaded) &&
-        (!isPersonalityTest || a.completion.IsPersonalityQuizGiven);
+        (!isPersonalityTest || a.completion.IsPersonalityQuizGiven) &&
+        (user.RoleId == 3 || clientId == 0 || a.ClientId == clientId);
+   
+    
+       
 
         Func<IQueryable<MemberAnalytics>, IOrderedQueryable<MemberAnalytics>> orderBy;
 
@@ -89,12 +93,13 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
         }
 
         PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: filter, page: page, includes: includes, pageSize: 6, orderBy: orderBy);
-        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new();
-
-        memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
-        memberAnalyticsDTOs.Page = memberAnalytics.Page;
-        memberAnalyticsDTOs.PageSize = memberAnalytics.PageSize;
-        memberAnalyticsDTOs.items = new List<MemberAnalyticsDTO>();
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new()
+        {
+            TotalCount = memberAnalytics.TotalCount,
+            Page = memberAnalytics.Page,
+            PageSize = memberAnalytics.PageSize,
+            items = new List<MemberAnalyticsDTO>()
+        };
 
         foreach (var member in memberAnalytics.items)
         {
@@ -102,31 +107,46 @@ public class MemberAnalyticsService : GenericService<MemberAnalytics>, IMemberAn
             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId && x.Shortlists.CreatedBy == userId, includes: x => x.Shortlists);
             dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
             dto.Owned_By = await GetOwnedByAsync(member.UserId);
+            dto.isAllowed = user.RoleId == 2 ? true : isAllowed ? true : typeId == member.ClientId ? true : false;
             memberAnalyticsDTOs.items.Add(dto);
         }
 
         return memberAnalyticsDTOs;
     }
 
-    public async Task<PaginatedList<MemberAnalyticsDTO>> GetShortlistedList(int page, int shortlistId)
+    public async Task<PaginatedList<MemberAnalyticsDTO>> GetShortlistedList(int page, int shortlistId,int userId,int typeId)
     {
-        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion };
+        User user = await _userRepository.GetByIdAsync(userId);
+
+        bool isAllowed = false;
+
+        if (user.RoleId == 3)
+        {
+
+            Client client = await _clientRepository.GetByIdAsync(typeId);
+            isAllowed = client.isAllowed;
+           
+        }
+
+        var includes = new Expression<Func<MemberAnalytics, object>>[] { x => x.user, x => x.user.Country, x => x.OwnedBy, x => x.completion, x=>x.client};
         var list = await _userShortlistRepository.GetByCriteriaAsync(filter : x => x.ShortlistId == shortlistId);
         var userIds = list.Select(s => s.UserId).ToList();
         PaginatedList<MemberAnalytics> memberAnalytics = await _memberAnalyticsRepository.GetByPaginatedCriteriaAsync(filter: x => userIds.Contains(x.UserId), page: page, includes: includes, pageSize: 6);
-        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new();
-
-        memberAnalyticsDTOs.TotalCount = memberAnalytics.TotalCount;
-        memberAnalyticsDTOs.Page = memberAnalytics.Page;
-        memberAnalyticsDTOs.PageSize = memberAnalytics.PageSize;
-        memberAnalyticsDTOs.items = new List<MemberAnalyticsDTO>();
+        PaginatedList<MemberAnalyticsDTO> memberAnalyticsDTOs = new()
+        {
+            TotalCount = memberAnalytics.TotalCount,
+            Page = memberAnalytics.Page,
+            PageSize = memberAnalytics.PageSize,
+            items = new List<MemberAnalyticsDTO>()
+        };
 
         foreach (var member in memberAnalytics.items)
         {
             MemberAnalyticsDTO dto = member.ToDto();
             var userShortlist = await _userShortlistRepository.GetByCriteriaAsync(filter: x => x.UserId == member.UserId, includes: x => x.Shortlists);
             dto.Shortlist = userShortlist.Select(x => x.Shortlists).ToList();
-          
+            dto.Owned_By = await GetOwnedByAsync(member.UserId);
+            dto.isAllowed = user.RoleId == 2 ? true :  isAllowed ? true : typeId == member.ClientId ? true : false;
             memberAnalyticsDTOs.items.Add(dto);
         }
 

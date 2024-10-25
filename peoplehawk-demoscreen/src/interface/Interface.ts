@@ -115,6 +115,7 @@ export interface MemberAnalytics {
   photoContent: string | null;
   shortlist: Shortlist[];
   owned_By: string;
+  isAllowed: boolean;
 }
 
 export interface PaginatedList<T> {
@@ -161,6 +162,7 @@ export interface MemberAnalyticsFilter {
   memberType: string;
   sortBy: string;
   isOn: boolean;
+  clientId: number;
 }
 
 export interface Subject {

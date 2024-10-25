@@ -29,4 +29,6 @@ namespace PeoplehawkServices.Dto;
     public List<Shortlist> Shortlist { get; set; }  
 
     public string? Owned_By { get; set; }
+
+    public bool isAllowed { get; set; }
 }

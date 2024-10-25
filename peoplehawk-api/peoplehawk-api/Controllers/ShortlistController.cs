@@ -56,9 +56,9 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("user")]
-        public async Task<PaginatedList<MemberAnalyticsDTO>> UserShortlist(int page = 1, int shortlist = 0)
+        public async Task<PaginatedList<MemberAnalyticsDTO>> UserShortlist(int page = 1, int shortlist = 0, int userId = 0 , int typeId = 0)
         {
-            return await _memberAnalyticsService.GetShortlistedList(page, shortlist);
+            return await _memberAnalyticsService.GetShortlistedList(page, shortlist,userId,typeId);
         }
     }
 }

@@ -1,3 +1,4 @@
+import { FC } from "react";
 import styled from "styled-components";
 
 const Container = styled.div({
@@ -20,11 +21,15 @@ const Title = styled.div({
   fontWeight: 900,
 });
 
-const LinkExpire = () => {
+interface ErrorProps {
+  description: string;
+}
+
+const LinkExpire: FC<ErrorProps> = ({ description }) => {
   return (
     <Container>
       <ContainerBody>
-        <Title>Link is not Valid any more</Title>
+        <Title>{description}</Title>
       </ContainerBody>
     </Container>
   );

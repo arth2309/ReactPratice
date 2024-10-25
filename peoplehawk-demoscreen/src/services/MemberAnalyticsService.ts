@@ -13,7 +13,8 @@ export const MemberAnalyticsList = async (
   orderedBy: number,
   searchTerm?: string,
   countryId?: number,
-  memberType?: string
+  memberType?: string,
+  clientId?: number
 ): Promise<PaginatedList<MemberAnalytics> | null> => {
   try {
     const response = await apiClient.get(
@@ -28,7 +29,8 @@ export const MemberAnalyticsList = async (
         isProfilePhoto,
         searchTerm,
         countryId,
-        memberType
+        memberType,
+        clientId
       )
     );
     return response.data;
@@ -39,11 +41,18 @@ export const MemberAnalyticsList = async (
 
 export const memberAnalyticsShortList = async (
   page: number,
-  shortlistId: number
+  shortlistId: number,
+  userId: number,
+  typeId: number
 ): Promise<PaginatedList<MemberAnalytics> | null> => {
   try {
     const response = await apiClient.get(
-      API_ENDPOINTS.MEMBER_ANALYTICS_SHORTLIST(page, shortlistId)
+      API_ENDPOINTS.MEMBER_ANALYTICS_SHORTLIST(
+        page,
+        shortlistId,
+        userId,
+        typeId
+      )
     );
     return response.data;
   } catch {

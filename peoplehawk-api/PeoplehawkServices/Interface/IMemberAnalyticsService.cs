@@ -12,7 +12,7 @@ public interface IMemberAnalyticsService : IGenericService<MemberAnalytics>
          bool isResume = false,
          bool isPersonalityTest = false,
       string sortOrder = "asc", int orderedBy = 0,
-       bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null);
+       bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null, int? clientId = 0);
 
-    Task<PaginatedList<MemberAnalyticsDTO>> GetShortlistedList(int page, int shortlistId);
+    Task<PaginatedList<MemberAnalyticsDTO>> GetShortlistedList(int page, int shortlistIdint,int userId, int typeId);
 }
