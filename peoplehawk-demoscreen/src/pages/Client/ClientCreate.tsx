@@ -5,6 +5,7 @@ import {
   OptionTypes,
   CountryList,
   AddClientProps,
+  ViewClientProps,
 } from "../../interface/Interface";
 import { CountryList as CountryData } from "../../services/AuthService";
 import Input from "../../components/layout/form/Input";
@@ -15,6 +16,8 @@ import { ROUTES } from "../../constants/routes";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage } from "formik";
 import { addClient } from "../../services/AdminService";
+import { useParams } from "react-router-dom";
+import { getClientDetail } from "../../services/AdminService";
 
 const Container = styled.div({
   display: "flex",
@@ -109,6 +112,10 @@ const ClientCreate = () => {
   );
 
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [editClientData, setEditClientData] = useState<ViewClientProps | null>(
+    null
+  );
 
   const convertApiToOptions = (apiData: CountryList[]): OptionTypes[] => {
     return apiData.map((item) => ({
@@ -126,6 +133,10 @@ const ClientCreate = () => {
 
   const fetchCountryList = async () => {
     const response = await CountryData();
+    if (id) {
+      const response = await getClientDetail(parseInt(id));
+      response && setEditClientData(response);
+    }
     if (response) {
       const transformedoptions = convertApiToOptions(response);
       setCountryOptions(transformedoptions);
@@ -163,8 +174,12 @@ const ClientCreate = () => {
             initialValues={intialValues}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-              const response = await addClient(values);
-              response && navigate(`/client/${response}/profile`);
+              if (id) {
+                console.log(values);
+              } else {
+                const response = await addClient(values);
+                response && navigate(`/client/${response}/profile`);
+              }
             }}
           >
             {({ setFieldValue }) => (
@@ -178,7 +193,7 @@ const ClientCreate = () => {
                     <ArrowBackIosNewIcon />
                     Back
                   </BackArrowButton>
-                  <SaveButton type="submit">Save</SaveButton>
+                  <SaveButton type="submit">{id ? "Edit" : "Save"}</SaveButton>
                 </Title>
                 {countryOptions ? (
                   <MainContainer>
@@ -186,6 +201,9 @@ const ClientCreate = () => {
                       <Input
                         className="input-div"
                         label="First Name"
+                        defaultValue={
+                          editClientData ? editClientData.firstName : ""
+                        }
                         required
                         onChange={(e) => {
                           setFieldValue("firstName", e.target.value);
@@ -199,6 +217,9 @@ const ClientCreate = () => {
                       <Input
                         className="input-div"
                         label="Last Name"
+                        defaultValue={
+                          editClientData ? editClientData.lastName : ""
+                        }
                         required
                         onChange={(e) => {
                           setFieldValue("lastName", e.target.value);
@@ -212,6 +233,9 @@ const ClientCreate = () => {
                       <Input
                         className="input-div"
                         label="Email (Username / Login)"
+                        defaultValue={
+                          editClientData ? editClientData.email : ""
+                        }
                         required
                         onChange={(e) => {
                           setFieldValue("email", e.target.value);
@@ -229,6 +253,9 @@ const ClientCreate = () => {
                           placeholder=""
                           isClearable
                           name="country"
+                          defaultValue={countryOptions.filter(
+                            (item) => item.label === editClientData?.countryName
+                          )}
                           showDropdownIndicator
                           onChange={(e, value) => {
                             !!value
@@ -245,6 +272,9 @@ const ClientCreate = () => {
                       <Input
                         className="input-div"
                         label="Member Registration Code"
+                        defaultValue={
+                          editClientData ? editClientData.organisationCode : ""
+                        }
                         required
                         onChange={(e) => {
                           setFieldValue("organisationCode", e.target.value);

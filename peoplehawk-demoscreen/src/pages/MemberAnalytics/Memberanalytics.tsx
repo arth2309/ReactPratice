@@ -299,7 +299,6 @@ const Memberanalytics = () => {
   }, [urlState]);
 
   const fetchData = async () => {
-    console.log(urlState.clientId);
     const result = await MemberAnalyticsList(
       urlState.page,
       userData ? userData.Id : 0,

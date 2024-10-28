@@ -19,4 +19,5 @@ public class ClientGetDto
     public bool isAllowed { get; set; }
 
     public string? profilePhoto { get; set; }
+
 }

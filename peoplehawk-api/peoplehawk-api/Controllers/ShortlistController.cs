@@ -60,5 +60,6 @@ namespace peoplehawk_api.Controllers
         {
             return await _memberAnalyticsService.GetShortlistedList(page, shortlist,userId,typeId);
         }
+ 
     }
 }

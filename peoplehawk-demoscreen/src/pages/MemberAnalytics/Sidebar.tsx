@@ -33,7 +33,7 @@ const CandidateTypes: OptionTypes[] = [
 
 const Container = styled.div({
   backgroundColor: "#F7F9FC",
-  width: "500px",
+  width: "450px",
   minHeight: "100vh",
 
   ".flex-div": {
@@ -133,7 +133,6 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
 
     const clientResponse = await getClientList(1);
     if (clientResponse) {
-      console.log(clientResponse.items);
       const transformedOptions = convertClientApiToOptions(
         clientResponse.items
       );

@@ -106,6 +106,7 @@ const OwnedByDiv = styled.div({
   justifyContent: "end",
   alignItems: "end",
   height: "160px",
+  gap: "10px",
 });
 
 const CompletionCard = styled.div({
@@ -159,6 +160,7 @@ const MemberCard: FC<MemberCardProps> = ({
   onShortlistOpener,
 }) => {
   const navigate = useNavigate();
+
   return (
     <MembarCard
       isVisible={isVisible}
@@ -295,7 +297,7 @@ const MemberCard: FC<MemberCardProps> = ({
             </CompletionCard>
 
             <OwnedByDiv>
-              <MemberCardSubTitle>ownedBy:</MemberCardSubTitle>
+              <MemberCardSubTitle>ownedBy: </MemberCardSubTitle>
               <div>{item.owned_By}</div>
             </OwnedByDiv>
           </CompletionCont>

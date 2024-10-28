@@ -1,7 +1,6 @@
 import Routes from "./routes/Routes";
 
-function App() 
-{
+function App() {
   return <Routes />;
 }
 

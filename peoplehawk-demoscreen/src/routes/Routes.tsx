@@ -152,6 +152,10 @@ const Routes = () => {
           element={protectRoutes(authCtx.isLoggedIn, 2, ClientCreate)}
         ></Route>
         <Route
+          path={ROUTES.CLIENT_EDIT}
+          element={protectRoutes(authCtx.isLoggedIn, 2, ClientCreate)}
+        ></Route>
+        <Route
           path={ROUTES.CLIENT_PROFILE}
           element={protectRoutes(authCtx.isLoggedIn, 2, ClientProfile)}
         ></Route>
