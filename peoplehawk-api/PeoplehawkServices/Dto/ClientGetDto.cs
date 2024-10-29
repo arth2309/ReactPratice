@@ -1,4 +1,6 @@
-﻿namespace PeoplehawkServices.Dto;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PeoplehawkServices.Dto;
 
 public class ClientGetDto
 {

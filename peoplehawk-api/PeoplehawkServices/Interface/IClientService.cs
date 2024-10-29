@@ -25,4 +25,5 @@ public interface IClientService : IGenericService<Client>
        bool isProfilePhoto = false, string? searchTerm = null, int? countryId = 0, string? memberType = null);
 
     Task<ClientIsAllowedDto> ChangeClientIsAllowed(ClientIsAllowedDto clientIsAllowed);
-    }
+    Task<ClientRegisterDto> UpdateClient(int id, ClientRegisterDto clientRegisterDto);
+}

@@ -44,6 +44,14 @@ public class AdminController : BaseController
         return await _clientService.Register(clientRegisterDto);
     }
 
+    [HttpPut("client/{id:int}/edit")]
+    public async Task<ClientRegisterDto> UpdateClient(int id,[FromBody]ClientRegisterDto clientRegisterDto)
+    {
+        ValidateId(id);
+        ValidateModel();
+        return await _clientService.UpdateClient(id,clientRegisterDto);
+    }
+
     [HttpGet("client/{Id:int}")]
     public async Task<ClientGetDto> ViewClient(int Id)
     {

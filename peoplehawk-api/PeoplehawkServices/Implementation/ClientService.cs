@@ -57,6 +57,8 @@ public class ClientService : GenericService<Client>,IClientService
         return id;
     }
 
+
+  
     public async Task<ClientGetDto> GetClientDetails(int Id)
     {
         Client client = await _clientRepository.FirstOrDefaultWithIncludesAsync(x => x.Id == Id, x => x.User,x => x.User.Country);
@@ -339,6 +341,31 @@ public class ClientService : GenericService<Client>,IClientService
         await UpdateAsync(client);
         return clientIsAllowed;
     }
+    
+    public async Task<ClientRegisterDto> UpdateClient(int id,ClientRegisterDto clientRegisterDto)
+    {
+        Client client = await GetByIdAsync(id);
+         if(client == null) 
+        {
+            throw new Exception(ErrorMessages.ClientNotFound);
+        }
 
- 
+         if(client.OrganisationCode != clientRegisterDto.OrganisationCode)
+        {
+            client.OrganisationCode = clientRegisterDto.OrganisationCode;
+            await UpdateAsync(client);
+        }
+
+         User user = await _userService.GetByIdAsync(client.UserId);
+        if (user == null)
+        {
+            throw new Exception(ErrorMessages.UserNotFound);
+        }
+        user.Email = clientRegisterDto.Email;
+        user.FirstName = clientRegisterDto.FirstName;    
+        user.LastName = clientRegisterDto.LastName;
+        await _userService.UpdateAsync(user);
+
+        return clientRegisterDto;
+    }
 }

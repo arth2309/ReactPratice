@@ -88,6 +88,7 @@ export const API_ENDPOINTS = {
   PROFILE_LINK_LIST: (userId: number) =>
     `candidate/profile-link-list?UserId=${userId}`,
   ADD_CLIENT: "candidate/client/create",
+  UPDATE_CLIENT: (id: number) => `candidate/client/${id}/edit`,
   GET_CLIENT: (id: number) => `candidate/client/${id}`,
   CLIENT_PASSWORD_INVITATION_LINK: (email: string) =>
     `candidate/client/invitation-link?email=${email}`,

@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage } from "formik";
-import { addClient } from "../../services/AdminService";
+import { addClient, updateClient } from "../../services/AdminService";
 import { useParams } from "react-router-dom";
 import { getClientDetail } from "../../services/AdminService";
 
@@ -154,15 +154,29 @@ const ClientCreate = () => {
       .required("Please select a Country"),
     organisationCode: Yup.string().required("please enter organisation code"),
   });
+  const countryIdFinder: () => number = () => {
+    if (editClientData && countryOptions) {
+      const item = countryOptions.find(
+        (item) => item.label === editClientData.countryName
+      );
+
+      if (item) {
+        return Number(item.value);
+      }
+    }
+
+    // Return 0 if no valid item is found or if editClientData or countryOptions is falsy
+    return 0;
+  };
 
   const intialValues: AddClientProps = {
-    firstName: "",
-    lastName: "",
+    firstName: editClientData ? editClientData.firstName : "",
+    lastName: editClientData ? editClientData.lastName : "",
     adminId: 1,
     id: 0,
-    email: "",
-    countryId: 0,
-    organisationCode: "",
+    email: editClientData ? editClientData.email : "",
+    countryId: countryIdFinder(),
+    organisationCode: editClientData ? editClientData.organisationCode : "",
     roleId: 3,
   };
 
@@ -172,10 +186,12 @@ const ClientCreate = () => {
         <SideBarContainer>
           <Formik
             initialValues={intialValues}
+            enableReinitialize
             validationSchema={validationSchema}
             onSubmit={async (values) => {
               if (id) {
-                console.log(values);
+                const response = await updateClient(parseInt(id), values);
+                response && navigate(`/client/${id}/profile`);
               } else {
                 const response = await addClient(values);
                 response && navigate(`/client/${response}/profile`);

@@ -143,7 +143,7 @@ const Addassignment: React.FC<ModalProps> = ({
     infohraphicResumeDescription: string;
     startDate: Date | null;
     endDate: Date | null;
-    isOngoing: boolean; 
+    isOngoing: boolean;
   }
 
   return (
@@ -184,7 +184,6 @@ const Addassignment: React.FC<ModalProps> = ({
                     </div>
                   </div>
                   <div>
-                    {/* <label>Title *</label> */}
                     <Input
                       defaultValue={intialValues.title}
                       name="title"

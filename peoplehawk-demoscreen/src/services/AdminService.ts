@@ -24,6 +24,21 @@ export const addClient = async (
   }
 };
 
+export const updateClient = async (
+  id: number,
+  data: AddClientProps
+): Promise<AddClientProps | null> => {
+  try {
+    const response = await apiClient.put<AddClientProps>(
+      API_ENDPOINTS.UPDATE_CLIENT(id),
+      data
+    );
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
+
 export const getClientDetail = async (
   id: number
 ): Promise<ViewClientProps | null> => {

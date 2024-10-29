@@ -81,6 +81,18 @@ const DetailDiv = styled.div({
   justifyContent: "center",
 });
 
+const Button = styled.button({
+  backgroundColor: "#0097A2",
+  padding: "12px 26px",
+  fontSize: "15px",
+  fontWeight: 700,
+  borderRadius: "0px",
+
+  "&:hover": {
+    backgroundColor: "#00B0BA",
+  },
+});
+
 const DetailDec = styled.div({
   fontSize: "16px",
   color: "#5f6163ad",
@@ -184,6 +196,13 @@ const ClientProfile = () => {
                 Give Access to client to see your candidates
               </div>
             </TextDiv>
+            <Button
+              onClick={() => {
+                clientId && navigate(`/client/${parseInt(clientId)}/edit`);
+              }}
+            >
+              Edit
+            </Button>
           </MainContainer>
         </SideBarContainer>
       </div>
