@@ -184,7 +184,8 @@ const Shortlist: React.FC<ModalProps> = ({
   const { userData } = useContext(AuthContext);
   const fetchData = async () => {
     const response = await getShortlist(userData ? userData.Id : 0);
-    response && dispatch({ type: "POST_SHORTLIST", payload: response });
+    response &&
+      dispatch({ type: "POST_SHORTLIST", payload: response.shortlist });
   };
 
   const isInShortlist = (item: ShortlistProps) =>
@@ -199,6 +200,7 @@ const Shortlist: React.FC<ModalProps> = ({
           id: response.id,
           name: response.name,
           createdBy: userData ? userData.Id : 0,
+          isFavourite: response.isFavourite,
         },
       });
     response &&
@@ -209,6 +211,7 @@ const Shortlist: React.FC<ModalProps> = ({
             id: response.id,
             name: response.name,
             createdBy: userData ? userData.Id : 0,
+            isFavourite: response.isFavourite,
           },
         ],
         state.userId
@@ -259,6 +262,7 @@ const Shortlist: React.FC<ModalProps> = ({
                   name: values.title,
                   userId: state.userId,
                   createdBy: userData ? userData.Id : 0,
+                  isFavourite: false,
                 });
                 response &&
                   dispatch({ type: "ADD_IN_SHORTLIST", payload: response });
@@ -314,6 +318,7 @@ const Shortlist: React.FC<ModalProps> = ({
                         name: item.name,
                         userId: state.userId,
                         createdBy: userData ? userData.Id : 0,
+                        isFavourite: item.isFavourite,
                       });
                     }}
                   >

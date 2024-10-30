@@ -10,7 +10,8 @@ public static class ShortlistExtensions
         {
             Id = shortlist.Id,
             name = shortlist.Name,
-            CreatedBy = shortlist.CreatedBy
+            CreatedBy = shortlist.CreatedBy,
+            IsFavourite = shortlist.IsFavourite,
         };
     }
 
@@ -20,7 +21,8 @@ public static class ShortlistExtensions
         {
             Id = shortlistDto.Id,
            Name = shortlistDto.name,
-            CreatedBy = shortlistDto.CreatedBy
+           CreatedBy = shortlistDto.CreatedBy,
+           IsFavourite = shortlistDto.IsFavourite
         };
     }
 }

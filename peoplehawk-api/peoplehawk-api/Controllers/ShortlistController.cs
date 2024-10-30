@@ -50,7 +50,7 @@ namespace peoplehawk_api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<List<Shortlist>> Shortlist(int id)
+        public async Task<ShortlistListDto> Shortlist(int id)
         {
             return await _shortlistService.GetAllShortlist(id);
         }
@@ -60,6 +60,5 @@ namespace peoplehawk_api.Controllers
         {
             return await _memberAnalyticsService.GetShortlistedList(page, shortlist,userId,typeId);
         }
- 
     }
 }

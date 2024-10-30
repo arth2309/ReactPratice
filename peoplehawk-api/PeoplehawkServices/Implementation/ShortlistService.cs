@@ -78,8 +78,12 @@ public class ShortlistService : GenericService<Shortlist>,IShortlistService
         };
     }
 
-    public async Task<List<Shortlist>> GetAllShortlist(int id)
+    public async Task<ShortlistListDto> GetAllShortlist(int id)
     {
-        return await _shortlistRepository.GetByCriteriaAsync(filter : x =>x.CreatedBy == id);    
+        ShortlistListDto shortlistListDto = new();
+        shortlistListDto.Shortlist = await _shortlistRepository.GetByCriteriaAsync(filter: x => x.CreatedBy == id);
+        shortlistListDto.FavouriteShortlist = await _shortlistRepository.GetByCriteriaAsync(filter: x => x.CreatedBy == id && x.IsFavourite);
+        return shortlistListDto;
     }
+    
 }

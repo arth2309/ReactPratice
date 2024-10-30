@@ -141,6 +141,7 @@ const CreateShortlist: React.FC<ModalProps> = ({
                 name: values.title,
                 userId: 0,
                 createdBy: userData ? userData.Id : 0,
+                isFavourite: false,
               });
               response &&
                 dispatch({ type: "ADD_IN_SHORTLIST", payload: response });

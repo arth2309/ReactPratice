@@ -281,6 +281,12 @@ export interface Shortlist {
   id: number;
   name: string;
   createdBy: number;
+  isFavourite: boolean;
+}
+
+export interface ShortlistList {
+  favouriteShortlist: Shortlist[];
+  shortlist: Shortlist[];
 }
 
 export interface UserShortlist {
@@ -288,10 +294,12 @@ export interface UserShortlist {
   name: string;
   userId: number;
   createdBy: number;
+  isFavourite: boolean;
 }
 
 export interface ShortlistReducerProps {
   list: Shortlist[];
+  favouriteList: Shortlist[];
   userList: Shortlist[];
   userId: number;
 }

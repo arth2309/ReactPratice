@@ -1,12 +1,14 @@
 import { Shortlist, ShortlistReducerProps } from "../interface/Interface";
 export const intialState: ShortlistReducerProps = {
   list: [],
+  favouriteList: [],
   userList: [],
   userId: 0,
 };
 
 export type Action =
   | { type: "POST_SHORTLIST"; payload: Shortlist[] }
+  | { type: "POST_FAVOURITE_SHORTLIST"; payload: Shortlist[] }
   | { type: "ADD_IN_SHORTLIST"; payload: Shortlist }
   | { type: "POST_USERID"; payload: number }
   | { type: "POST_USERLIST"; payload: Shortlist[] }
@@ -23,6 +25,11 @@ export const shortlistReducer = (
       return {
         ...state,
         list: action.payload,
+      };
+    case "POST_FAVOURITE_SHORTLIST":
+      return {
+        ...state,
+        favouriteList: action.payload,
       };
     case "ADD_IN_SHORTLIST":
       return {

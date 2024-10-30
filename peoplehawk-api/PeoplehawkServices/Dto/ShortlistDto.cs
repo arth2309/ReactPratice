@@ -8,4 +8,6 @@ public class ShortlistDto
     public int UserId { get; set; }
 
     public int? CreatedBy { get; set; }
+
+    public bool IsFavourite { get; set; }
 }

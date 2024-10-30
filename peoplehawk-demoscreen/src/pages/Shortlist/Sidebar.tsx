@@ -128,7 +128,13 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
 
   const fetchData = async () => {
     const response = await getShortlist(userData ? userData.Id : 0);
-    response && dispatch({ type: "POST_SHORTLIST", payload: response });
+    response &&
+      dispatch({ type: "POST_SHORTLIST", payload: response.shortlist });
+    response &&
+      dispatch({
+        type: "POST_FAVOURITE_SHORTLIST",
+        payload: response.favouriteShortlist,
+      });
   };
 
   const { id } = useParams();
@@ -153,6 +159,24 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
           </ShortlistButton>
         </Title>
         <MainContainer>
+          {state.favouriteList.length > 0 && <h3>Favourite Shortlists</h3>}
+          {state.favouriteList &&
+            state.favouriteList.map((item, index) => (
+              <ShortlistDiv
+                isSelect={id !== undefined && item.id === parseInt(id)}
+                key={index}
+                onClick={() => {
+                  navigate(
+                    userData && userData.RoleId === 3
+                      ? `/client/shortlist/${item.id}`
+                      : `/shortlist/${item.id}`
+                  );
+                }}
+              >
+                {item.name}
+              </ShortlistDiv>
+            ))}
+          {state.list.length > 0 && <h3>Shortlists</h3>}
           {state.list &&
             state.list.map((item, index) => (
               <ShortlistDiv

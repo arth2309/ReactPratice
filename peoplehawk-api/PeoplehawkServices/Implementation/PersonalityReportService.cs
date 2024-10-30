@@ -43,7 +43,6 @@ public class PersonalityReportService : GenericService<PersonalityReport>, IPers
     }
 
    
-
    public async Task<QuizStatus> GetReport(int UserId)
     {
         QuizStatus quizStatus = new QuizStatus();

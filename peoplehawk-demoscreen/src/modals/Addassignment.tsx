@@ -6,7 +6,6 @@ import DatePicker from "react-datepicker";
 import { AddData, UpdateData } from "../services/AssignmentService";
 import * as Yup from "yup";
 import moment from "moment";
-import { newDate } from "react-datepicker/dist/date_utils";
 
 interface ModalProps {
   onClose: () => void;
