@@ -127,21 +127,6 @@ const AIIconImg = styled.img({
   cursor: "pointer",
 });
 
-const OutlineButton = styled.button({
-  cursor: "pointer",
-  position: "relative",
-  background: "transparent",
-  border: "1px solid #F96332",
-  width: "150px",
-  fontSize: "16px",
-  fontWeight: "600",
-  display: "flex",
-  marginTop: "10px",
-  marginBottom: "10px",
-  justifyContent: "center",
-  borderRadius: "20px",
-  color: "#394456",
-});
 let listArray: string[] = [];
 const Aboutme: React.FC<ModalProps> = ({ onClose, note }) => {
   const { userData } = useContext(AuthContext);
@@ -175,6 +160,7 @@ const Aboutme: React.FC<ModalProps> = ({ onClose, note }) => {
     while (!res.done) {
       if (res.value !== undefined && res.value.candidates) {
         setStreamedText(
+          // eslint-disable-next-line
           (prevState) =>
             prevState + res.value.candidates[0].content.parts[0].text
         );

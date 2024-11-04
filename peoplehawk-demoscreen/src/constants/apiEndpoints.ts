@@ -97,4 +97,5 @@ export const API_ENDPOINTS = {
   CLIENT_REGISTER: "candidate/client/password",
   CLIENT_LIST: (adminId: number) => `candidate/client/list?AdminId=${adminId}`,
   CLIENT_ISALLOWED: "candidate/client/isAllowed",
+  FAVOURITE_SHORTLIST: (id: number) => `candidate/shortlist/isFavourite/${id}`,
 };

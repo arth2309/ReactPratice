@@ -10,6 +10,8 @@ export type Action =
   | { type: "POST_SHORTLIST"; payload: Shortlist[] }
   | { type: "POST_FAVOURITE_SHORTLIST"; payload: Shortlist[] }
   | { type: "ADD_IN_SHORTLIST"; payload: Shortlist }
+  | { type: "ADD_IN_FAVOURITE_SHORTLIST"; payload: Shortlist }
+  | { type: "REMOVE_IN_FAVOURITE_SHORTLIST"; payload: number }
   | { type: "POST_USERID"; payload: number }
   | { type: "POST_USERLIST"; payload: Shortlist[] }
   | { type: "ADD_IN_USERLIST"; payload: Shortlist }
@@ -60,6 +62,18 @@ export const shortlistReducer = (
       return {
         ...state,
         list: state.list.filter((item) => item.id !== action.payload),
+      };
+    case "ADD_IN_FAVOURITE_SHORTLIST":
+      return {
+        ...state,
+        favouriteList: [...state.favouriteList, action.payload],
+      };
+    case "REMOVE_IN_FAVOURITE_SHORTLIST":
+      return {
+        ...state,
+        favouriteList: state.favouriteList.filter(
+          (item) => item.id !== action.payload
+        ),
       };
     default:
       return state;

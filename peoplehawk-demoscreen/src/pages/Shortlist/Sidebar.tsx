@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Dispatch, useEffect, useState, useContext } from "react";
-import { getShortlist } from "../../services/ShortlistService";
+import {
+  getShortlist,
+  addOrRemoveFavouriteShortlist,
+} from "../../services/ShortlistService";
 import { Action } from "../../store/ShortlistReducer";
 import CreateShortlist from "../../modals/CreateShortlist";
 import { ShortlistReducerProps } from "../../interface/Interface";
@@ -12,6 +15,12 @@ import { ROUTES } from "../../constants/routes";
 import { useMemberAnalytics } from "../../store/MemberAnalyticsContext";
 import { useParams } from "react-router-dom";
 import AuthContext from "../../store/AuthContext";
+import PushPinSharpIcon from "@mui/icons-material/PushPinSharp";
+import {
+  showToast,
+  ToastComponent,
+} from "../../components/layout/ToastComponent/Toastcomponent";
+import { TOAST } from "../../constants/toast";
 
 interface SideBarProps {
   state: ShortlistReducerProps;
@@ -80,7 +89,7 @@ const ShortlistButton = styled.button({
 const ShortlistDiv = styled.div<ButtonProps>`
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   background-color: ${(props) => (!props.isSelect ? "white" : "#c6cdd9")};
   color: black;
   padding: 10px;
@@ -139,8 +148,37 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
 
   const { id } = useParams();
 
+  const changeFavouriteList = async (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const response = await addOrRemoveFavouriteShortlist(id);
+    response &&
+      (response.isFavourite
+        ? dispatch({ type: "ADD_IN_FAVOURITE_SHORTLIST", payload: response })
+        : dispatch({
+            type: "REMOVE_IN_FAVOURITE_SHORTLIST",
+            payload: response.id,
+          }));
+    response &&
+      (response.isFavourite
+        ? showToast(
+            TOAST.ADD_FAVOURITE_SHORTLIST.title,
+            TOAST.ADD_FAVOURITE_SHORTLIST.description,
+            TOAST.ADD_FAVOURITE_SHORTLIST.type
+          )
+        : showToast(
+            TOAST.REMOVE_FAVOURITE_SHORTLIST.title,
+            TOAST.REMOVE_FAVOURITE_SHORTLIST.description,
+            TOAST.REMOVE_FAVOURITE_SHORTLIST.type
+          ));
+  };
+
   return (
     <div>
+      <ToastComponent />
       <Container>
         {isCreateShortlist && (
           <CreateShortlist
@@ -174,6 +212,13 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
                 }}
               >
                 {item.name}
+                <div
+                  onClick={(e) => {
+                    changeFavouriteList(item.id, e);
+                  }}
+                >
+                  <PushPinSharpIcon />
+                </div>
               </ShortlistDiv>
             ))}
           {state.list.length > 0 && <h3>Shortlists</h3>}
@@ -191,6 +236,13 @@ const Sidebar: React.FC<SideBarProps> = ({ state, dispatch }) => {
                 }}
               >
                 {item.name}
+                <div
+                  onClick={(e) => {
+                    changeFavouriteList(item.id, e);
+                  }}
+                >
+                  <PushPinSharpIcon />
+                </div>
               </ShortlistDiv>
             ))}
         </MainContainer>

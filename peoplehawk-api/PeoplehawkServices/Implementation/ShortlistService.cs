@@ -85,5 +85,15 @@ public class ShortlistService : GenericService<Shortlist>,IShortlistService
         shortlistListDto.FavouriteShortlist = await _shortlistRepository.GetByCriteriaAsync(filter: x => x.CreatedBy == id && x.IsFavourite);
         return shortlistListDto;
     }
-    
+
+    public async Task<Shortlist> AddFavouriteShortlist(int id)
+    {
+        Shortlist shortlist = await GetByIdAsync(id);
+        shortlist.IsFavourite = !shortlist.IsFavourite;
+        Shortlist shortlist1 =  await UpdateAsync(shortlist);
+        return shortlist1;
 }
+
+}
+
+

@@ -65,3 +65,14 @@ export const deleteShortlist = async (
     return null;
   }
 };
+
+export const addOrRemoveFavouriteShortlist = async (
+  id: number
+): Promise<Shortlist | null> => {
+  try {
+    const response = await apiClient.put(API_ENDPOINTS.FAVOURITE_SHORTLIST(id));
+    return response.data;
+  } catch {
+    return null;
+  }
+};

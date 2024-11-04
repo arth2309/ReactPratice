@@ -364,6 +364,7 @@ public class ClientService : GenericService<Client>,IClientService
         user.Email = clientRegisterDto.Email;
         user.FirstName = clientRegisterDto.FirstName;    
         user.LastName = clientRegisterDto.LastName;
+        user.CountryId = clientRegisterDto.CountryId;
         await _userService.UpdateAsync(user);
 
         return clientRegisterDto;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using PeoplehawkRepositories.Models;
 using PeoplehawkServices.Dto;
 using PeoplehawkServices.Interface;
@@ -49,16 +50,24 @@ namespace peoplehawk_api.Controllers
             return await _shortlistService.RemoveUserFromShortlist(UserId, ShortlistId);
         }
 
+        
         [HttpGet("{id:int}")]
-        public async Task<ShortlistListDto> Shortlist(int id)
+        public async Task<IActionResult> Shortlist(int id)
         {
-            return await _shortlistService.GetAllShortlist(id);
+            var result = await _shortlistService.GetAllShortlist(id);
+            return Ok(result);
         }
 
         [HttpGet("user")]
         public async Task<PaginatedList<MemberAnalyticsDTO>> UserShortlist(int page = 1, int shortlist = 0, int userId = 0 , int typeId = 0)
         {
             return await _memberAnalyticsService.GetShortlistedList(page, shortlist,userId,typeId);
+        }
+
+        [HttpPut("isFavourite/{id:int}")]
+        public async Task<Shortlist> FavouriteShortlist(int id)
+        {
+            return await _shortlistService.AddFavouriteShortlist(id);
         }
     }
 }

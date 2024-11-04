@@ -1,5 +1,4 @@
 import styled, { css, keyframes } from "styled-components";
-import { Request as RequestProps } from "../interface/Interface";
 
 interface ModalProps {
   onClose: () => void;
@@ -116,7 +115,6 @@ const ConfirmDialog: React.FC<ModalProps> = ({
           <div>{description}</div>
           <ButtonDiv>
             <CancelButton onClick={onClose}>Cancel</CancelButton>
-
             <ConfirmButton onClick={onConfirm}>Confirm</ConfirmButton>
           </ButtonDiv>
         </ModalBody>

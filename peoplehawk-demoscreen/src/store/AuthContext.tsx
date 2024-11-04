@@ -71,6 +71,7 @@ export const AuthContextProvider = (props: AuthProvider) => {
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line
   }, [token]);
 
   const userIsLoggedIn = !!token;

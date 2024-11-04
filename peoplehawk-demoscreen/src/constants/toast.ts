@@ -28,6 +28,8 @@ interface ToastProps {
   DELETE_PROFILE_LINK: ToastComponentProps;
   COPY_PROFILE_LINK: ToastComponentProps;
   AUTO_LOGGED_OUT: ToastComponentProps;
+  ADD_FAVOURITE_SHORTLIST: ToastComponentProps;
+  REMOVE_FAVOURITE_SHORTLIST: ToastComponentProps;
 }
 
 export const TOAST: ToastProps = {
@@ -146,5 +148,15 @@ export const TOAST: ToastProps = {
     title: "info",
     description: "You have been Logged out Automatically.",
     type: "info",
+  },
+  ADD_FAVOURITE_SHORTLIST: {
+    title: "Success",
+    description: "The shortlist is now in your favorites.",
+    type: "success",
+  },
+  REMOVE_FAVOURITE_SHORTLIST: {
+    title: "Success",
+    description: "The shortlist is no longer in your favorites.",
+    type: "success",
   },
 };

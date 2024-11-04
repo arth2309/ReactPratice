@@ -170,7 +170,7 @@ const Personalityresult: React.FC<ModalProps> = ({
         </ModalHeader>
         <ProfileContainer>
           <h4>
-            {state.firstName}'s Personality Type is : {typeArray[index]}{" "}
+            {state.firstName}'s Personality Type is : {typeArray[index]}
           </h4>
           <Container>
             <Pie data={data} options={options} />
